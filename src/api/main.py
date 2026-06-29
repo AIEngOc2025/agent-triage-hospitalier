@@ -1,4 +1,6 @@
-import os, sys, asyncio, time, uuid, json, httpx, gradio as gr, uvicorn
+import os, sys, asyncio, time, uuid, json, httpx
+import gradio as gr
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
@@ -22,8 +24,8 @@ os.environ.update({
     "HF_HUB_OFFLINE": "1"
 })
 
-if sys.executable != VENV_PYTHON:
-    os.execv(VENV_PYTHON, [VENV_PYTHON] + sys.argv)
+#if sys.executable != VENV_PYTHON:
+   # os.execv(VENV_PYTHON, [VENV_PYTHON] + sys.argv)
 
 vllm_process = None
 
@@ -95,9 +97,7 @@ async def gradio_chat(message, history):
     except Exception as e:
         return f"⏳ Moteur en chargement... ({e})"
 
-demo = gr.ChatInterface(fn=gradio_chat,  
-        title="🏥 Agent Triage CHSA"
-)
+demo = gr.ChatInterface(fn=gradio_chat,  title="🏥 Agent Triage CHSA")
 app = gr.mount_gradio_app(app, demo, path="/")
 
 if __name__ == "__main__":
