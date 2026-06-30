@@ -1,43 +1,48 @@
 import os
 from pathlib import Path
+import tempfile
 
-# --- Détection de l'environnement ---
-IS_PRODUCTION = os.getenv("FASTAPI_CLOUD", "false").lower() == "true"
+# --- Environment Detection ---
+# Detect production environment for FastAPI Cloud or Hugging Face Spaces
+IS_PRODUCTION = (os.getenv("FASTAPI_CLOUD", "false").lower() == "true" or
+                 os.getenv("SPACE_ID") is not None)
+
 
 # --- 1. Project Structure ---
-# Le chemin de base est la racine du projet (un niveau au-dessus de 'src')
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
+SRC_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = SRC_DIR.parent
+MODELS_DIR = BASE_DIR.parent / "models"
 # --- 2. vLLM Engine Configuration ---
 if IS_PRODUCTION:
-    # Dans l'environnement FastAPI Cloud, les binaires sont dans le PATH du venv
-    VENV_PYTHON_PATH = "python"
-    VLLM_BINARY_PATH = "vllm"
-    # Le modèle est copié dans le conteneur
-    MODEL_PATH = "models/merged_dpo_final_chsa"
+    # In the FastAPI Cloud environment, binaries are in the venv's PATH
+    VLLM_BINARY = "vllm"
+    # The model is copied into the container at /app/models/
+    MODEL_PATH = "/app/models/merged_dpo_final_chsa"  # Path in the cloud container
+    APP_ENTRYPOINT = "src.api.orchestrateur:app"  # Used by run.py and cloud deployment
 else:
-    # Chemins pour le développement local sur Mac
-    VENV_PYTHON_PATH = os.getenv("VENV_PYTHON_PATH", "/Users/mpaga/.venv-vllm-metal/bin/python")
-    VLLM_BINARY_PATH = os.getenv("VLLM_BINARY_PATH", "/Users/mpaga/.venv-vllm-metal/bin/vllm")
-    # Chemin absolu vers le modèle pour éviter les erreurs d'interprétation par vLLM
-    MODEL_PATH = os.getenv("MODEL_PATH", str(BASE_DIR / "models" / "merged_dpo_final_chsa"))
-
+    # Paths for local development on Mac
+    VLLM_BINARY = os.getenv("VLLM_BINARY_PATH", "/Users/mpaga/.venv-vllm-metal/bin/vllm")
+    # Absolute path to the model to avoid interpretation errors by vLLM
+    MODEL_PATH = os.getenv("MODEL_PATH", f"./{MODELS_DIR.relative_to(BASE_DIR.parent)}/merged_dpo_final_chsa")
+    APP_ENTRYPOINT = "src.api.local.main:app"  # Used by run.py
 
 # Network ports
-VLLM_PORT = 8000
-API_PORT = 8001
+VLLM_PORT = 8003
+API_PORT = 8004
 VLLM_HOST = "127.0.0.1"
 
 # vLLM server arguments
+# Note: Ces arguments sont pour le mode 'local' (main.py), pas pour l'orchestrateur.
 VLLM_SERVER_ARGS = [
+    "--model", MODEL_PATH,
     "--host", VLLM_HOST,
     "--port", str(VLLM_PORT),
-    #"--device", "mps",
-    "--max-model-len", "4096",
-    "--gpu-memory-utilization", "0.7",
+   # "--max-model-len", "4096",
+    #"--gpu-memory-utilization", "0.7",
 ]
 
 # --- 3. Logging & Auditing ---
-LOG_DIR = BASE_DIR / "logs"
+import tempfile
+LOG_DIR = Path(tempfile.gettempdir())
 LOG_FILE = LOG_DIR / "audit_medical.jsonl"
 VLLM_LOG_FILE = LOG_DIR / "vllm_server.log"

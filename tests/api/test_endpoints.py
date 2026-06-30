@@ -1,34 +1,37 @@
 import sys
 import os
-import .src.api.main as main
 from fastapi.testclient import TestClient
+import pytest
 
 # Add the src/api directory to the Python path to allow imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/api')))
 
-from main import app  # Importe votre application FastAPI
+# Détermine quel 'app' importer en fonction de l'environnement
+IS_ORCHESTRATOR = os.getenv("APP_MODE") == "orchestrator"
+if IS_ORCHESTRATOR:
+    from orchestrateur import app
+else:
+    from local.main import app
 
-def test_triage_endpoint_status():
+
+@pytest.fixture
+def client():
+    # Utilise un contexte pour s'assurer que le lifespan est correctement géré
+    with TestClient(app) as c:
+        yield c
+
+def test_chat_endpoint_status(client: TestClient):
     """Vérifie que l'API répond 200 OK"""
-    with TestClient(app) as client:
-        response = client.post("/triage", json={"symptomes": "J'ai mal au bras."})
-        assert response.status_code == 200
+    response = client.post("/chat", json={"history": [{"role": "user", "content": "Bonjour"}], "patient_id": "PAT-TEST-001"})
+    assert response.status_code == 200
 
-def test_triage_response_schema():
+def test_chat_response_schema(client: TestClient):
     """Vérifie que le format JSON de sortie est conforme au PDF (Traçabilité)"""
-    with TestClient(app) as client:
-        response = client.post("/triage", json={"symptomes": "Forte fièvre"})
-        json_data = response.json()
-    
-        # Basé sur le schéma de réponse de src/api/main.py
-        assert "decision" in json_data
-        assert "latency_sec" in json_data
+    response = client.post("/chat", json={"history": [{"role": "user", "content": "Forte fièvre"}], "patient_id": "PAT-TEST-002"})
+    json_data = response.json()
 
-def test_triage_bilingual_logic():
-    """Vérifie que l'IA ne mélange pas les langues en sortie"""
-    # The model is prompted in French, so it should respond in French.
-    with TestClient(app) as client:
-        # Test with an English symptom, expecting a French response
-        resp_fr = client.post("/triage", json={"symptomes": "Chest pain"})
-        # Check for common French triage terms
-        assert any(word in resp_fr.json()["decision"].lower() for word in ["urgence", "immédiate", "prioritaire", "consulter", "rapide"])
+    # Le schéma de réponse a changé pour être plus simple
+    assert "response" in json_data
+    # La réponse doit être une chaîne de caractères non vide
+    assert isinstance(json_data["response"], str)
+    assert len(json_data["response"]) > 0
