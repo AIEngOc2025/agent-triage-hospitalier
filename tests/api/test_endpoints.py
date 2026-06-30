@@ -1,17 +1,14 @@
-import sys
 import os
 from fastapi.testclient import TestClient
 import pytest
 
-# Add the src/api directory to the Python path to allow imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src/api')))
-
 # Détermine quel 'app' importer en fonction de l'environnement
+# Les imports sont maintenant absolus depuis la racine du projet (src)
 IS_ORCHESTRATOR = os.getenv("APP_MODE") == "orchestrator"
 if IS_ORCHESTRATOR:
-    from orchestrateur import app
+    from src.api.orchestrateur import app
 else:
-    from local.main import app
+    from src.api.local.main import app
 
 
 @pytest.fixture
