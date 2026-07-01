@@ -1,5 +1,6 @@
 import os
 import asyncio
+import sys
 import time
 import uuid
 import json
@@ -8,7 +9,7 @@ import gradio as gr
 import aiofiles
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 from contextlib import asynccontextmanager
 
 # --- 1. CONFIGURATION (Imports simplifiés) ---
@@ -16,7 +17,13 @@ from .config import MODEL_PATH, LOG_FILE
 try:
     from vllm import LLM, SamplingParams
 except ImportError:
+    # Permet au code de s'exécuter même si vllm n'est pas installé,
+    # par exemple pour des tests unitaires ou du linting.
     LLM, SamplingParams = None, None
+
+# Détection de l'environnement pour l'accélération matérielle
+IS_MACOS = sys.platform == "darwin"
+
 # Variables globales pour le moteur
 llm = None
 sampling_params = None
@@ -58,11 +65,12 @@ async def lifespan(app: FastAPI):
     if LLM:
         print(f"📥 [vLLM] Chargement du modèle depuis : {MODEL_PATH}")
         # Pour Hugging Face, le modèle est chargé en mémoire.
-        # Pour le local sur Mac, il utilise Metal.
+        # Pour le local sur Mac, vLLM détecte 'mps' (Metal) automatiquement.
+        # On retire les arguments spécifiques pour laisser vLLM auto-configurer.
         llm = LLM(
             model=MODEL_PATH,
             max_model_len=4096,  # Limite la longueur pour éviter les erreurs de mémoire
-            trust_remote_code=True # Nécessaire pour les modèles locaux/custom
+            trust_remote_code=True  # Nécessaire pour les modèles locaux/custom
         )
         sampling_params = SamplingParams(
             temperature=0.2, 

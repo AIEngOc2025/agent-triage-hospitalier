@@ -1,30 +1,32 @@
 import os
 from pathlib import Path
-import tempfile
 
 # --- Environment Detection ---
 # Detect production environment for FastAPI Cloud or Hugging Face Spaces
-IS_PRODUCTION = (os.getenv("FASTAPI_CLOUD", "false").lower() == "true" or
+IS_PRODUCTION = (os.getenv("APP_ENV", "development").lower() == "production" or
+                 os.getenv("FASTAPI_CLOUD", "false").lower() == "true" or
                  os.getenv("SPACE_ID") is not None)
 
 
 # --- 1. Project Structure ---
 SRC_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = SRC_DIR.parent
-MODELS_DIR = BASE_DIR.parent / "models"
+MODELS_DIR = BASE_DIR / "models" # Le dossier models est à la racine du projet
+
 # --- 2. vLLM Engine Configuration ---
 if IS_PRODUCTION:
     # In the FastAPI Cloud environment, binaries are in the venv's PATH
     VLLM_BINARY = "vllm"
     # The model is copied into the container at /app/models/
-    MODEL_PATH = "/app/models/merged_dpo_final_chsa"  # Path in the cloud container
-    APP_ENTRYPOINT = "src.api.orchestrateur:app"  # Used by run.py and cloud deployment
+    MODEL_PATH = str(BASE_DIR / "models" / "merged_dpo_final_chsa")  # Chemin absolu dans le conteneur
 else:
     # Paths for local development on Mac
     VLLM_BINARY = os.getenv("VLLM_BINARY_PATH", "/Users/mpaga/.venv-vllm-metal/bin/vllm")
     # Absolute path to the model to avoid interpretation errors by vLLM
-    MODEL_PATH = os.getenv("MODEL_PATH", f"./{MODELS_DIR.relative_to(BASE_DIR.parent)}/merged_dpo_final_chsa")
-    APP_ENTRYPOINT = "src.api.local.main:app"  # Used by run.py
+    MODEL_PATH = str(MODELS_DIR / "merged_dpo_final_chsa") # Chemin absolu local
+
+# L'entrypoint est maintenant le même pour le local et la production
+APP_ENTRYPOINT = "src.api.orchestrateur:app"
 
 # Network ports
 VLLM_PORT = 8003
