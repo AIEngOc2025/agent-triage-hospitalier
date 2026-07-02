@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import tempfile
 
 # --- Environment Detection ---
 # Detect production environment for FastAPI Cloud or Hugging Face Spaces
@@ -32,6 +33,10 @@ APP_ENTRYPOINT = "src.api.orchestrateur:app"
 VLLM_PORT = 8003
 API_PORT = 8004
 VLLM_HOST = "127.0.0.1"
+VLLM_MAX_MODEL_LEN = 4096
+
+# Pour le déploiement multi-GPU (ex: sur Hugging Face Spaces avec 2xT4)
+VLLM_TENSOR_PARALLEL_SIZE = int(os.getenv("VLLM_TENSOR_PARALLEL_SIZE", "1"))
 
 # vLLM server arguments
 # Note: Ces arguments sont pour le mode 'local' (main.py), pas pour l'orchestrateur.
@@ -44,7 +49,6 @@ VLLM_SERVER_ARGS = [
 ]
 
 # --- 3. Logging & Auditing ---
-import tempfile
 LOG_DIR = Path(tempfile.gettempdir())
 LOG_FILE = LOG_DIR / "audit_medical.jsonl"
 VLLM_LOG_FILE = LOG_DIR / "vllm_server.log"

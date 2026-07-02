@@ -58,7 +58,8 @@ class UniversalMedicalProcessor:
                             "response": clean_resp
                         })
                         count += 1
-                except Exception:
+                # Cible les erreurs attendues (JSON malformé, clé manquante) pour ne pas masquer d'autres problèmes.
+                except (json.JSONDecodeError, KeyError):
                     continue
 
         print(f"✅ Terminé : {count} exemples extraits.")

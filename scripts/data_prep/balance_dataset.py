@@ -25,7 +25,8 @@ def balance_and_limit():
                     fr_pool.append(data)
                 elif lang == 'en':
                     en_pool.append(data)
-            except:
+            # Cible les erreurs de parsing JSON ou de clés manquantes
+            except (json.JSONDecodeError, KeyError):
                 continue
 
     print(f"📊 État initial : FR={len(fr_pool)} | EN={len(en_pool)}")

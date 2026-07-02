@@ -1,13 +1,15 @@
 import json
 import os
+import subprocess
 
 import spacy
 
 # Chargement de SpaCy pour l'anonymisation demandée par le CHSA
 try:
     nlp_en = spacy.load("en_core_web_lg")
-except:
-    os.system("python -m spacy download en_core_web_lg")
+except OSError:
+    print("Modèle SpaCy manquant, tentative de téléchargement...")
+    subprocess.run(["python", "-m", "spacy", "download", "en_core_web_lg"], check=True)
     nlp_en = spacy.load("en_core_web_lg")
 
 def anonymize(text):

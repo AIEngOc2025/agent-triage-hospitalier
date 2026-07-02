@@ -63,7 +63,8 @@ class MedicalDataFinalProcessor:
                             "response": self.anonymizer.anonymize_text(str(resp))
                         })
                         count += 1
-                except Exception:
+                # Cible les erreurs de parsing JSON, de clés ou de types
+                except (json.JSONDecodeError, KeyError, TypeError, ValueError):
                     continue
 
         print(f"✅ Terminé : {count} exemples extraits.")

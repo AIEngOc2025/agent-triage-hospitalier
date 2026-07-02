@@ -1,13 +1,16 @@
 import torch
 from datasets import load_dataset
-from peft import LoraConfig, get_peft_model
-from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
+from peft import LoraConfig
+from peft import get_peft_model
+from transformers import AutoModelForCausalLM
+from transformers import AutoTokenizer
+from transformers import TrainingArguments
 from trl import SFTTrainer
 
 # 1. CONFIGURATION
-MODEL_NAME = "Qwen/Qwen2.5-1.5B" # Version stable recommandée
+MODEL_NAME = "Qwen/Qwen2.5-0.5B" # Modèle utilisé dans le reste du projet
 DATA_PATH = "data/processed/train_sft.jsonl"
-OUTPUT_DIR = "models/checkpoints/qwen-sft-medical"
+OUTPUT_DIR = "models/sft_model"
 
 # Détection de l'accélérateur (Mac vs Cloud)
 if torch.backends.mps.is_available():

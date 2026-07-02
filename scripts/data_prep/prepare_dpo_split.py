@@ -2,7 +2,7 @@ import json
 import os
 import random
 
-import spacy
+import spacy # Ruff: F401 - 'spacy' is imported but unused (car nlp_* sont utilisés)
 
 # --- CONFIGURATION OFFICIELLE ---
 RAW_DIR = "data/raw"
@@ -15,10 +15,11 @@ FILE_TEST = "Mpaga_Christophe_1_Dataset_Test_DPO_052026.jsonl"
 
 # --- CHARGEMENT ANONYMISEUR ---
 print("📥 Chargement des modèles linguistiques...")
-try:
+try: # Ruff: E722 - Do not use bare 'except'
     nlp_fr = spacy.load("fr_core_news_lg")
     nlp_en = spacy.load("en_core_web_lg")
-except:
+except OSError:
+    import subprocess
     os.system("python -m spacy download fr_core_news_lg")
     os.system("python -m spacy download en_core_web_lg")
     nlp_fr = spacy.load("fr_core_news_lg")
@@ -88,16 +89,21 @@ def process_dpo_data():
                     chosen = data.get(chosen_key) or data.get(f"op{ans_char}")
 
                     # Choix d'une mauvaise réponse
-                    wrong_options = [data.get(k) for k in ['answer_a', 'answer_b', 'answer_c', 'answer_d', 'opa', 'opb']
-                                     if data.get(k) and data.get(k) != chosen]
+                    all_options = [data.get(k) for k in ['answer_a', 'answer_b', 'answer_c', 'answer_d', 'opa', 'opb', 'opc', 'opd'] if data.get(k)]
+                    wrong_options = [opt for opt in all_options if opt != chosen]
 
                     if chosen and wrong_options:
+                        rejected = random.choice(wrong_options)
+                        # S'assurer que la réponse rejetée n'est pas accidentellement la même que la bonne
+                        while chosen == rejected and len(wrong_options) > 1:
+                            rejected = random.choice(wrong_options)
                         final_pool.append({
                             "prompt": format_prompt_chatml(anonymize(data.get('question'), "fr")),
                             "chosen": anonymize(chosen, "fr"),
-                            "rejected": anonymize(random.choice(wrong_options), "fr")
+                            "rejected": anonymize(rejected, "fr")
                         })
-                except Exception: continue
+                # Cible les erreurs de parsing JSON, de clés ou de types
+                except (json.JSONDecodeError, KeyError, TypeError, ValueError): continue
 
     # 3. MÉLANGE, SPLIT ET SAUVEGARDE
     if not final_pool:

@@ -69,9 +69,16 @@ app = FastAPI(title="CHSA AI Agent Gateway", lifespan=lifespan)
 # --- LOGIQUE API ---
 async def chat_relay(history: list, patient_id: str):
     payload = {
-        "model": VLLM_SERVER_ARGS[1], # Utilise le modèle spécifié au lancement du serveur
+        "model": MODEL_PATH, # Utilisation directe de la variable de configuration pour plus de robustesse
         # Injection du prompt système pour garantir la concision clinique
-        "messages": [{"role": "system", "content": "Tu es un infirmier de triage. Ton unique rôle est de poser une seule question courte et simple pour déterminer le niveau d'urgence (Maximale, Modérée, Différée). Ne fournis aucune explication, seulement la question."}] + history,
+        "messages": [{
+            "role": "system", 
+            "content": """Tu es un infirmier de triage pour le Centre Hospitalier Sud-Aveyron (CHSA).
+
+**Instructions strictes :**
+1.  **Présentation :** Commence TOUJOURS par te présenter et demander la raison de la venue.
+2.  **Une seule question :** Pose UNE SEULE question courte et simple à la fois pour préciser les symptômes."""
+        }] + history,
         "temperature": 0.3,
         "repetition_penalty": 1.15
     }

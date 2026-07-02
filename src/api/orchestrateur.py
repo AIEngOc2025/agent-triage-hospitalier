@@ -13,7 +13,7 @@ from typing import List, Optional
 from contextlib import asynccontextmanager
 
 # --- 1. CONFIGURATION (Imports simplifiés) ---
-from .config import MODEL_PATH, LOG_FILE
+from .config import MODEL_PATH, LOG_FILE, VLLM_MAX_MODEL_LEN, VLLM_TENSOR_PARALLEL_SIZE
 try:
     from vllm import LLM, SamplingParams
 except ImportError:
@@ -65,12 +65,14 @@ async def lifespan(app: FastAPI):
     if LLM:
         print(f"📥 [vLLM] Chargement du modèle depuis : {MODEL_PATH}")
         # Pour Hugging Face, le modèle est chargé en mémoire.
-        # Pour le local sur Mac, vLLM détecte 'mps' (Metal) automatiquement.
-        # On retire les arguments spécifiques pour laisser vLLM auto-configurer.
+        # Pour un déploiement GPU, on retire `device="cpu"` pour laisser vLLM
+        # détecter et utiliser CUDA automatiquement.
         llm = LLM(
             model=MODEL_PATH,
-            max_model_len=4096,  # Limite la longueur pour éviter les erreurs de mémoire
-            trust_remote_code=True  # Nécessaire pour les modèles locaux/custom
+            max_model_len=VLLM_MAX_MODEL_LEN,
+            trust_remote_code=True,  # Nécessaire pour les modèles locaux/custom
+            tensor_parallel_size=VLLM_TENSOR_PARALLEL_SIZE, # Pour déploiement multi-GPU
+            # gpu_memory_utilization=0.90 # Optionnel: Ajuster si besoin
         )
         sampling_params = SamplingParams(
             temperature=0.2, 
@@ -78,6 +80,9 @@ async def lifespan(app: FastAPI):
             repetition_penalty=1.15, 
             stop=["<|im_end|>"]
         )
+        # "Préchauffage" du modèle pour réduire la latence de la première requête
+        print("🔥 [vLLM] Préchauffage du modèle...")
+        await asyncio.to_thread(llm.generate, "Bonjour", sampling_params, use_tqdm=False)
         print("✅ [vLLM] Moteur opérationnel.")
     else:
         print("❌ [CRITICAL] vLLM n'est pas installé. L'inférence ne fonctionnera pas.")
@@ -87,6 +92,11 @@ async def lifespan(app: FastAPI):
 
 # --- 4. API FASTAPI (Passerelle Hospitalière) ---
 app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
+
+@app.get("/health", status_code=200, tags=["Monitoring"])
+async def health_check():
+    """Vérifie que le service est opérationnel."""
+    return {"status": "ok"}
 
 class ChatRequest(BaseModel):
     patient_id: str = "PAT-001"
