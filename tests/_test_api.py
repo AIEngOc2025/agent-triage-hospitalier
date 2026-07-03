@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 
 # L'import est maintenant absolu depuis la racine du projet (src)
@@ -20,3 +19,16 @@ def test_triage_endpoint_success():
         assert isinstance(data["decision"], str)
         assert isinstance(data["latency_sec"], float)
         assert len(data["decision"]) > 0
+
+def test_triage_endpoint_invalid_input():
+    """
+    Tests a call to the /triage endpoint with invalid or missing data.
+    The API should return a 422 Unprocessable Entity error.
+    """
+    with TestClient(app) as client:
+        # Envoi d'une requête avec un champ incorrect ("symptom" au lieu de "symptomes")
+        response = client.post(
+            "/triage",
+            json={"symptom": "Données invalides"}
+        )
+        assert response.status_code == 422
