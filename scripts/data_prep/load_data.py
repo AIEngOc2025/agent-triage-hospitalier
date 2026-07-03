@@ -1,8 +1,8 @@
 import json
-
 import os
 import pandas as pd
 from anonymize import MedicalAnonymizer
+import argparse
 
 
 class LocalDataProcessor:
@@ -44,7 +44,6 @@ class LocalDataProcessor:
         print(f"✅ Terminé ! {len(self.final_data)} exemples prêts dans {output_path}")
 
 # --- CONFIGURATION ---
-import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Process local data for SFT training.")
     parser.add_argument("--csv_path", type=str, help="Path to the input CSV file (e.g., data/raw/mes_donnees.csv).")

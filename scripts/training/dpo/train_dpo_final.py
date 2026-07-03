@@ -1,5 +1,4 @@
 # --- 1. INSTALLATION ---
-!pip install -q -U transformers datasets peft trl accelerate bitsandbytes
 
 import argparse
 import torch

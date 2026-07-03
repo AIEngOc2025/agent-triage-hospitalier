@@ -47,8 +47,24 @@ def calculate_matrix():
 
         # 2. Vérification de l'urgence (Priorité)
         # On cherche si les mots clés d'urgence (maximale/modérée) correspondent
-        urgence_keywords = ['maximale', 'modérée', 'différée', 'urgency', 'emergency', 'immediate']
-        urgence_match = 1 if any(w in output_text for w in urgence_keywords if w in ground_truth) else 0
+        # On vérifie si le niveau d'urgence spécifique est correctement prédit.
+        urgence_levels = {
+            "maximale": ["maximale", "emergency", "immediate"],
+            "modérée": ["modérée", "urgency"],
+            "différée": ["différée", "deferred"]
+        }
+        
+        # On détermine d'abord le niveau d'urgence attendu de la vérité terrain
+        expected_level = None
+        for level, keywords in urgence_levels.items():
+            if any(kw in ground_truth for kw in keywords):
+                expected_level = level
+                break
+        
+        # Ensuite, on vérifie si la prédiction correspond à ce niveau attendu
+        urgence_match = 0
+        if expected_level and any(kw in output_text for kw in urgence_levels[expected_level]):
+            urgence_match = 1
 
         # 3. Détection d'hallucination technique (Code Swift/Points d'exclamation)
         hallucination = 1 if ("ui" in output_text or "!!!" in output_text or "self." in output_text) else 0

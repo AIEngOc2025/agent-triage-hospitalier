@@ -11,11 +11,11 @@ project_root = Path(__file__).resolve().parent # This is already the project roo
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-# --- Importations après configuration du path ---
 from src.api.config import APP_ENTRYPOINT, API_PORT, IS_PRODUCTION
 
 def main():
     """
+
     Lance le serveur d'application ASGI.
     - En développement: Utilise Uvicorn avec rechargement automatique.
     - En production: Utilise Gunicorn pour la robustesse et la performance.
