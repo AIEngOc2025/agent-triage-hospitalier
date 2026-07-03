@@ -7,7 +7,7 @@ from pathlib import Path
 # --- Configuration robuste du chemin d'accès ---
 # Ajoute la racine du projet au PYTHONPATH pour garantir que les imports (ex: `from src.api...`) fonctionnent
 # peu importe d'où le script est lancé.
-project_root = Path(__file__).resolve().parent
+project_root = Path(__file__).resolve().parent # This is already the project root
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
@@ -35,7 +35,8 @@ def main():
             "-w", workers,
             "-k", "uvicorn.workers.UvicornWorker",
             "--preload",
-            "-b", f"0.0.0.0:{port}", APP_ENTRYPOINT
+            "-b", f"0.0.0.0:{port}", # Bind to all network interfaces
+            APP_ENTRYPOINT # Application entry point (e.g., "src.api.orchestrateur:app")
         ]
         print(f"🚀 Lancement du serveur de PRODUCTION avec la commande : {' '.join(command)}")
         subprocess.run(command)

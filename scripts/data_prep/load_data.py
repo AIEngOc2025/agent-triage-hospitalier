@@ -1,5 +1,6 @@
 import json
 
+import os
 import pandas as pd
 from anonymize import MedicalAnonymizer
 
@@ -43,14 +44,17 @@ class LocalDataProcessor:
         print(f"✅ Terminé ! {len(self.final_data)} exemples prêts dans {output_path}")
 
 # --- CONFIGURATION ---
+import argparse
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process local data for SFT training.")
+    parser.add_argument("--csv_path", type=str, help="Path to the input CSV file (e.g., data/raw/mes_donnees.csv).")
+    parser.add_argument("--csv_col_question", type=str, default="question", help="Column name for questions in CSV.")
+    parser.add_argument("--csv_col_reponse", type=str, default="reponse", help="Column name for responses in CSV.")
+    parser.add_argument("--output_file", type=str, default="data/processed/train_sft.jsonl",
+                        help="Path to save the processed JSONL file.")
+    args = parser.parse_args()
+
     processor = LocalDataProcessor()
-
-    # EXEMPLE : Si tu as un fichier CSV nommé 'mes_donnees.csv' dans data/raw
-    # remplace 'question' et 'reponse' par les vrais noms de tes colonnes
-    # path_csv = "data/raw/mes_donnees.csv"
-    # if os.path.exists(path_csv):
-    #    processor.process_csv(path_csv, col_question="question", col_reponse="reponse")
-
-    # Sauvegarde finale
-    processor.save("data/processed/train_sft.jsonl")
+    if args.csv_path and os.path.exists(args.csv_path):
+        processor.process_csv(args.csv_path, col_question=args.csv_col_question, col_reponse=args.csv_col_reponse)
+    processor.save(args.output_file)

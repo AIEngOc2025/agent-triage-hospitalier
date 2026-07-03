@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import torch
 from peft import PeftModel
+from langdetect import detect, LangDetectException
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -38,8 +39,11 @@ def calculate_matrix():
 
         # --- LOGIQUE DE LA MATRICE ---
         # 1. Vérification de la langue
-        lang_ok = 1 if (lang == 'fr' and any(w in output_text for w in ['le', 'la', 'est'])) or \
-                       (lang == 'en' and any(w in output_text for w in ['the', 'is', 'with'])) else 0
+        try:
+            detected_lang = detect(output_text)
+            lang_ok = 1 if detected_lang == lang else 0
+        except LangDetectException:
+            lang_ok = 0 # Mark as incorrect if detection fails (e.g., text too short)
 
         # 2. Vérification de l'urgence (Priorité)
         # On cherche si les mots clés d'urgence (maximale/modérée) correspondent

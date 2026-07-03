@@ -1,18 +1,25 @@
 # --- 1. INSTALLATION ---
 !pip install -q -U transformers datasets peft trl accelerate bitsandbytes
 
+import argparse
 import torch
 from datasets import load_dataset
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, BitsAndBytesConfig
 from peft import LoraConfig, PeftModel
 from trl import DPOTrainer
 
+parser = argparse.ArgumentParser(description="DPO Training Script")
+parser.add_argument("--model_id", type=str, default="Qwen/Qwen2.5-0.5B", help="Base model ID from Hugging Face.")
+parser.add_argument("--sft_adapters_path", type=str, default="/kaggle/working/chsa_model_final", help="Path to the SFT adapters.")
+parser.add_argument("--dpo_dataset_path", type=str, default="/kaggle/input/ton-dataset-dpo/Mpaga_Christophe_1_Dataset_Train_DPO_052026.jsonl", help="Path to the DPO training data.")
+parser.add_argument("--output_dir", type=str, default="./qwen-chsa-dpo-final", help="Directory to save the DPO model.")
+args, _ = parser.parse_known_args() # Use parse_known_args in notebooks to avoid conflicts
+
 # --- 2. CONFIGURATION ---
-MODEL_ID = "Qwen/Qwen2.5-0.5B"
-# Remplace par le chemin réel vers tes poids SFT (4 époques)
-SFT_ADAPTERS = "/kaggle/working/chsa_model_final" 
-DPO_DATA = "/kaggle/input/ton-dataset-dpo/Mpaga_Christophe_1_Dataset_Train_DPO_052026.jsonl"
-OUTPUT_DIR = "./qwen-chsa-dpo-final"
+MODEL_ID = args.model_id
+SFT_ADAPTERS = args.sft_adapters_path
+DPO_DATA = args.dpo_dataset_path
+OUTPUT_DIR = args.output_dir
 
 # --- 3. CHARGEMENT DU MODÈLE SFT ---
 bnb_config = BitsAndBytesConfig(
