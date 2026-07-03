@@ -1,4 +1,3 @@
-
 import torch
 from datasets import load_dataset
 from peft import LoraConfig
@@ -26,9 +25,9 @@ tokenizer.padding_side = "right"
 # On charge le modèle brut (SANS get_peft_model ici)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_ID,
-    dtype=torch.float32, # Crucial pour la stabilité sur puce M1
+    dtype=torch.float32,  # Crucial pour la stabilité sur puce M1
     device_map={"": device},
-    trust_remote_code=True
+    trust_remote_code=True,
 )
 
 # --- 5. CONFIGURATION LORA (Semaine 2) ---
@@ -38,36 +37,38 @@ peft_config = LoraConfig(
     target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],
     lora_dropout=0.05,
     bias="none",
-    task_type="CAUSAL_LM"
+    task_type="CAUSAL_LM",
 )
+
 
 # --- 6. FORMATAGE CHATML (Infaillible pour Qwen) ---
 def formatting_prompts_func(example):
     # Formatage propre respectant la structure apprise par Qwen
     return f"<|im_start|>system\nTu es l'infirmier d'accueil du CHSA.<|im_end|>\n<|im_start|>user\n{example['instruction']}<|im_end|>\n<|im_start|>assistant\n{example['response']}<|im_end|>"
 
+
 # --- 7. ARGUMENTS D'ENTRAÎNEMENT ---
 training_args = TrainingArguments(
     output_dir=OUTPUT_DIR,
     per_device_train_batch_size=1,
     gradient_accumulation_steps=8,
-    learning_rate=1e-2,            # LR légèrement baissé pour éviter les instabilités
+    learning_rate=1e-2,  # LR légèrement baissé pour éviter les instabilités
     num_train_epochs=3,
     logging_steps=5,
     logging_dir="./logs",
     save_strategy="epoch",
     # --- SPÉCIFIQUE MAC M1 ---
-    fp16=False,                    # On désactive fp16 (incompatible MPS GradScaler)
-    bf16=False,                    # On désactive bf16 (non supporté sur M1)
-    max_grad_norm=0.3,             # Empêche l'explosion des gradients (évite les "!!!!")
-    report_to="tensorboard"
+    fp16=False,  # On désactive fp16 (incompatible MPS GradScaler)
+    bf16=False,  # On désactive bf16 (non supporté sur M1)
+    max_grad_norm=0.3,  # Empêche l'explosion des gradients (évite les "!!!!")
+    report_to="tensorboard",
 )
 
 # --- 8. TRAINER (C'est lui qui applique LoRA maintenant) ---
 trainer = SFTTrainer(
     model=model,
     train_dataset=dataset,
-    peft_config=peft_config,       # Le Trainer applique LoRA automatiquement
+    peft_config=peft_config,  # Le Trainer applique LoRA automatiquement
     formatting_func=formatting_prompts_func,
     args=training_args,
 )

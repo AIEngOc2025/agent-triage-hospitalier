@@ -5,8 +5,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from trl import DPOTrainer
 
 MODEL_ID = "Qwen/Qwen2.5-1.5B"
-SFT_ADAPTERS = "./models/qwen3-medical-sft" # Là où tu as tes fichiers .safetensors
+SFT_ADAPTERS = "./models/qwen3-medical-sft"  # Là où tu as tes fichiers .safetensors
 DPO_DATA = "data/processed/Mpaga_Christophe_1_Dataset_DPO_Final_052026.jsonl"
+
 
 def train_dpo():
     # 1. Charger le modèle SFT (Base + Tes adaptateurs)
@@ -20,24 +21,26 @@ def train_dpo():
     model = PeftModel.from_pretrained(base_model, SFT_ADAPTERS, is_trainable=True)
 
     # 2. Dataset DPO
-    dataset = load_dataset("json", data_files=DPO_DATA, split="train[:100]") # Test sur 100
+    dataset = load_dataset(
+        "json", data_files=DPO_DATA, split="train[:100]"
+    )  # Test sur 100
 
     # 3. Config DPO (Phase 3 de la mission)
     training_args = TrainingArguments(
         output_dir="./models/qwen3-medical-dpo",
         per_device_train_batch_size=1,
-        max_steps=10, # Test local
-        learning_rate=5e-7, # LR très bas pour le DPO
+        max_steps=10,  # Test local
+        learning_rate=5e-7,  # LR très bas pour le DPO
         logging_steps=1,
         save_strategy="no",
         remove_unused_columns=False,
-        report_to="none"
+        report_to="none",
     )
 
     dpo_trainer = DPOTrainer(
         model,
         args=training_args,
-        beta=0.1, # Force de l'alignement
+        beta=0.1,  # Force de l'alignement
         train_dataset=dataset,
         tokenizer=tokenizer,
         max_prompt_length=256,
@@ -47,6 +50,7 @@ def train_dpo():
     print("⚡ Lancement de l'alignement DPO (Semaine 3)...")
     dpo_trainer.train()
     print("✅ POC DPO terminé !")
+
 
 if __name__ == "__main__":
     train_dpo()

@@ -6,6 +6,7 @@ from collections import Counter
 FILE_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
 REPORT_PATH = "reports/metrics/dataset_stats_summary.json"
 
+
 def generate_stats():
     if not os.path.exists(FILE_PATH):
         print(f"❌ Erreur : Fichier {FILE_PATH} introuvable.")
@@ -20,20 +21,20 @@ def generate_stats():
 
     print(f"📊 Analyse du dataset : {FILE_PATH}...")
 
-    with open(FILE_PATH, 'r', encoding='utf-8') as f:
+    with open(FILE_PATH, "r", encoding="utf-8") as f:
         for line in f:
             try:
                 data = json.loads(line)
                 total_rows += 1
 
                 # 1. Taille du jeu de données (Statistiques de longueur)
-                instr = data.get('instruction', '')
-                resp = data.get('response', '')
+                instr = data.get("instruction", "")
+                resp = data.get("response", "")
                 char_counts_instr.append(len(instr))
                 char_counts_resp.append(len(resp))
 
                 # 2. Bilinguisme (Via les métadonnées créées précédemment)
-                lang = data.get('clinical_metadata', {}).get('language', 'inconnu')
+                lang = data.get("clinical_metadata", {}).get("language", "inconnu")
                 lang_counter[lang] += 1
 
                 # 3. Anonymisation (Détection des tags RGPD)
@@ -51,9 +52,9 @@ def generate_stats():
     avg_len_resp = sum(char_counts_resp) / total_rows if total_rows > 0 else 0
 
     # Affichage du rapport (Format PDF/Jury)
-    print("\n" + "═"*60)
+    print("\n" + "═" * 60)
     print("      RAPPORT DE STATISTIQUES DESCRIPTIVES - PROJET CHSA")
-    print("═"*60)
+    print("═" * 60)
 
     print("\n📈 VOLUMÉTRIE GÉNÉRALE")
     print(f"   - Nombre total de paires SFT : {total_rows:,}")
@@ -72,7 +73,7 @@ def generate_stats():
     for tag, count in anonymization_stats.items():
         print(f"     {tag:<12} : {count:>5} remplacements")
 
-    print("\n" + "═"*60)
+    print("\n" + "═" * 60)
 
     # Sauvegarde du rapport en JSON pour l'intégrer au rapport technique
     os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
@@ -83,14 +84,15 @@ def generate_stats():
         "anonymization_metrics": dict(anonymization_stats),
         "average_lengths": {
             "instruction": round(avg_len_instr, 2),
-            "response": round(avg_len_resp, 2)
-        }
+            "response": round(avg_len_resp, 2),
+        },
     }
 
-    with open(REPORT_PATH, 'w', encoding='utf-8') as f:
+    with open(REPORT_PATH, "w", encoding="utf-8") as f:
         json.dump(report_data, f, indent=4, ensure_ascii=False)
 
     print(f"✅ Rapport sauvegardé dans : {REPORT_PATH}")
+
 
 if __name__ == "__main__":
     generate_stats()

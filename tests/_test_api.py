@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 # L'import est maintenant absolu depuis la racine du projet (src)
 from src.api.orchestrateur import app
 
+
 def test_triage_endpoint_success():
     """
     Tests a successful call to the /triage endpoint with valid data.
@@ -10,7 +11,9 @@ def test_triage_endpoint_success():
     with TestClient(app) as client:
         response = client.post(
             "/triage",
-            json={"symptomes": "Le patient a une forte fièvre et des difficultés à respirer."}
+            json={
+                "symptomes": "Le patient a une forte fièvre et des difficultés à respirer."
+            },
         )
         assert response.status_code == 200
         data = response.json()
@@ -20,6 +23,7 @@ def test_triage_endpoint_success():
         assert isinstance(data["latency_sec"], float)
         assert len(data["decision"]) > 0
 
+
 def test_triage_endpoint_invalid_input():
     """
     Tests a call to the /triage endpoint with invalid or missing data.
@@ -27,8 +31,5 @@ def test_triage_endpoint_invalid_input():
     """
     with TestClient(app) as client:
         # Envoi d'une requête avec un champ incorrect ("symptom" au lieu de "symptomes")
-        response = client.post(
-            "/triage",
-            json={"symptom": "Données invalides"}
-        )
+        response = client.post("/triage", json={"symptom": "Données invalides"})
         assert response.status_code == 422

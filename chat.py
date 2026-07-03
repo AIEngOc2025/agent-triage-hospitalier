@@ -1,6 +1,8 @@
 from vllm import LLM
 
-llm = LLM(model="models/merged_dpo_final_chsa",)
+llm = LLM(
+    model="models/merged_dpo_final_chsa",
+)
 conversation = [
     {
         "role": "system",

@@ -13,6 +13,7 @@ DPO_ADAPTERS = "models/dpo_final_chsa"
 # On utilise le fichier TEST DPO que nous avons créé sur Mac
 TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_DPO_052026.jsonl"
 
+
 def evaluate_dpo_safe():
     print("🧹 Nettoyage de la mémoire...")
     gc.collect()
@@ -26,9 +27,7 @@ def evaluate_dpo_safe():
     # 2. Chargement du modèle de base (FP16 pour Mac M1)
     print("📥 Chargement du modèle de base...")
     base_model = AutoModelForCausalLM.from_pretrained(
-        MODEL_ID,
-        dtype=torch.float16,
-        device_map={"": "mps"}
+        MODEL_ID, dtype=torch.float16, device_map={"": "mps"}
     )
 
     # 3. Chargement des adaptateurs DPO
@@ -41,7 +40,7 @@ def evaluate_dpo_safe():
         print(f"❌ Erreur : Le fichier {TEST_FILE} est introuvable.")
         return
 
-    with open(TEST_FILE, 'r', encoding='utf-8') as f:
+    with open(TEST_FILE, "r", encoding="utf-8") as f:
         dataset = [json.loads(line) for line in f]
 
     total_loss = 0
@@ -54,8 +53,8 @@ def evaluate_dpo_safe():
             try:
                 # --- CORRECTION DES CLÉS ICI ---
                 # Dans le DPO, on utilise 'prompt' et 'chosen' (la réponse de référence)
-                prompt_text = item['prompt']
-                chosen_answer = item['chosen']
+                prompt_text = item["prompt"]
+                chosen_answer = item["chosen"]
 
                 # On construit le texte complet tel que le modèle doit le voir
                 # Note : 'prompt' contient déjà les balises <|im_start|> d'après nos scripts précédents
@@ -79,10 +78,10 @@ def evaluate_dpo_safe():
 
     if count > 0:
         avg_loss = total_loss / count
-        print("\n" + "="*40)
+        print("\n" + "=" * 40)
         print("📊 RÉSULTAT TEST DPO (Mpaga_Christophe)")
         print(f"Validation Loss : {avg_loss:.4f}")
-        print("="*40)
+        print("=" * 40)
 
         # Sauvegarde du résultat pour le rapport technique
         os.makedirs("reports/metrics", exist_ok=True)
@@ -90,6 +89,7 @@ def evaluate_dpo_safe():
             json.dump({"test_loss": avg_loss, "samples": count}, f)
     else:
         print("❌ Aucune donnée n'a pu être évaluée.")
+
 
 if __name__ == "__main__":
     evaluate_dpo_safe()

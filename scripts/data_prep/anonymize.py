@@ -15,21 +15,24 @@ class MedicalAnonymizer:
 
         # 1. Analyse du texte (recherche de noms, téléphones, lieux)
         # Note: 'fr' doit être installé via spacy
-        results = self.analyzer.analyze(text=text, entities=["PERSON", "LOCATION", "PHONE_NUMBER"], language='fr')
+        results = self.analyzer.analyze(
+            text=text, entities=["PERSON", "LOCATION", "PHONE_NUMBER"], language="fr"
+        )
 
         # 2. Application de l'anonymisation (remplacement par <NOM>, etc.)
         operators = {
             "PERSON": OperatorConfig("replace", {"new_value": "<PATIENT>"}),
             "LOCATION": OperatorConfig("replace", {"new_value": "<ADRESSE>"}),
-            "PHONE_NUMBER": OperatorConfig("mask", {"masking_char": "*", "chars_to_mask": 10, "from_end": True}),
+            "PHONE_NUMBER": OperatorConfig(
+                "mask", {"masking_char": "*", "chars_to_mask": 10, "from_end": True}
+            ),
         }
 
         anonymized = self.anonymizer.anonymize(
-            text=text,
-            analyzer_results=results,
-            operators=operators
+            text=text, analyzer_results=results, operators=operators
         )
         return anonymized.text
+
 
 # --- Test rapide ---
 if __name__ == "__main__":

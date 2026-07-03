@@ -6,6 +6,7 @@ import random
 INPUT_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_Final_5k.jsonl"
 OUTPUT_DIR = "data/processed/"
 
+
 def split_dataset():
     if not os.path.exists(INPUT_PATH):
         print(f"❌ Erreur : Fichier {INPUT_PATH} introuvable.")
@@ -15,10 +16,10 @@ def split_dataset():
     fr_data = []
     en_data = []
 
-    with open(INPUT_PATH, 'r', encoding='utf-8') as f:
+    with open(INPUT_PATH, "r", encoding="utf-8") as f:
         for line in f:
             item = json.loads(line)
-            if item['clinical_metadata']['language'] == 'fr':
+            if item["clinical_metadata"]["language"] == "fr":
                 fr_data.append(item)
             else:
                 en_data.append(item)
@@ -37,26 +38,29 @@ def split_dataset():
     splits = {
         "Train": train_fr + train_en,
         "Val": val_fr + val_en,
-        "Test": test_fr + test_en
+        "Test": test_fr + test_en,
     }
 
     # 5. Sauvegarde des 3 fichiers
     print("\n📦 --- COMPARTIMENTAGE DU DATASET ---")
     for name, data in splits.items():
-        random.shuffle(data) # Mélange final
+        random.shuffle(data)  # Mélange final
         file_name = f"Mpaga_Christophe_1_Dataset_{name}_SFT_052026.jsonl"
         path = os.path.join(OUTPUT_DIR, file_name)
 
-        with open(path, 'w', encoding='utf-8') as f:
+        with open(path, "w", encoding="utf-8") as f:
             for entry in data:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
         # Calcul du bilinguisme par split pour vérification
-        fr_count = sum(1 for x in data if x['clinical_metadata']['language'] == 'fr')
-        en_count = sum(1 for x in data if x['clinical_metadata']['language'] == 'en')
+        fr_count = sum(1 for x in data if x["clinical_metadata"]["language"] == "fr")
+        en_count = sum(1 for x in data if x["clinical_metadata"]["language"] == "en")
 
-        print(f"✅ {name:<5} : {len(data):>4} exemples (FR: {fr_count} | EN: {en_count})")
+        print(
+            f"✅ {name:<5} : {len(data):>4} exemples (FR: {fr_count} | EN: {en_count})"
+        )
         print(f"      📍 {path}")
+
 
 if __name__ == "__main__":
     split_dataset()

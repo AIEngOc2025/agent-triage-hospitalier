@@ -1,16 +1,16 @@
 import json
-import os
-import pytest
 
 SFT_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
 DPO_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_DPO_052026.jsonl"
 
+
 def load_jsonl(path):
     data = []
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, "r", encoding="utf-8") as f:
         for line in f:
             data.append(json.loads(line))
     return data
+
 
 # --- TESTS VOLUME ---
 def test_sft_volume():
@@ -18,17 +18,19 @@ def test_sft_volume():
     data = load_jsonl(SFT_PATH)
     assert len(data) >= 4000  # Train (4000) + Val(500) + Test(500) = 5000 total
 
+
 # --- TESTS BILINGUISME ---
 def test_bilingual_parity():
     """Vérifie l'équilibre 50/50"""
     data = load_jsonl(SFT_PATH)
-    fr_count = sum(1 for x in data if x['clinical_metadata']['language'] == 'fr')
-    en_count = sum(1 for x in data if x['clinical_metadata']['language'] == 'en')
-    
+    fr_count = sum(1 for x in data if x["clinical_metadata"]["language"] == "fr")
+    en_count = sum(1 for x in data if x["clinical_metadata"]["language"] == "en")
+
     # On autorise une marge d'erreur de 5%
     total = len(data)
     assert abs(fr_count - en_count) < (total * 0.05)
     print(f"\nRatio FR/EN : {fr_count}/{en_count}")
+
 
 # --- TESTS ANONYMISATION ---
 def test_anonymization_presence():
@@ -36,6 +38,7 @@ def test_anonymization_presence():
     data = load_jsonl(SFT_PATH)
     anonymized = any("<PATIENT>" in str(x) for x in data)
     assert anonymized is True
+
 
 # --- TESTS STRUCTURE DPO ---
 def test_dpo_structure():

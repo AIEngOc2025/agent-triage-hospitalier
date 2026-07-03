@@ -8,7 +8,7 @@ from transformers import TrainingArguments
 from trl import SFTTrainer
 
 # 1. CONFIGURATION
-MODEL_NAME = "Qwen/Qwen2.5-0.5B" # Modèle utilisé dans le reste du projet
+MODEL_NAME = "Qwen/Qwen2.5-0.5B"  # Modèle utilisé dans le reste du projet
 DATA_PATH = "data/processed/train_sft.jsonl"
 OUTPUT_DIR = "models/sft_model"
 
@@ -34,17 +34,17 @@ model = AutoModelForCausalLM.from_pretrained(
     MODEL_NAME,
     torch_dtype=torch.float16 if device != "cpu" else torch.float32,
     device_map={"": device} if device != "cpu" else None,
-    trust_remote_code=True
+    trust_remote_code=True,
 )
 
 # 4. CONFIGURATION LORA
 lora_config = LoraConfig(
     r=16,
     lora_alpha=32,
-    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"], # Cibles pour Qwen
+    target_modules=["q_proj", "v_proj", "k_proj", "o_proj"],  # Cibles pour Qwen
     lora_dropout=0.05,
     bias="none",
-    task_type="CAUSAL_LM"
+    task_type="CAUSAL_LM",
 )
 model = get_peft_model(model, lora_config)
 
@@ -54,13 +54,13 @@ training_args = TrainingArguments(
     per_device_train_batch_size=2,
     gradient_accumulation_steps=4,
     learning_rate=2e-4,
-    max_steps=10, # On fait 10 étapes pour tester sur Mac
+    max_steps=10,  # On fait 10 étapes pour tester sur Mac
     logging_steps=1,
     save_strategy="no",
-    bf16=False, # MPS ne supporte pas toujours bien le bf16
+    bf16=False,  # MPS ne supporte pas toujours bien le bf16
     fp16=True if device == "cuda" else False,
     push_to_hub=False,
-    report_to="none"
+    report_to="none",
 )
 
 # 6. LANCEMENT DU TRAINER
@@ -69,7 +69,7 @@ trainer = SFTTrainer(
     train_dataset=dataset,
     args=training_args,
     tokenizer=tokenizer,
-    dataset_text_field="instruction", # Champ source
+    dataset_text_field="instruction",  # Champ source
     max_seq_length=512,
 )
 

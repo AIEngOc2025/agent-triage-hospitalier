@@ -23,4 +23,5 @@ models/**/*.pt filter=lfs diff=lfs merge=lfs -text
 /src/api/Dockerfile filter=lfs diff=lfs merge=lfs -text
 /test/Dokerfile_app filter=lfs diff=lfs merge=lfs -text
 *.dockerignore filter=lfs diff=lfs merge=lfs -text
+/app/Dockerfile filter=lfs diff=lfs merge=lfs -text
 *.py !text !filter !merge !diff

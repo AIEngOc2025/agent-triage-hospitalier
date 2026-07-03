@@ -13,7 +13,7 @@ if os.path.exists(config_path):
     if "rope_theta" not in config:
         print("🔧 Ajout du paramètre 'rope_theta' manquant...")
         config["rope_theta"] = 1000000.0
-        
+
         # Par sécurité, vérifions aussi d'autres paramètres souvent requis par MLX
         if "sliding_window" not in config:
             config["sliding_window"] = None
@@ -22,6 +22,8 @@ if os.path.exists(config_path):
             json.dump(config, f, indent=2)
         print("✅ Fichier config.json mis à jour avec succès.")
     else:
-        print("ℹ️ 'rope_theta' est déjà présent. Le problème vient peut-être d'une version de mlx-lm trop récente.")
+        print(
+            "ℹ️ 'rope_theta' est déjà présent. Le problème vient peut-être d'une version de mlx-lm trop récente."
+        )
 else:
     print(f"❌ Erreur : Fichier introuvable à l'adresse {config_path}")
