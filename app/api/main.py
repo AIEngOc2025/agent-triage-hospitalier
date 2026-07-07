@@ -43,6 +43,7 @@ def clean_llm_response(text: str) -> str:
     return clean_text.strip()
 
 
+
 def patch_model_config_if_needed():
     """
     Vérifie et corrige le fichier config.json du modèle local pour assurer la
