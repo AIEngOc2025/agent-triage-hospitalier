@@ -63,6 +63,7 @@ def patch_model_config_if_needed():
             json.dump(config, f, indent=2)
         print("✅ [Patch] Fichier config.json mis à jour.")
 
+
 def patch_tokenizer_config_if_needed():
     """
     Vérifie et corrige le fichier tokenizer_config.json pour forcer l'utilisation
@@ -70,7 +71,9 @@ def patch_tokenizer_config_if_needed():
     """
     config_path = Path(MODEL_PATH) / "tokenizer_config.json"
     if not config_path.is_file():
-        print(f"⚠️  Avertissement : Fichier tokenizer_config.json non trouvé à {config_path}")
+        print(
+            f"⚠️  Avertissement : Fichier tokenizer_config.json non trouvé à {config_path}"
+        )
         return
 
     with open(config_path, "r") as f:
@@ -82,10 +85,13 @@ def patch_tokenizer_config_if_needed():
         config["tokenizer_class"] = "Qwen2TokenizerFast"
         # Assure la présence du fichier tokenizer.json, essentiel pour le tokenizer rapide.
         if not (Path(MODEL_PATH) / "tokenizer.json").is_file():
-            print("❌ [CRITICAL] tokenizer.json est manquant ! Le tokenizer rapide ne fonctionnera pas.")
+            print(
+                "❌ [CRITICAL] tokenizer.json est manquant ! Le tokenizer rapide ne fonctionnera pas."
+            )
         with open(config_path, "w") as f:
             json.dump(config, f, indent=2)
         print("✅ [Patch] Fichier tokenizer_config.json mis à jour.")
+
 
 # --- 2. LOGIQUE GÉNÉRATIVE (API LLM.CHAT) ---
 async def run_triage_inference(messages: List[dict]) -> str:
