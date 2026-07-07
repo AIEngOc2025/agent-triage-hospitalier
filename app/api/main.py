@@ -1,22 +1,23 @@
-import os
 import asyncio
+import json
+import re
+import os
 import sys
 import time
 import uuid
-import json
-import re
-import gradio as gr
-import aiofiles
-from pathlib import Path
-from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
-from pydantic import BaseModel
+from pathlib import Path
 from typing import List
+
+import aiofiles
+import gradio as gr
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
 
 # --- 1. CONFIGURATION (Imports simplifiés) ---
-from api.config import (
-    IS_PRODUCTION,
+from .config import (
+    IS_MACOS,
     MODEL_PATH,
     LOG_FILE,
     VLLM_MAX_MODEL_LEN,
@@ -29,9 +30,6 @@ except ImportError:
     # Permet au code de s'exécuter même si vllm n'est pas installé,
     # par exemple pour des tests unitaires ou du linting.
     LLM, SamplingParams = None, None
-
-# Détection de l'environnement pour l'accélération matérielle
-IS_MACOS = sys.platform == "darwin"
 
 # Variables globales pour le moteur
 llm = None
