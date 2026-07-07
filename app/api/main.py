@@ -2,7 +2,6 @@ import asyncio
 import json
 import os
 import re
-import sys
 import time
 import uuid
 from contextlib import asynccontextmanager
@@ -16,6 +15,7 @@ from pydantic import BaseModel
 
 # --- 1. CONFIGURATION (Imports simplifiés) ---
 from .config import (
+    IS_PRODUCTION,
     IS_MACOS,
     MODEL_PATH,
     LOG_FILE,
