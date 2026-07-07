@@ -9,10 +9,9 @@ import gradio as gr
 import aiofiles
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
 from pydantic import BaseModel
 from typing import List
-from contextlib import asynccontextmanager
-
 
 
 # --- 1. CONFIGURATION (Imports simplifiés) ---
