@@ -114,14 +114,20 @@ class ModelEngine:
             return "❌ Erreur : Moteur non initialisé."
 
         if self.engine_type == "vLLM":
+            # On unifie la logique : on applique le template manuellement comme pour MLX
+            # pour garantir un comportement identique entre dev et prod.
+            prompt = self.model.get_tokenizer().apply_chat_template(messages,
+                tokenize=False,
+                add_generation_prompt=True)
             outputs = await asyncio.to_thread(
-                self.model.chat, messages, self.sampling_params, use_tqdm=False
+                self.model.generate, prompt, self.sampling_params, use_tqdm=False
             )
             raw_text = outputs[0].outputs[0].text
         elif self.engine_type == "MLX":
             prompt = self.tokenizer.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True
             )
+            # La génération MLX reste inchangée
             raw_text = await asyncio.to_thread(
                 generate,
                 self.model,
@@ -192,6 +198,6 @@ async def api_chat(request: ChatRequest):
             "latency_sec": round(time.time() - start_time, 3),
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
         }
-        return {"assistant": response, "audit_ref": log_entry["audit_id"]}
+        return {"response": response, "audit_ref": log_entry["audit_id"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
