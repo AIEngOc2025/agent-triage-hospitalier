@@ -1,20 +1,14 @@
 import asyncio
-import json
 import os
 import re
 import sys
 import time
 import uuid
 from contextlib import asynccontextmanager
-from pathlib import Path
 from typing import List
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-
-# Add the project root to sys.path to ensure 'config' can be imported
-project_root = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(project_root))
 
 # --- 1. CONFIGURATION ---
 from .config import (
@@ -28,11 +22,10 @@ from .config import (
 
 # --- PATCH: Robust fix for transformers/mlx-lm compatibility bug ---
 try:
-    import transformers
     from transformers.models.auto import TOKENIZER_MAPPING
-    
+
     original_register = TOKENIZER_MAPPING.register
-    
+
     def patched_register(*args, **kwargs):
         try:
             return original_register(*args, **kwargs)
@@ -40,7 +33,7 @@ try:
             if "'str' object has no attribute '__module__'" in str(e):
                 return None
             raise e
-    
+
     TOKENIZER_MAPPING.register = patched_register
     print("✅ [Patch] Transformers Tokenizer mapping patched with try-except for MLX.")
 except Exception as e:
@@ -59,11 +52,13 @@ except ImportError:
 
 # --- 2. ENGINE ABSTRACTION ---
 
+
 class ModelEngine:
     """
     Abstraction layer for LLM inference.
     Uses vLLM in production (GPU) and MLX for local development (Apple Silicon).
     """
+
     def __init__(self):
         self.engine_type = None
         self.model = None
@@ -91,7 +86,7 @@ class ModelEngine:
             max_model_len=VLLM_MAX_MODEL_LEN,
             trust_remote_code=True,
             tensor_parallel_size=VLLM_TENSOR_PARALLEL_SIZE,
-            gpu_memory_utilization=0.80
+            gpu_memory_utilization=0.80,
         )
         self.sampling_params = SamplingParams(
             temperature=0.2,
@@ -128,7 +123,12 @@ class ModelEngine:
                 messages, tokenize=False, add_generation_prompt=True
             )
             raw_text = await asyncio.to_thread(
-                generate, self.model, self.tokenizer, prompt=prompt, max_tokens=512, temp=0.2
+                generate,
+                self.model,
+                self.tokenizer,
+                prompt=prompt,
+                max_tokens=512,
+                temp=0.2,
             )
         else:
             return "❌ Erreur : Moteur non supporté."
@@ -140,8 +140,10 @@ class ModelEngine:
         clean_text = re.sub(r"<[^>]+>", "", clean_text)
         return clean_text.strip()
 
+
 # Global engine instance
 engine = ModelEngine()
+
 
 # --- 3. LIFESPAN ---
 @asynccontextmanager
@@ -151,16 +153,20 @@ async def lifespan(app: FastAPI):
     yield
     print("🛑 Arrêt de l'orchestrateur.")
 
+
 # --- 4. API FASTAPI ---
 app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
+
 
 @app.get("/health", status_code=200, tags=["Monitoring"])
 async def health_check():
     return {"status": "ok", "engine": engine.engine_type}
 
+
 class ChatRequest(BaseModel):
     patient_id: str = "PAT-001"
     history: List[dict]
+
 
 @app.post("/chat")
 async def api_chat(request: ChatRequest):

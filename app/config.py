@@ -2,11 +2,11 @@ import os
 import platform
 
 # --- Environnement ---
-# Mettre à True lors du déploiement sur FastAPI Cloud / GPU
+# Set to True for FastAPI Cloud / GPU deployment
 IS_PRODUCTION = os.getenv("IS_PRODUCTION", "False").lower() == "true"
 IS_MACOS = platform.system() == "Darwin"
 
-# --- Chemins ---
+# --- Paths ---
 # Chemin absolu vers le modèle fusionné
 MODEL_PATH = "/Users/mpaga/OC/agent-triage-hospitalier/models/merged_dpo_final_chsa"
 LOG_FILE = "logs/triage.log"
