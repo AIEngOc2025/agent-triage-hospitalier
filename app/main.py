@@ -116,9 +116,9 @@ class ModelEngine:
         if self.engine_type == "vLLM":
             # On unifie la logique : on applique le template manuellement comme pour MLX
             # pour garantir un comportement identique entre dev et prod.
-            prompt = self.model.get_tokenizer().apply_chat_template(messages,
-                tokenize=False,
-                add_generation_prompt=True)
+            prompt = self.model.get_tokenizer().apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True
+            )
             outputs = await asyncio.to_thread(
                 self.model.generate, prompt, self.sampling_params, use_tqdm=False
             )
