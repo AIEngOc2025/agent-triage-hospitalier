@@ -20,7 +20,7 @@ def audit_rgpd():
     print("\n" + "🛡️ " * 5 + " AUDIT DE CONFORMITÉ RGPD " + " 🛡️" * 5)
     print(f"Nombre total de lignes analysées : {total_lines}")
     print(
-        f"Lignes contenant des données masquées : {anonymized_lines} ({ (anonymized_lines/total_lines)*100:.2f}%)"
+        f"Lignes contenant des données masquées : {anonymized_lines} ({(anonymized_lines / total_lines) * 100:.2f}%)"
     )
     print("-" * 40)
     print(f"👤 Noms de patients anonymisés : {stats['patients_masqués']}")
