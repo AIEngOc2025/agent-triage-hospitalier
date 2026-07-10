@@ -3,12 +3,8 @@ from fastapi.testclient import TestClient
 import pytest
 
 # Détermine quel 'app' importer en fonction de l'environnement
-# Les imports sont maintenant absolus depuis la racine du projet (src)
-IS_ORCHESTRATOR = os.getenv("APP_MODE") == "orchestrator"
-if IS_ORCHESTRATOR:
-    from src.api.orchestrateur import app
-else:
-    from src.api.local.main import app
+# Les imports sont maintenant alignés avec la structure du projet (app/)
+from app.main import app
 
 
 @pytest.fixture
