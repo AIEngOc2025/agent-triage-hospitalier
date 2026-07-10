@@ -13,13 +13,12 @@ def test_code_linting():
 
 
 def test_code_formatting():
-    """Vérifie que le code est correctement formaté via Black"""
+    """Vérifie que le code est correctement formaté via Ruff"""
     result = subprocess.run(
-        ["uv", "run", "python", "-m", "black", "--check", "."],
+        ["uv", "run", "ruff", "format", "--check", "."],
         capture_output=True,
         text=True,
-        env={**os.environ, "PYTHONPATH": os.getcwd()},
     )
     assert result.returncode == 0, (
-        f"Le code n'est pas formaté avec Black. Lancez 'black .'\n{result.stdout}\n{result.stderr}"
+        f"Le code n'est pas formaté avec Ruff. Lancez 'ruff format .'\n{result.stdout}\n{result.stderr}"
     )
