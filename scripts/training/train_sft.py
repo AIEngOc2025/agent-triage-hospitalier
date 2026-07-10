@@ -8,7 +8,7 @@ from transformers import TrainingArguments
 from trl import SFTTrainer
 
 # 1. CONFIGURATION
-MODEL_NAME = "Qwen/Qwen2.5-0.5B"  # Modèle utilisé dans le reste du projet
+MODEL_NAME = "Qwen/Qwen3-1.7B-Base"  # Modèle utilisé dans le reste du projet
 DATA_PATH = "data/processed/train_sft.jsonl"
 OUTPUT_DIR = "models/sft_model"
 

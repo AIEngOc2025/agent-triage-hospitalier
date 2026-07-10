@@ -18,7 +18,9 @@ class Settings(BaseSettings):
     # --- Model & Path Settings ---
     # The model path can now be overridden by an environment variable.
     # It defaults to a path relative to the project root.
-    MODEL_PATH: Path = Path(__file__).resolve().parent.parent / "models/merged_dpo_final_chsa"
+    MODEL_PATH: Path = (
+        Path(__file__).resolve().parent.parent / "models/merged_dpo_final_chsa"
+    )
     LOG_FILE: Path = Path(__file__).resolve().parent.parent / "logs/triage.log"
 
     # --- vLLM Parameters ---

@@ -1,7 +1,5 @@
 import asyncio
-import os
 import re
-import sys
 import time
 import uuid
 from contextlib import asynccontextmanager
@@ -10,15 +8,7 @@ from typing import List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-# --- 1. CONFIGURATION ---
-from .config import (
-    IS_PRODUCTION,
-    IS_MACOS,
-    MODEL_PATH,
-    LOG_FILE,
-    VLLM_MAX_MODEL_LEN,
-    VLLM_TENSOR_PARALLEL_SIZE,
-)
+from .settings import settings
 
 # --- PATCH: Robust fix for transformers/mlx-lm compatibility bug ---
 try:
@@ -66,9 +56,9 @@ class ModelEngine:
         self.sampling_params = None
 
     def initialize(self):
-        if IS_PRODUCTION:
+        if settings.IS_PRODUCTION:
             self._init_vllm()
-        elif IS_MACOS:
+        elif settings.IS_MACOS:
             self._init_mlx()
         else:
             print("❌ Error: No compatible engine found for this environment.")
@@ -78,14 +68,14 @@ class ModelEngine:
             print("❌ [vLLM] Package not installed. Cannot start production engine.")
             return
 
-        print(f"📥 [vLLM] Loading model from: {MODEL_PATH}")
+        print(f"📥 [vLLM] Loading model from: {settings.MODEL_PATH}")
         self.engine_type = "vLLM"
         self.model = LLM(
-            model=MODEL_PATH,
-            tokenizer=MODEL_PATH,
-            max_model_len=VLLM_MAX_MODEL_LEN,
+            model=str(settings.MODEL_PATH),
+            tokenizer=str(settings.MODEL_PATH),
+            max_model_len=settings.VLLM_MAX_MODEL_LEN,
             trust_remote_code=True,
-            tensor_parallel_size=VLLM_TENSOR_PARALLEL_SIZE,
+            tensor_parallel_size=settings.VLLM_TENSOR_PARALLEL_SIZE,
             gpu_memory_utilization=0.80,
         )
         self.sampling_params = SamplingParams(
@@ -101,9 +91,9 @@ class ModelEngine:
             print("❌ [MLX] Package mlx-lm not installed. Local inference unavailable.")
             return
 
-        print(f"📥 [MLX] Loading model from: {MODEL_PATH}")
+        print(f"📥 [MLX] Loading model from: {settings.MODEL_PATH}")
         try:
-            self.model, self.tokenizer = load(MODEL_PATH)
+            self.model, self.tokenizer = load(str(settings.MODEL_PATH))
             self.engine_type = "MLX"
             print("✅ [MLX] Engine operational.")
         except Exception as e:
@@ -154,7 +144,7 @@ engine = ModelEngine()
 # --- 3. LIFESPAN ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+    settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     engine.initialize()
     yield
     print("🛑 Arrêt de l'orchestrateur.")
