@@ -10,25 +10,6 @@ from pydantic import BaseModel
 
 from .settings import settings
 
-# --- PATCH: Robust fix for transformers/mlx-lm compatibility bug ---
-try:
-    from transformers.models.auto import TOKENIZER_MAPPING
-
-    original_register = TOKENIZER_MAPPING.register
-
-    def patched_register(*args, **kwargs):
-        try:
-            return original_register(*args, **kwargs)
-        except AttributeError as e:
-            if "'str' object has no attribute '__module__'" in str(e):
-                return None
-            raise e
-
-    TOKENIZER_MAPPING.register = patched_register
-    print("✅ [Patch] Transformers Tokenizer mapping patched with try-except for MLX.")
-except Exception as e:
-    print(f"⚠️  Patch failed: {e}")
-
 # Optional imports for engines
 try:
     from vllm import LLM, SamplingParams
@@ -36,9 +17,9 @@ except ImportError:
     LLM, SamplingParams = None, None
 
 try:
-    from mlx_lm import load, generate
+    from mlx_lm import load, generate as mlx_generate
 except ImportError:
-    load, generate = None, None
+    load, mlx_generate = None, None
 
 # --- 2. ENGINE ABSTRACTION ---
 
@@ -46,7 +27,7 @@ except ImportError:
 class ModelEngine:
     """
     Abstraction layer for LLM inference.
-    Uses vLLM in production (GPU) and MLX for local development (Apple Silicon).
+    Uses vLLM for production (GitHub/Cloud) and MLX (vLLM-Metal) for local development.
     """
 
     def __init__(self):
@@ -56,29 +37,26 @@ class ModelEngine:
         self.sampling_params = None
 
     def initialize(self):
-        print(
-            f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}, IS_MACOS: {settings.IS_MACOS}"
-        )
-        if settings.IS_PRODUCTION:
-            self._init_vllm()
-        elif settings.IS_MACOS:
-            self._init_mlx()
-        else:
-            # Fallback: If we are on Linux and neither production nor macos is detected,
-            # we attempt vLLM as it's the only other viable engine.
-            import platform
-
-            if platform.system() == "Linux":
-                print(
-                    "⚠️  No explicit environment detected, but running on Linux. Attempting vLLM fallback..."
-                )
+        print(f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}")
+        try:
+            if settings.IS_PRODUCTION:
+                print("🚀 Production mode detected: initializing vLLM...")
                 self._init_vllm()
+            elif settings.IS_MACOS:
+                print("💻 MacOS detected: initializing vLLM-Metal (MLX)...")
+                self._init_mlx()
             else:
                 print("❌ Error: No compatible engine found for this environment.")
+        except Exception as e:
+            if settings.IS_PRODUCTION:
+                print(f"❌ Critical error during production engine initialization: {e}")
+                raise e
+            else:
+                print(f"⚠️  Development initialization warning: {e}")
 
     def _init_vllm(self):
         if LLM is None:
-            print("❌ [vLLM] Package not installed. Cannot start production engine.")
+            print("❌ [vLLM] Package not installed.")
             return
 
         print(f"📥 [vLLM] Loading model from: {settings.MODEL_PATH}")
@@ -101,7 +79,7 @@ class ModelEngine:
 
     def _init_mlx(self):
         if load is None:
-            print("❌ [MLX] Package mlx-lm not installed. Local inference unavailable.")
+            print("❌ [MLX] Package mlx-lm not installed.")
             return
 
         print(f"📥 [MLX] Loading model from: {settings.MODEL_PATH}")
@@ -117,8 +95,6 @@ class ModelEngine:
             return "❌ Erreur : Moteur non initialisé."
 
         if self.engine_type == "vLLM":
-            # On unifie la logique : on applique le template manuellement comme pour MLX
-            # pour garantir un comportement identique entre dev et prod.
             prompt = self.model.get_tokenizer().apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True
             )
@@ -130,9 +106,8 @@ class ModelEngine:
             prompt = self.tokenizer.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True
             )
-            # La génération MLX reste inchangée
             raw_text = await asyncio.to_thread(
-                generate,
+                mlx_generate,
                 self.model,
                 self.tokenizer,
                 prompt=prompt,
@@ -170,6 +145,7 @@ app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
 
 @app.get("/health", status_code=200, tags=["Monitoring"])
 async def health_check():
+    print(f"🩺 Health check called. Engine: {engine.engine_type}")
     return {"status": "ok", "engine": engine.engine_type}
 
 
