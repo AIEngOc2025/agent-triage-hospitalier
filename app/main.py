@@ -37,7 +37,9 @@ class ModelEngine:
         self.sampling_params = None
 
     def initialize(self):
-        print(f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}")
+        print(
+            f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}"
+        )
         try:
             if settings.IS_PRODUCTION:
                 print("🚀 Production mode detected: initializing vLLM...")
