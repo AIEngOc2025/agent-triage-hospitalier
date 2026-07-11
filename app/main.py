@@ -56,15 +56,20 @@ class ModelEngine:
         self.sampling_params = None
 
     def initialize(self):
-        print(
-            f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}, IS_MACOS: {settings.IS_MACOS}"
-        )
+        print(f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}, IS_MACOS: {settings.IS_MACOS}")
         if settings.IS_PRODUCTION:
             self._init_vllm()
         elif settings.IS_MACOS:
             self._init_mlx()
         else:
-            print("❌ Error: No compatible engine found for this environment.")
+            # Fallback: If we are on Linux and neither production nor macos is detected, 
+            # we attempt vLLM as it's the only other viable engine.
+            import platform
+            if platform.system() == "Linux":
+                print("⚠️  No explicit environment detected, but running on Linux. Attempting vLLM fallback...")
+                self._init_vllm()
+            else:
+                print("❌ Error: No compatible engine found for this environment.")
 
     def _init_vllm(self):
         if LLM is None:
