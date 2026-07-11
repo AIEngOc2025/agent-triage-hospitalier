@@ -32,7 +32,10 @@ class Settings(BaseSettings):
     @property
     def IS_PRODUCTION(self) -> bool:
         import os
-        return self.APP_ENV.lower() == "production" or "FASTAPI_CLOUD_APP_ID" in os.environ
+
+        return (
+            self.APP_ENV.lower() == "production" or "FASTAPI_CLOUD_APP_ID" in os.environ
+        )
 
     @property
     def IS_MACOS(self) -> bool:

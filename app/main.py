@@ -56,7 +56,9 @@ class ModelEngine:
         self.sampling_params = None
 
     def initialize(self):
-        print(f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}, IS_MACOS: {settings.IS_MACOS}")
+        print(
+            f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}, IS_MACOS: {settings.IS_MACOS}"
+        )
         if settings.IS_PRODUCTION:
             self._init_vllm()
         elif settings.IS_MACOS:
