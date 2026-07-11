@@ -145,7 +145,8 @@ engine = ModelEngine()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    engine.initialize()
+    # Start model loading in the background to allow the health check to respond immediately
+    asyncio.create_task(asyncio.to_thread(engine.initialize))
     yield
     print("🛑 Arrêt de l'orchestrateur.")
 
