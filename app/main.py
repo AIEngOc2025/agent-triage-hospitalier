@@ -3,26 +3,33 @@ import re
 import time
 import uuid
 from contextlib import asynccontextmanager
-from typing import List
+from typing import List, AsyncGenerator
 
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.settings import settings
 
 # Optional imports for engines
 try:
-    from vllm import LLM, SamplingParams
+    from vllm import AsyncLLMEngine, AsyncEngineArgs, SamplingParams
 except ImportError:
-    LLM, SamplingParams = None, None
+    AsyncLLMEngine, AsyncEngineArgs, SamplingParams = None, None, None
+
+try:
+    from mlx_lm import load, generate as mlx_generate
+except ImportError:
+    load, mlx_generate = None, None
 
 # --- 2. ENGINE ABSTRACTION ---
 
 
 class ModelEngine:
     """
-    Abstraction layer for LLM inference.
-    Uses vLLM for production (GitHub/Cloud) and MLX (vLLM-Metal) for local development.
+    Scalable abstraction layer for LLM inference.
+    Uses AsyncLLMEngine for production to enable continuous batching.
+    Uses MLX for local development on MacOS.
     """
 
     def __init__(self):
@@ -40,7 +47,7 @@ class ModelEngine:
                 print("💻 MacOS detected: initializing vLLM-Metal (MLX)...")
                 self._init_mlx()
             else:
-                print("🚀 Initializing vLLM engine...")
+                print("🚀 Initializing Async vLLM engine (Scalable GPU)...")
                 self._init_vllm()
         except Exception as e:
             if settings.IS_PRODUCTION:
@@ -50,13 +57,13 @@ class ModelEngine:
                 print(f"⚠️  Development initialization warning: {e}")
 
     def _init_vllm(self):
-        if LLM is None:
-            print("❌ [vLLM] Package not installed.")
-            return
+        if AsyncLLMEngine is None:
+            raise ImportError("vLLM AsyncLLMEngine package not installed.")
 
         print(f"📥 [vLLM] Loading model from: {settings.MODEL_PATH}")
         self.engine_type = "vLLM"
-        self.model = LLM(
+
+        engine_args = AsyncEngineArgs(
             model=str(settings.MODEL_PATH),
             tokenizer=str(settings.MODEL_PATH),
             max_model_len=settings.VLLM_MAX_MODEL_LEN,
@@ -64,13 +71,16 @@ class ModelEngine:
             tensor_parallel_size=settings.VLLM_TENSOR_PARALLEL_SIZE,
             gpu_memory_utilization=0.80,
         )
+        self.model = AsyncLLMEngine.from_engine_args(engine_args)
+        self.tokenizer = self.model.get_tokenizer()
+
         self.sampling_params = SamplingParams(
             temperature=0.2,
             max_tokens=512,
             repetition_penalty=1.15,
             stop=["<|im_end|>"],
         )
-        print("✅ [vLLM] Engine operational.")
+        print("✅ [vLLM] Async Engine operational (Scalable GPU).")
 
     def _init_mlx(self):
         try:
@@ -87,24 +97,37 @@ class ModelEngine:
         except Exception as e:
             print(f"❌ [MLX] Failed to load model: {e}")
 
-    async def generate(self, messages: List[dict]) -> str:
+    async def generate_stream(
+        self, messages: List[dict], request_id: str
+    ) -> AsyncGenerator[str, None]:
         if not self.model:
-            return "❌ Erreur : Moteur non initialisé."
+            yield "❌ Erreur : Moteur non initialisé."
+            return
 
         if self.engine_type == "vLLM":
-            prompt = self.model.get_tokenizer().apply_chat_template(
+            prompt = self.tokenizer.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True
             )
-            outputs = await asyncio.to_thread(
-                self.model.generate, prompt, self.sampling_params, use_tqdm=False
+            results_generator = self.model.generate(
+                prompt, self.sampling_params, request_id
             )
-            raw_text = outputs[0].outputs[0].text
+
+            final_text = ""
+            async for request_output in results_generator:
+                text = request_output.outputs[0].text
+                # Extract only the new tokens
+                delta = text[len(final_text) :]
+                final_text = text
+                yield delta
+
         elif self.engine_type == "MLX":
             from mlx_lm import generate as mlx_generate
 
             prompt = self.tokenizer.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True
             )
+            # MLX generate is not natively an async stream like vLLM,
+            # but we wrap it to keep the interface consistent.
             raw_text = await asyncio.to_thread(
                 mlx_generate,
                 self.model,
@@ -113,10 +136,19 @@ class ModelEngine:
                 max_tokens=512,
                 temp=0.2,
             )
+            yield self.clean_response(raw_text)
+        else:
+            yield "❌ Erreur : Moteur non supporté."
+
+    async def generate(self, messages: List[dict]) -> str:
+        request_id = str(uuid.uuid4())
+        full_text = ""
+        async for chunk in self.generate_stream(messages, request_id):
+            full_text += chunk
         else:
             return "❌ Erreur : Moteur non supporté."
 
-        return self.clean_response(raw_text)
+        return self.clean_response(full_text)
 
     def clean_response(self, text: str) -> str:
         clean_text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
@@ -151,6 +183,7 @@ async def health_check():
 class ChatRequest(BaseModel):
     patient_id: str = "PAT-001"
     history: List[dict]
+    stream: bool = False
 
 
 @app.post("/chat")
@@ -167,6 +200,17 @@ async def api_chat(request: ChatRequest):
 4.  **Bilinguisme :** Réponds en français ou en anglais selon la langue de l'utilisateur.
 5.  **Anti-Exemple :** Ne génère JAMAIS de cas cliniques ou de questions à choix multiples. Tu dois converser naturellement."""
         messages.insert(0, {"role": "system", "content": system_prompt})
+
+    if request.stream:
+
+        async def event_generator():
+            try:
+                async for chunk in engine.generate_stream(messages, str(uuid.uuid4())):
+                    yield f"data: {chunk}\n\n"
+            except Exception as e:
+                yield f"data: Error: {str(e)}\n\n"
+
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
 
     try:
         response = await engine.generate(messages)
