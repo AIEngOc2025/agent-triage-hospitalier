@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
     # --- Environment Settings ---
     # Set to 'production' in your deployment environment
-    APP_ENV: str = "development"
+    APP_ENV: str = "production"
 
     # --- Model & Path Settings ---
     # The model path can now be overridden by an environment variable.
