@@ -2,7 +2,8 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 
-base_model_id = "Qwen/Qwen3-1.7B"
+# Use the base model that matches the SFT/DPO training
+base_model_id = "Qwen/Qwen2.5-0.5B"
 adapter_path = "models/dpo_final_chsa"
 save_path = "models/merged_dpo_final_chsa"
 

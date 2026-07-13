@@ -8,7 +8,7 @@ from typing import List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from .settings import settings
+from app import settings
 
 # Optional imports for engines
 try:
@@ -41,14 +41,12 @@ class ModelEngine:
             f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}"
         )
         try:
-            if settings.IS_PRODUCTION:
-                print("🚀 Production mode detected: initializing vLLM...")
-                self._init_vllm()
-            elif settings.IS_MACOS:
+            if settings.IS_MACOS:
                 print("💻 MacOS detected: initializing vLLM-Metal (MLX)...")
                 self._init_mlx()
             else:
-                print("❌ Error: No compatible engine found for this environment.")
+                print("🚀 Initializing vLLM engine...")
+                self._init_vllm()
         except Exception as e:
             if settings.IS_PRODUCTION:
                 print(f"❌ Critical error during production engine initialization: {e}")
@@ -138,7 +136,7 @@ async def lifespan(app: FastAPI):
     # Start model loading in the background to allow the health check to respond immediately
     asyncio.create_task(asyncio.to_thread(engine.initialize))
     yield
-    print("🛑 Arrêt de l'orchestrateur.")
+    print("🛑 Arrêt de la tentative du chargement de l'orchestrateur")
 
 
 # --- 4. API FASTAPI ---
