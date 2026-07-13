@@ -8,18 +8,13 @@ from typing import List
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from app import settings
+from app.settings import settings
 
 # Optional imports for engines
 try:
     from vllm import LLM, SamplingParams
 except ImportError:
     LLM, SamplingParams = None, None
-
-try:
-    from mlx_lm import load, generate as mlx_generate
-except ImportError:
-    load, mlx_generate = None, None
 
 # --- 2. ENGINE ABSTRACTION ---
 
@@ -78,7 +73,9 @@ class ModelEngine:
         print("✅ [vLLM] Engine operational.")
 
     def _init_mlx(self):
-        if load is None:
+        try:
+            from mlx_lm import load, generate as mlx_generate
+        except ImportError:
             print("❌ [MLX] Package mlx-lm not installed.")
             return
 
@@ -103,6 +100,7 @@ class ModelEngine:
             )
             raw_text = outputs[0].outputs[0].text
         elif self.engine_type == "MLX":
+            from mlx_lm import generate as mlx_generate
             prompt = self.tokenizer.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True
             )

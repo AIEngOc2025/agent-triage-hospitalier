@@ -46,7 +46,9 @@ class Settings(BaseSettings):
         env_file=".env",  # Load from a .env file
         env_file_encoding="utf-8",
         case_sensitive=False,  # Environment variables are case-insensitive
+        extra='ignore',       # Ignore extra environment variables
     )
+
 
 
 # Create a single, importable instance of the settings
