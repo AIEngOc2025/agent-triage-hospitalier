@@ -101,6 +101,7 @@ class ModelEngine:
             raw_text = outputs[0].outputs[0].text
         elif self.engine_type == "MLX":
             from mlx_lm import generate as mlx_generate
+
             prompt = self.tokenizer.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True
             )
