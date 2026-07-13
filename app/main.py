@@ -74,7 +74,7 @@ class ModelEngine:
 
     def _init_mlx(self):
         try:
-            from mlx_lm import load, generate as mlx_generate
+            from mlx_lm import load
         except ImportError:
             print("❌ [MLX] Package mlx-lm not installed.")
             return
