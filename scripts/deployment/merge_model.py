@@ -16,9 +16,7 @@ try:
 
     print("📦 [STEP 2/4] Chargement du modèle de base (float32 pour stabilité CPU)...")
     base_model = AutoModelForCausalLM.from_pretrained(
-        base_model_id, 
-        torch_dtype=torch.float32, 
-        device_map="auto"
+        base_model_id, torch_dtype=torch.float32, device_map="auto"
     )
 
     print("📦 [STEP 3/4] Chargement des adapters et fusion...")
@@ -28,7 +26,7 @@ try:
     print("📦 [STEP 4/4] Sauvegarde du modèle fusionné...")
     merged_model.save_pretrained(save_path, max_shard_size="2GB")
     tokenizer.save_pretrained(save_path)
-    
+
     print(f"✅ Modèle fusionné et sauvegardé avec succès dans {save_path}")
 
 except Exception as e:
