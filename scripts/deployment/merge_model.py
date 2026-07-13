@@ -1,21 +1,38 @@
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
+import os
+import traceback
 
 # Use the base model that matches the SFT/DPO training
-base_model_id = "Qwen/Qwen2.5-0.5B"
+base_model_id = "Qwen/Qwen3-1.7B-Base"
 adapter_path = "models/dpo_final_chsa"
 save_path = "models/merged_dpo_final_chsa"
 
-print("🧬 Fusion du modèle pour déploiement vLLM...")
-tokenizer = AutoTokenizer.from_pretrained(base_model_id)
-base_model = AutoModelForCausalLM.from_pretrained(
-    base_model_id, torch_dtype=torch.float16, device_map="cpu"
-)
+print("🧬 Fusion du modèle pour déploiement vLLM (Mode CPU/Linux)...")
 
-model = PeftModel.from_pretrained(base_model, adapter_path)
-merged_model = model.merge_and_unload()
+try:
+    print("📦 [STEP 1/4] Chargement du tokenizer...")
+    tokenizer = AutoTokenizer.from_pretrained(base_model_id)
 
-merged_model.save_pretrained(save_path)
-tokenizer.save_pretrained(save_path)
-print(f"✅ Modèle fusionné sauvegardé dans {save_path}")
+    print("📦 [STEP 2/4] Chargement du modèle de base (float32 pour stabilité CPU)...")
+    base_model = AutoModelForCausalLM.from_pretrained(
+        base_model_id, 
+        torch_dtype=torch.float32, 
+        device_map="auto"
+    )
+
+    print("📦 [STEP 3/4] Chargement des adapters et fusion...")
+    model = PeftModel.from_pretrained(base_model, adapter_path)
+    merged_model = model.merge_and_unload()
+
+    print("📦 [STEP 4/4] Sauvegarde du modèle fusionné...")
+    merged_model.save_pretrained(save_path, max_shard_size="2GB")
+    tokenizer.save_pretrained(save_path)
+    
+    print(f"✅ Modèle fusionné et sauvegardé avec succès dans {save_path}")
+
+except Exception as e:
+    print(f"❌ Erreur critique lors de la fusion : {str(e)}")
+    traceback.print_exc()
+    exit(1)
