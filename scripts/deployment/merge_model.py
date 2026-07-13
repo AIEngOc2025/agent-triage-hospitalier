@@ -1,7 +1,6 @@
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
-import os
 import traceback
 
 # Use the base model that matches the SFT/DPO training
