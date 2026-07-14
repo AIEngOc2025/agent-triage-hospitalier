@@ -1,15 +1,16 @@
 import json
-import os
 import pytest
 from unittest.mock import AsyncMock, patch, mock_open, ANY
-from app.main import log_audit, api_chat, ChatRequest
+from app.main import log_audit
 from fastapi.testclient import TestClient
 from app.main import app
+
 
 @pytest.fixture
 def client():
     with TestClient(app) as c:
         yield c
+
 
 @pytest.mark.asyncio
 async def test_log_audit_writes_file():
@@ -20,14 +21,13 @@ async def test_log_audit_writes_file():
         await log_audit(entry)
 
         # Check if file was opened in append mode
-        mocked_file.assert_called_once_with(
-            ANY, "a", encoding="utf-8"
-        )
+        mocked_file.assert_called_once_with(ANY, "a", encoding="utf-8")
 
         # Check if the written content is the JSON string of the entry
         handle = mocked_file()
         written_data = "".join(call.args[0] for call in handle.write.call_args_list)
         assert json.loads(written_data) == entry
+
 
 @pytest.mark.asyncio
 @patch("app.main.engine.generate")
@@ -41,7 +41,7 @@ async def test_api_chat_logs_audit(mock_generate, client):
             json={
                 "history": [{"role": "user", "content": "Hello"}],
                 "patient_id": "PAT-TEST-LOG",
-                "stream": False
+                "stream": False,
             },
         )
 
@@ -52,6 +52,7 @@ async def test_api_chat_logs_audit(mock_generate, client):
         assert log_entry["patient_id"] == "PAT-TEST-LOG"
         assert log_entry["decision"] == "Test response"
         assert log_entry["stream"] is False
+
 
 @pytest.mark.asyncio
 @patch("app.main.engine.generate_stream")
@@ -70,7 +71,7 @@ async def test_api_chat_streaming_logs_audit(mock_generate_stream, client):
             json={
                 "history": [{"role": "user", "content": "Hello"}],
                 "patient_id": "PAT-TEST-STREAM",
-                "stream": True
+                "stream": True,
             },
         )
 
@@ -89,4 +90,3 @@ async def test_api_chat_streaming_logs_audit(mock_generate_stream, client):
         assert log_entry["patient_id"] == "PAT-TEST-STREAM"
         assert "Hello World" in log_entry["decision"]
         assert log_entry["stream"] is True
-

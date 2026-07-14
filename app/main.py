@@ -152,11 +152,12 @@ class ModelEngine:
 async def log_audit(entry: dict):
     """
     Writes an audit log entry to the configured log file in JSONL format.
-    
+
     @args/params : entry (dict) - The log entry to record.
     @return : None
     """
     try:
+
         def write_log():
             with open(settings.LOG_FILE, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
@@ -219,7 +220,7 @@ async def api_chat(request: ChatRequest):
                 async for chunk in engine.generate_stream(messages, str(uuid.uuid4())):
                     full_response.append(chunk)
                     yield f"data: {chunk}\n\n"
-                
+
                 # Log completion of streaming request
                 log_entry = {
                     "audit_id": str(uuid.uuid4()),
