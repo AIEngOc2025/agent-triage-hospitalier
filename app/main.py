@@ -1,8 +1,10 @@
 import asyncio
+import json
 import re
 import time
 import uuid
 from contextlib import asynccontextmanager
+
 from typing import List, AsyncGenerator
 
 from fastapi import FastAPI, HTTPException
@@ -10,17 +12,6 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.settings import settings
-
-# Optional imports for engines
-try:
-    from vllm import AsyncLLMEngine, AsyncEngineArgs, SamplingParams
-except ImportError:
-    AsyncLLMEngine, AsyncEngineArgs, SamplingParams = None, None, None
-
-try:
-    from mlx_lm import load, generate as mlx_generate
-except ImportError:
-    load, mlx_generate = None, None
 
 # --- 2. ENGINE ABSTRACTION ---
 
@@ -57,7 +48,9 @@ class ModelEngine:
                 print(f"⚠️  Development initialization warning: {e}")
 
     def _init_vllm(self):
-        if AsyncLLMEngine is None:
+        try:
+            from vllm import AsyncLLMEngine, AsyncEngineArgs, SamplingParams
+        except ImportError:
             raise ImportError("vLLM AsyncLLMEngine package not installed.")
 
         print(f"📥 [vLLM] Loading model from: {settings.MODEL_PATH}")
@@ -156,6 +149,23 @@ class ModelEngine:
         return clean_text.strip()
 
 
+async def log_audit(entry: dict):
+    """
+    Writes an audit log entry to the configured log file in JSONL format.
+    
+    @args/params : entry (dict) - The log entry to record.
+    @return : None
+    """
+    try:
+        def write_log():
+            with open(settings.LOG_FILE, "a", encoding="utf-8") as f:
+                f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+        await asyncio.to_thread(write_log)
+    except Exception as e:
+        print(f"❌ Audit logging failed: {e}")
+
+
 # Global engine instance
 engine = ModelEngine()
 
@@ -205,8 +215,21 @@ async def api_chat(request: ChatRequest):
 
         async def event_generator():
             try:
+                full_response = []
                 async for chunk in engine.generate_stream(messages, str(uuid.uuid4())):
+                    full_response.append(chunk)
                     yield f"data: {chunk}\n\n"
+                
+                # Log completion of streaming request
+                log_entry = {
+                    "audit_id": str(uuid.uuid4()),
+                    "patient_id": request.patient_id,
+                    "decision": "".join(full_response),
+                    "latency_sec": round(time.time() - start_time, 3),
+                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                    "stream": True,
+                }
+                await log_audit(log_entry)
             except Exception as e:
                 yield f"data: Error: {str(e)}\n\n"
 
@@ -220,7 +243,9 @@ async def api_chat(request: ChatRequest):
             "decision": response,
             "latency_sec": round(time.time() - start_time, 3),
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "stream": False,
         }
+        await log_audit(log_entry)
         return {"response": response, "audit_ref": log_entry["audit_id"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -2,7 +2,7 @@ import torch
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-MODEL_ID = "Qwen/Qwen2.5-0.5B"
+MODEL_ID = "Qwen/Qwen3-1.7B-Base"
 DPO_ADAPTERS = "models/dpo_final_chsa"  # Chemin vers tes poids DPO
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)

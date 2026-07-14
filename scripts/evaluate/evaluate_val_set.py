@@ -6,7 +6,7 @@ from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from trl import SFTTrainer
 
-MODEL_ID = "Qwen/Qwen2.5-0.5B"
+MODEL_ID = "Qwen/Qwen3-1.7B-Base"
 ADAPTERS = "models/sft_final_chsa"
 VAL_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Val_SFT_052026.jsonl"
 

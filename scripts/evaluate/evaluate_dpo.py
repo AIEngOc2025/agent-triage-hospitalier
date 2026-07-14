@@ -8,7 +8,7 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # --- CONFIGURATION ---
-MODEL_ID = "Qwen/Qwen2.5-0.5B"
+MODEL_ID = "Qwen/Qwen3-1.7B-Base"
 DPO_ADAPTERS = "models/dpo_final_chsa"
 # On utilise le fichier TEST DPO que nous avons créé sur Mac
 TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_DPO_052026.jsonl"

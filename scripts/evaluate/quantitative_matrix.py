@@ -8,7 +8,7 @@ from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # --- CONFIGURATION ---
-MODEL_ID = "Qwen/Qwen2.5-0.5B"
+MODEL_ID = "Qwen/Qwen3-1.7B-Base"
 ADAPTERS = "models/sft_final_chsa"
 TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_SFT_052026.jsonl"
 
