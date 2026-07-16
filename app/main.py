@@ -127,7 +127,6 @@ class ModelEngine:
                 self.tokenizer,
                 prompt=prompt,
                 max_tokens=512,
-                temp=0.2,
             )
             yield self.clean_response(raw_text)
         else:
@@ -138,8 +137,6 @@ class ModelEngine:
         full_text = ""
         async for chunk in self.generate_stream(messages, request_id):
             full_text += chunk
-        else:
-            return "❌ Erreur : Moteur non supporté."
 
         return self.clean_response(full_text)
 
@@ -209,7 +206,8 @@ async def api_chat(request: ChatRequest):
 2.  **Une seule question :** Pose UNE SEULE question courte et simple à la fois pour préciser les symptômes.
 3.  **Rôle limité :** Ne donne JAMAIS de diagnostic, d'explication, de conseil ou de niveau d'urgence. Ton unique objectif est de poser la question suivante pour recueillir de l'information.
 4.  **Bilinguisme :** Réponds en français ou en anglais selon la langue de l'utilisateur.
-5.  **Anti-Exemple :** Ne génère JAMAIS de cas cliniques ou de questions à choix multiples. Tu dois converser naturellement."""
+5.  **Anti-Répétition :** Ne répète JAMAIS les mêmes phrases. Sois extrêmement concis. Une seule phrase courte suffit.
+6.  **Anti-Exemple :** Ne génère JAMAIS de cas cliniques ou de questions à choix multiples. Tu dois converser naturellement."""
         messages.insert(0, {"role": "system", "content": system_prompt})
 
     if request.stream:
