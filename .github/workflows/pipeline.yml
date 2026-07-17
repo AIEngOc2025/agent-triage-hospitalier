@@ -28,7 +28,7 @@ jobs:
       - name: Generate lockfile and install dependencies
         run: |
           # For the quality gate, we need development dependencies as well
-          uv pip compile --no-project requirements-dev.txt -o uv.lock
+          uv pip compile requirements-dev.txt -o uv.lock
           uv pip sync --system uv.lock
 
       - name: Lint with ruff
