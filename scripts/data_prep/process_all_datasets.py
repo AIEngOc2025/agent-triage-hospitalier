@@ -27,10 +27,12 @@ class UniversalMedicalProcessor:
                         response = data["chosen"]
 
                     # 2. Cas spécial : QCM (medmcqa, frenchmedmcqa, medical_mqca)
-                    # Ces fichiers ont souvent 'question' + 'opa', 'opb'... et 'cop' (index de la réponse)
+                    # Ces fichiers ont souvent 'question' + 'opa', 'opb'...
+                    # et 'cop' (index de la réponse)
                     elif "question" in data and "cop" in data:
                         instruction = data["question"]
-                        # On essaie de reconstruire la réponse textuelle à partir de l'option correcte
+                        # On essaie de reconstruire la réponse textuelle
+                        # à partir de l'option correcte
                         options = {0: "opa", 1: "opb", 2: "opc", 3: "opd", 4: "ope"}
                         # Parfois cop est un int (0,1,2) ou un str ('A','B','C')
                         cop = data["cop"]
