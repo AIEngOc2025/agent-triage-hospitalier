@@ -28,7 +28,10 @@ model = AutoModelForCausalLM.from_pretrained(
 # 4. Fonction de formatage CORRIGÉE (Traitement ligne par ligne)
 def formatting_prompts_func(example):
     # On retourne simplement la chaîne de caractères formatée pour UNE ligne
-    return f"### Instruction: {example['instruction']}\n### Response: {example['response']}"
+    return (
+        f"### Instruction: {example['instruction']}\n"
+        f"### Response: {example['response']}"
+    )
 
 
 # 5. Configuration LoRA
