@@ -26,7 +26,7 @@ jobs:
         run: pip install uv
 
       - name: Install dependencies with uv
-        run: uv pip install -r requirements.txt
+        run: uv pip install --system -r requirements.txt
 
       - name: Lint with ruff
         run: uv run ruff check .
@@ -49,8 +49,11 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install -r requirements.txt
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies with uv
+        run: uv pip install --system -r requirements.txt
 
       - name: Run inference test
         run: python scripts/test_inference.py
