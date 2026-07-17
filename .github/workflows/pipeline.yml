@@ -65,7 +65,7 @@ jobs:
           mkdir -p /tmp/deps
           cp requirements.txt /tmp/deps/
           cd /tmp/deps          
-          uv pip compile requirements.txt -o uv.lock --output-format=toml
+          uv pip compile requirements.txt -o uv.lock --output-file=toml
           mv uv.lock ${{ github.workspace }}
           cd ${{ github.workspace }}
           uv pip sync --system uv.lock
