@@ -37,7 +37,10 @@ def anonymize(text, lang):
 
 def format_prompt_chatml(text):
     # Format ChatML requis pour éviter les "!!!!" lors du test final
-    return f"<|im_start|>system\nTu es l'infirmier d'accueil bienveillant du CHSA.<|im_end|>\n<|im_start|>user\n{text}<|im_end|>\n<|im_start|>assistant\n"
+    return (
+        f"<|im_start|>system\nTu es l'infirmier d'accueil bienveillant du CHSA."
+        f"<|im_end|>\n<|im_start|>user\n{text}<|im_end|>\n<|im_start|>assistant\n"
+    )
 
 
 def process_dpo_data():
@@ -125,7 +128,8 @@ def process_dpo_data():
 
                     if chosen and wrong_options:
                         rejected = random.choice(wrong_options)
-                        # S'assurer que la réponse rejetée n'est pas accidentellement la même que la bonne
+                        # S'assurer que la réponse rejetée n'est pas
+                        # accidentellement la même que la bonne
                         while chosen == rejected and len(wrong_options) > 1:
                             rejected = random.choice(wrong_options)
                         final_pool.append(

@@ -57,7 +57,8 @@ def evaluate_dpo_safe():
                 chosen_answer = item["chosen"]
 
                 # On construit le texte complet tel que le modèle doit le voir
-                # Note : 'prompt' contient déjà les balises <|im_start|> d'après nos scripts précédents
+                # Note : 'prompt' contient déjà les balises <|im_start|> d'après
+                # nos scripts précédents
                 full_text = f"{prompt_text}{chosen_answer}<|im_end|>"
 
                 inputs = tokenizer(full_text, return_tensors="pt").to("mps")
