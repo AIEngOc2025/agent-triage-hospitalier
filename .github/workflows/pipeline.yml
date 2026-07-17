@@ -23,7 +23,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: pip install -U uv
 
       - name: Generate lockfile and install dependencies
         run: |
@@ -31,10 +31,12 @@ jobs:
           mkdir -p /tmp/deps
           cp requirements.txt requirements-dev.txt /tmp/deps/
           cd /tmp/deps
-          uv pip compile requirements-dev.txt -o uv.lock --output-format=toml
-          mv uv.lock ${{ github.workspace }}
+          # Generate a flat lock file for maximum compatibility
+          uv pip compile requirements-dev.txt -o requirements.lock
+          mv requirements.lock ${{ github.workspace }}
           cd ${{ github.workspace }}
-          uv pip sync --system uv.lock
+          # Install dependencies using the generated lock file with pip
+          pip install --system -r requirements.lock
 
       - name: Lint with ruff
         run: uv run ruff check .
@@ -58,17 +60,17 @@ jobs:
           python-version: "3.11"
 
       - name: Install uv
-        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+        run: pip install -U uv
 
       - name: Generate lockfile and install dependencies
         run: |
           mkdir -p /tmp/deps
           cp requirements.txt /tmp/deps/
-          cd /tmp/deps          
-          uv pip compile requirements.txt -o uv.lock --output-file=toml
-          mv uv.lock ${{ github.workspace }}
+          cd /tmp/deps
+          uv pip compile requirements.txt -o requirements.lock
+          mv requirements.lock ${{ github.workspace }}
           cd ${{ github.workspace }}
-          uv pip sync --system uv.lock
+          pip install --system -r requirements.lock
 
       - name: Run inference test
         run: python scripts/test_inference.py
