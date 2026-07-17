@@ -6,7 +6,7 @@ requires-python = ">=3.11"
 
 [tool.ruff]
 line-length = 88
-exclude = ["build"]
+exclude = ["build", "*.jsonl"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
