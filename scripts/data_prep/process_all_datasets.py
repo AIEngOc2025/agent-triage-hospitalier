@@ -73,7 +73,8 @@ class UniversalMedicalProcessor:
                             {"instruction": clean_inst, "response": clean_resp}
                         )
                         count += 1
-                # Cible les erreurs attendues (JSON malformé, clé manquante) pour ne pas masquer d'autres problèmes.
+                # Cible les erreurs attendues (JSON malformé, clé manquante)
+                # pour ne pas masquer d'autres problèmes.
                 except (json.JSONDecodeError, KeyError):
                     continue
 

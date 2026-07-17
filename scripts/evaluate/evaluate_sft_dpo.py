@@ -13,7 +13,10 @@ base_model = AutoModelForCausalLM.from_pretrained(
 model = PeftModel.from_pretrained(base_model, DPO_ADAPTERS)
 
 query = "J'ai une douleur vive au bras gauche et je transpire."
-prompt = f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n<|im_start|>user\n{query}<|im_end|>\n<|im_start|>assistant\n"
+prompt = (
+    f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
+    f"<|im_start|>user\n{query}<|im_end|>\n<|im_start|>assistant\n"
+)
 
 inputs = tokenizer(prompt, return_tensors="pt").to("mps")
 with torch.no_grad():

@@ -9,3 +9,4 @@ __pycache__/
 # Lock file
 uv.lock
 requirements.lockbuild/
+.env

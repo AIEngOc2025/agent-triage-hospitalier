@@ -12,7 +12,10 @@ def test_triage_endpoint_success():
         response = client.post(
             "/triage",
             json={
-                "symptomes": "Le patient a une forte fièvre et des difficultés à respirer."
+                "symptomes": (
+                    "Le patient a une forte fièvre et des "
+                    "difficultés à respirer."
+                )
             },
         )
         assert response.status_code == 200
