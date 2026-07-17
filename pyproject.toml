@@ -1,3 +1,14 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f72434c1c44388319472a82e391312ffd16d88f803366f66dc8c4d8a63d44b00
-size 261
+[project]
+name = "agent-triage-hospitalier"
+version = "0.1.0"
+description = "A hospital triage agent using LLMs."
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.format]
+quote-style = "double"
