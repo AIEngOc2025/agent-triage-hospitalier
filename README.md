@@ -1,3 +1,7 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ab5d9fde18752a3c851fa458581d36fe72fe7b9c0638dade5b30a415f529ddef
-size 498
+# Agent de Triage Hospitalier
+
+Ce projet a pour but de développer un agent conversationnel capable d'effectuer un premier triage des patients aux urgences.
+
+## Pipeline CI/CD
+
+Le pipeline est configuré pour exécuter des tests de qualité et déployer le modèle sur le Hugging Face Hub.
