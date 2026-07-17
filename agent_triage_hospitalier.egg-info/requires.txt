@@ -1,0 +1,14 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+gunicorn>=22.0.0
+pytest-asyncio>=1.4.0
+
+[apple-silicon]
+mlx-lm>=0.15.0
+
+[gpu]
+vllm>=0.6.0
+torch>=2.4.0
+transformers<5.0.0,>=4.46.0
+peft>=0.19.1

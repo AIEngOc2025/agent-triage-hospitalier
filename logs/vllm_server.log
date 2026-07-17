@@ -1,0 +1,1521 @@
+INFO 06-28 23:59:00 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-28 23:59:00 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-28 23:59:00 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-28 23:59:02 [__init__.py:238] Platform plugin metal is activated
+INFO 06-28 23:59:03 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=18136) INFO 06-28 23:59:04 [api_utils.py:339] 
+(APIServer pid=18136) INFO 06-28 23:59:04 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=18136) INFO 06-28 23:59:04 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=18136) INFO 06-28 23:59:04 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/src/models/merged_dpo_final_chsa
+(APIServer pid=18136) INFO 06-28 23:59:04 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=18136) INFO 06-28 23:59:04 [api_utils.py:339] 
+(APIServer pid=18136) INFO 06-28 23:59:04 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/src/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/src/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=18136) WARNING 06-28 23:59:04 [system_utils.py:299] Found ulimit of 2048 and failed to automatically increase with error current limit exceeds maximum limit. This can cause fd limit errors like `OSError: [Errno 24] Too many open files`. Consider increasing with ulimit -n
+(APIServer pid=18136) Traceback (most recent call last):
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=18136)     sys.exit(main())
+(APIServer pid=18136)              ^^^^^^
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=18136)     args.dispatch_function(args)
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=18136)     uvloop.run(run_server(args))
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=18136)     return __asyncio.run(
+(APIServer pid=18136)            ^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=18136)     return runner.run(main)
+(APIServer pid=18136)            ^^^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=18136)     return self._loop.run_until_complete(task)
+(APIServer pid=18136)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=18136)     return await main
+(APIServer pid=18136)            ^^^^^^^^^^
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 665, in run_server
+(APIServer pid=18136)     await run_server_worker(listen_address, sock, args, **uvicorn_kwargs)
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 679, in run_server_worker
+(APIServer pid=18136)     async with build_async_engine_client(
+(APIServer pid=18136)                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/contextlib.py", line 210, in __aenter__
+(APIServer pid=18136)     return await anext(self.gen)
+(APIServer pid=18136)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 94, in build_async_engine_client
+(APIServer pid=18136)     engine_args = AsyncEngineArgs.from_cli_args(args)
+(APIServer pid=18136)                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/engine/arg_utils.py", line 1546, in from_cli_args
+(APIServer pid=18136)     engine_args = cls(
+(APIServer pid=18136)                   ^^^^
+(APIServer pid=18136)   File "<string>", line 213, in __init__
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/engine/arg_utils.py", line 755, in __post_init__
+(APIServer pid=18136)     self.model = get_model_path(self.model, self.revision)
+(APIServer pid=18136)                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/transformers_utils/repo_utils.py", line 239, in get_model_path
+(APIServer pid=18136)     return hf_api().snapshot_download(
+(APIServer pid=18136)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 84, in _inner_fn
+(APIServer pid=18136)     validate_repo_id(arg_value)
+(APIServer pid=18136)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/huggingface_hub/utils/_validators.py", line 132, in validate_repo_id
+(APIServer pid=18136)     raise HFValidationError(
+(APIServer pid=18136) huggingface_hub.errors.HFValidationError: Repo id must be in the form 'repo_name' or 'namespace/repo_name': '/Users/mpaga/poc-agent-triage-medical/src/models/merged_dpo_final_chsa'. Use `repo_type` argument if needed.
+INFO 06-29 10:09:06 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 10:09:06 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 10:09:06 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 10:09:08 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 10:09:08 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=30568) INFO 06-29 10:09:10 [api_utils.py:339] 
+(APIServer pid=30568) INFO 06-29 10:09:10 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=30568) INFO 06-29 10:09:10 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=30568) INFO 06-29 10:09:10 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=30568) INFO 06-29 10:09:10 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=30568) INFO 06-29 10:09:10 [api_utils.py:339] 
+(APIServer pid=30568) INFO 06-29 10:09:10 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=30568) Traceback (most recent call last):
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=30568)     sys.exit(main())
+(APIServer pid=30568)              ^^^^^^
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=30568)     args.dispatch_function(args)
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=30568)     uvloop.run(run_server(args))
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=30568)     return __asyncio.run(
+(APIServer pid=30568)            ^^^^^^^^^^^^^^
+(APIServer pid=30568)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=30568)     return runner.run(main)
+(APIServer pid=30568)            ^^^^^^^^^^^^^^^^
+(APIServer pid=30568)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=30568)     return self._loop.run_until_complete(task)
+(APIServer pid=30568)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=30568)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=30568)     return await main
+(APIServer pid=30568)            ^^^^^^^^^^
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=30568)     listen_address, sock = setup_server(args)
+(APIServer pid=30568)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=30568)     return func(*args, **kwargs)
+(APIServer pid=30568)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=30568)     sock = create_server_socket(sock_addr)
+(APIServer pid=30568)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=30568)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=30568)     sock.bind(addr)
+(APIServer pid=30568) OSError: [Errno 48] Address already in use
+Traceback (most recent call last):
+  File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 4, in <module>
+    from vllm.entrypoints.cli.main import main
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/__init__.py", line 14, in <module>
+    import vllm.env_override  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/env_override.py", line 87, in <module>
+    import torch
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/__init__.py", line 2229, in <module>
+    from torch import _VF as _VF, functional as functional  # usort: skip
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/functional.py", line 8, in <module>
+    import torch.nn.functional as F
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/nn/__init__.py", line 8, in <module>
+    from torch.nn.modules import *  # usort: skip # noqa: F403
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/nn/modules/__init__.py", line 1, in <module>
+    from .module import Module  # usort: skip
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/nn/modules/module.py", line 17, in <module>
+    from torch.utils._python_dispatch import is_traceable_wrapper_subclass
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/utils/__init__.py", line 8, in <module>
+    from torch.utils import (
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/utils/data/__init__.py", line 1, in <module>
+    from torch.utils.data.dataloader import (
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 642, in <module>
+    class _BaseDataLoaderIter:
+KeyboardInterrupt
+INFO 06-29 11:16:27 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 11:16:27 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 11:16:27 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 11:16:31 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 11:16:32 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=26100) INFO 06-29 11:16:34 [api_utils.py:339] 
+(APIServer pid=26100) INFO 06-29 11:16:34 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=26100) INFO 06-29 11:16:34 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=26100) INFO 06-29 11:16:34 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=26100) INFO 06-29 11:16:34 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=26100) INFO 06-29 11:16:34 [api_utils.py:339] 
+(APIServer pid=26100) INFO 06-29 11:16:34 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=26100) Traceback (most recent call last):
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=26100)     sys.exit(main())
+(APIServer pid=26100)              ^^^^^^
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=26100)     args.dispatch_function(args)
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=26100)     uvloop.run(run_server(args))
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=26100)     return __asyncio.run(
+(APIServer pid=26100)            ^^^^^^^^^^^^^^
+(APIServer pid=26100)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=26100)     return runner.run(main)
+(APIServer pid=26100)            ^^^^^^^^^^^^^^^^
+(APIServer pid=26100)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=26100)     return self._loop.run_until_complete(task)
+(APIServer pid=26100)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=26100)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=26100)     return await main
+(APIServer pid=26100)            ^^^^^^^^^^
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=26100)     listen_address, sock = setup_server(args)
+(APIServer pid=26100)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=26100)     return func(*args, **kwargs)
+(APIServer pid=26100)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=26100)     sock = create_server_socket(sock_addr)
+(APIServer pid=26100)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=26100)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=26100)     sock.bind(addr)
+(APIServer pid=26100) OSError: [Errno 48] Address already in use
+INFO 06-29 11:34:43 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 11:34:43 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 11:34:43 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 11:34:46 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 11:34:46 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=35232) INFO 06-29 11:34:47 [api_utils.py:339] 
+(APIServer pid=35232) INFO 06-29 11:34:47 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=35232) INFO 06-29 11:34:47 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=35232) INFO 06-29 11:34:47 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=35232) INFO 06-29 11:34:47 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=35232) INFO 06-29 11:34:47 [api_utils.py:339] 
+(APIServer pid=35232) INFO 06-29 11:34:47 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=35232) Traceback (most recent call last):
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=35232)     sys.exit(main())
+(APIServer pid=35232)              ^^^^^^
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=35232)     args.dispatch_function(args)
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=35232)     uvloop.run(run_server(args))
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=35232)     return __asyncio.run(
+(APIServer pid=35232)            ^^^^^^^^^^^^^^
+(APIServer pid=35232)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=35232)     return runner.run(main)
+(APIServer pid=35232)            ^^^^^^^^^^^^^^^^
+(APIServer pid=35232)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=35232)     return self._loop.run_until_complete(task)
+(APIServer pid=35232)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=35232)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=35232)     return await main
+(APIServer pid=35232)            ^^^^^^^^^^
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=35232)     listen_address, sock = setup_server(args)
+(APIServer pid=35232)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=35232)     return func(*args, **kwargs)
+(APIServer pid=35232)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=35232)     sock = create_server_socket(sock_addr)
+(APIServer pid=35232)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=35232)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=35232)     sock.bind(addr)
+(APIServer pid=35232) OSError: [Errno 48] Address already in use
+INFO 06-29 11:35:18 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 11:35:18 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 11:35:18 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 11:35:20 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 11:35:20 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=35256) INFO 06-29 11:35:22 [api_utils.py:339] 
+(APIServer pid=35256) INFO 06-29 11:35:22 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=35256) INFO 06-29 11:35:22 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=35256) INFO 06-29 11:35:22 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=35256) INFO 06-29 11:35:22 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=35256) INFO 06-29 11:35:22 [api_utils.py:339] 
+(APIServer pid=35256) INFO 06-29 11:35:22 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=35256) Traceback (most recent call last):
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=35256)     sys.exit(main())
+(APIServer pid=35256)              ^^^^^^
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=35256)     args.dispatch_function(args)
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=35256)     uvloop.run(run_server(args))
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=35256)     return __asyncio.run(
+(APIServer pid=35256)            ^^^^^^^^^^^^^^
+(APIServer pid=35256)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=35256)     return runner.run(main)
+(APIServer pid=35256)            ^^^^^^^^^^^^^^^^
+(APIServer pid=35256)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=35256)     return self._loop.run_until_complete(task)
+(APIServer pid=35256)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=35256)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=35256)     return await main
+(APIServer pid=35256)            ^^^^^^^^^^
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=35256)     listen_address, sock = setup_server(args)
+(APIServer pid=35256)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=35256)     return func(*args, **kwargs)
+(APIServer pid=35256)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=35256)     sock = create_server_socket(sock_addr)
+(APIServer pid=35256)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=35256)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=35256)     sock.bind(addr)
+(APIServer pid=35256) OSError: [Errno 48] Address already in use
+INFO 06-29 11:59:16 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 11:59:16 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 11:59:16 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 11:59:19 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 11:59:19 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=41848) INFO 06-29 11:59:21 [api_utils.py:339] 
+(APIServer pid=41848) INFO 06-29 11:59:21 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=41848) INFO 06-29 11:59:21 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=41848) INFO 06-29 11:59:21 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=41848) INFO 06-29 11:59:21 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=41848) INFO 06-29 11:59:21 [api_utils.py:339] 
+(APIServer pid=41848) INFO 06-29 11:59:21 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=41848) Traceback (most recent call last):
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=41848)     sys.exit(main())
+(APIServer pid=41848)              ^^^^^^
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=41848)     args.dispatch_function(args)
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=41848)     uvloop.run(run_server(args))
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=41848)     return __asyncio.run(
+(APIServer pid=41848)            ^^^^^^^^^^^^^^
+(APIServer pid=41848)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=41848)     return runner.run(main)
+(APIServer pid=41848)            ^^^^^^^^^^^^^^^^
+(APIServer pid=41848)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=41848)     return self._loop.run_until_complete(task)
+(APIServer pid=41848)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=41848)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=41848)     return await main
+(APIServer pid=41848)            ^^^^^^^^^^
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=41848)     listen_address, sock = setup_server(args)
+(APIServer pid=41848)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=41848)     return func(*args, **kwargs)
+(APIServer pid=41848)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=41848)     sock = create_server_socket(sock_addr)
+(APIServer pid=41848)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=41848)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=41848)     sock.bind(addr)
+(APIServer pid=41848) OSError: [Errno 48] Address already in use
+INFO 06-29 12:05:48 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:05:48 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:05:48 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:05:50 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:05:51 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=53561) INFO 06-29 12:05:53 [api_utils.py:339] 
+(APIServer pid=53561) INFO 06-29 12:05:53 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=53561) INFO 06-29 12:05:53 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=53561) INFO 06-29 12:05:53 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=53561) INFO 06-29 12:05:53 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=53561) INFO 06-29 12:05:53 [api_utils.py:339] 
+(APIServer pid=53561) INFO 06-29 12:05:53 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=53561) WARNING 06-29 12:05:53 [system_utils.py:299] Found ulimit of 2048 and failed to automatically increase with error current limit exceeds maximum limit. This can cause fd limit errors like `OSError: [Errno 24] Too many open files`. Consider increasing with ulimit -n
+(APIServer pid=53561) INFO 06-29 12:05:53 [model.py:611] Resolved architecture: Qwen3ForCausalLM
+(APIServer pid=53561) INFO 06-29 12:05:53 [model.py:1745] Using max model len 4096
+(APIServer pid=53561) INFO 06-29 12:05:53 [vllm.py:999] Asynchronous scheduling is enabled.
+(APIServer pid=53561) INFO 06-29 12:05:53 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(APIServer pid=53561) INFO 06-29 12:05:54 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(APIServer pid=53561) INFO 06-29 12:05:54 [platform.py:660] Metal memory: 17.2GB total, 5.6GB available
+(APIServer pid=53561) WARNING 06-29 12:05:54 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+INFO 06-29 12:05:59 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:05:59 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:05:59 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:05:59 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:06:00 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(EngineCore pid=53620) INFO 06-29 12:06:00 [core.py:113] Initializing a V1 LLM engine (v0.23.0) with config: model='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', speculative_config=None, tokenizer='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cpu, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::qwen_gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, moe_backend='auto', linear_backend='auto')
+(EngineCore pid=53620) INFO 06-29 12:06:00 [worker.py:123] MLX device set to: Device(gpu, 0)
+(EngineCore pid=53620) INFO 06-29 12:06:00 [utils.py:73] Set Metal wired_limit to 11.8 GB
+(EngineCore pid=53620) INFO 06-29 12:06:00 [worker.py:131] PyTorch device set to: mps
+(EngineCore pid=53620) INFO 06-29 12:06:00 [parallel_state.py:1568] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://192.168.1.113:51563 backend=gloo
+(EngineCore pid=53620) INFO 06-29 12:06:01 [parallel_state.py:1903] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=53620) INFO 06-29 12:06:01 [model_lifecycle.py:151] Loading model: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa (VLM: False)
+(EngineCore pid=53620) INFO 06-29 12:06:04 [model_lifecycle.py:212] Model loaded in 3.03s: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(EngineCore pid=53620) INFO 06-29 12:06:08 [cache_policy.py:743] Paged attention: VLLM_METAL_MEMORY_FRACTION=auto, defaulting to 0.90 for paged path
+(EngineCore pid=53620) INFO 06-29 12:06:08 [cache_policy.py:580] Paged attention memory breakdown: metal_limit=12.71GB, fraction=0.9, usable_metal=11.44GB, model_memory=3.44GB, overhead=0.49GB, kv_budget=7.51GB, per_block_bytes=1835008, num_blocks=4094, max_tokens_cached=65504
+(EngineCore pid=53620) INFO 06-29 12:06:12 [kv_cache.py:167] KV cache: 7512.5 MB (28 layers, 4094 blocks, 16 tokens/block)
+(EngineCore pid=53620) INFO 06-29 12:06:12 [cache_policy.py:606] Paged attention enabled: 28 layers patched, 4094 blocks allocated (block_size=16, mla=False, turboquant=False, k_quant=N/A)
+(EngineCore pid=53620) INFO 06-29 12:06:12 [cache_policy.py:647] Paged attention: reporting MPS cache capacity (4094 blocks × 1835008 bytes = 7.51 GB)
+(EngineCore pid=53620) INFO 06-29 12:06:12 [kv_cache_utils.py:1744] GPU KV cache size: 65,504 tokens
+(EngineCore pid=53620) INFO 06-29 12:06:12 [kv_cache_utils.py:1745] Maximum concurrency for 4,096 tokens per request: 15.99x
+(EngineCore pid=53620) INFO 06-29 12:06:12 [cache_policy.py:315] KV cache config received: 4094 blocks (MLX manages cache internally)
+(EngineCore pid=53620) INFO 06-29 12:06:12 [model_runner.py:690] Warming up model...
+(EngineCore pid=53620) INFO 06-29 12:06:12 [model_runner.py:696] Model warm-up complete
+(EngineCore pid=53620) INFO 06-29 12:06:12 [__init__.py:256] Warming up v2 paged-attention Metal kernels...
+(EngineCore pid=53620) INFO 06-29 12:06:12 [__init__.py:237] Native paged-attention Metal kernels loaded
+(EngineCore pid=53620) INFO 06-29 12:06:12 [__init__.py:264] Paged-attention Metal kernel warm-up complete
+(EngineCore pid=53620) INFO 06-29 12:06:12 [core.py:306] init engine (profile, create kv cache, warmup model) took 8.10 s (compilation: 0.56 s)
+(EngineCore pid=53620) WARNING 06-29 12:06:13 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+(EngineCore pid=53620) INFO 06-29 12:06:13 [vllm.py:999] Asynchronous scheduling is enabled.
+(EngineCore pid=53620) INFO 06-29 12:06:13 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(EngineCore pid=53620) INFO 06-29 12:06:13 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(EngineCore pid=53620) INFO 06-29 12:06:13 [platform.py:660] Metal memory: 17.2GB total, 1.0GB available
+(APIServer pid=53561) INFO 06-29 12:06:14 [api_server.py:579] Supported tasks: ['generate']
+(APIServer pid=53561) WARNING 06-29 12:06:14 [model.py:1502] Default vLLM sampling parameters have been overridden by the model's `generation_config.json`: `{'temperature': 0.6, 'top_k': 20, 'top_p': 0.95}`. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+(APIServer pid=53561) INFO 06-29 12:06:16 [hf.py:548] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(APIServer pid=53561) INFO 06-29 12:06:16 [api_server.py:583] Starting vLLM server on http://127.0.0.1:8000
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:37] Available routes are:
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /openapi.json, Methods: GET, HEAD
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /docs, Methods: GET, HEAD
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /docs/oauth2-redirect, Methods: GET, HEAD
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /redoc, Methods: GET, HEAD
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /load, Methods: GET
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /version, Methods: GET
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /health, Methods: GET
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /metrics, Methods: GET
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /tokenize, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /detokenize, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/models, Methods: GET
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /ping, Methods: GET
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /ping, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /invocations, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/chat/completions, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/chat/completions/batch, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/responses, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/responses/{response_id}, Methods: GET
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/responses/{response_id}/cancel, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/completions, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/messages, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/messages/count_tokens, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /generative_scoring, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /inference/v1/generate, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /scale_elastic_ep, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /is_scaling_elastic_ep, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/chat/completions/render, Methods: POST
+(APIServer pid=53561) INFO 06-29 12:06:16 [launcher.py:46] Route: /v1/completions/render, Methods: POST
+(APIServer pid=53561) INFO:     127.0.0.1:51941 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=53561) INFO 06-29 12:09:16 [loggers.py:271] Engine 000: Avg prompt throughput: 3.5 tokens/s, Avg generation throughput: 1.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=53561) INFO 06-29 12:09:26 [loggers.py:271] Engine 000: Avg prompt throughput: 2.8 tokens/s, Avg generation throughput: 7.3 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 33.7%
+(APIServer pid=53561) INFO:     127.0.0.1:51984 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=53561) INFO 06-29 12:09:36 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 33.7%
+(APIServer pid=53561) INFO 06-29 12:09:46 [loggers.py:271] Engine 000: Avg prompt throughput: 1.2 tokens/s, Avg generation throughput: 0.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 51.6%
+(APIServer pid=53561) INFO:     127.0.0.1:52028 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=53561) INFO 06-29 12:09:56 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.5 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 51.6%
+mx.metal.device_info is deprecated and will be removed in a future version. Use mx.device_info instead.
+(APIServer pid=53561) INFO:     Started server process [53561]
+(APIServer pid=53561) INFO:     Waiting for application startup.
+(APIServer pid=53561) INFO:     Application startup complete.
+(APIServer pid=53561) INFO:     Shutting down
+(APIServer pid=53561) INFO:     Shutting down
+(APIServer pid=53561) INFO:     Waiting for application shutdown.
+(APIServer pid=53561) INFO:     Application shutdown complete.
+(APIServer pid=53561) INFO 06-29 12:10:06 [loggers.py:271] Engine 000: Avg prompt throughput: 1.2 tokens/s, Avg generation throughput: 8.8 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 59.5%
+(APIServer pid=53561) INFO:     127.0.0.1:52056 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=53561) INFO 06-29 12:10:16 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.6 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 59.5%
+(APIServer pid=53561) INFO 06-29 12:10:26 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 59.5%
+(APIServer pid=53561) INFO 06-29 12:10:36 [loggers.py:271] Engine 000: Avg prompt throughput: 1.6 tokens/s, Avg generation throughput: 15.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.3%, Prefix cache hit rate: 63.1%
+(APIServer pid=53561) INFO:     127.0.0.1:52103 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=53561) INFO 06-29 12:10:46 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.9 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 63.1%
+(APIServer pid=53561) INFO:     127.0.0.1:52139 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=53561) INFO 06-29 12:10:56 [loggers.py:271] Engine 000: Avg prompt throughput: 1.6 tokens/s, Avg generation throughput: 16.4 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 65.3%
+(APIServer pid=53561) INFO 06-29 12:11:02 [launcher.py:100] [shutdown] API server: shutdown triggered
+(APIServer pid=53561) INFO 06-29 12:11:02 [launcher.py:116] [shutdown] API server: stopping engine client mode=abort timeout=0s
+(EngineCore pid=53620) INFO 06-29 12:11:02 [core.py:1178] [shutdown] EngineCore: trigger received signal=SIGINT
+(EngineCore pid=53620) INFO 06-29 12:11:02 [core.py:1297] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=53620) INFO 06-29 12:11:02 [core.py:1328] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=53620) INFO 06-29 12:11:02 [core.py:1191] [shutdown] EngineCore: exiting busy loop
+(APIServer pid=53561) INFO 06-29 12:11:02 [core_client.py:652] [shutdown] MPClient: start timeout=0s
+(APIServer pid=53561) INFO 06-29 12:11:02 [core_client.py:654] [shutdown] MPClient: stopping engine manager
+(EngineCore pid=53620) INFO 06-29 12:11:02 [worker.py:409] Metal worker shutdown complete
+(APIServer pid=53561) WARNING 06-29 12:11:02 [utils.py:607] [shutdown] Process manager: force killing remaining processes count=1
+(APIServer pid=53561) INFO 06-29 12:11:02 [core_client.py:656] [shutdown] MPClient: engine manager stopped
+(APIServer pid=53561) INFO 06-29 12:11:02 [core_client.py:657] [shutdown] MPClient: cleaning up background resources
+(APIServer pid=53561) INFO 06-29 12:11:02 [core_client.py:659] [shutdown] MPClient: complete
+(APIServer pid=53561) INFO 06-29 12:11:02 [launcher.py:125] [shutdown] API server: engine client stopped
+(APIServer pid=53561) INFO 06-29 12:11:02 [launcher.py:128] [shutdown] API server: signalling HTTP server shutdown
+(APIServer pid=53561) INFO 06-29 12:11:02 [launcher.py:149] [shutdown] API server: shutting down FastAPI HTTP server
+INFO 06-29 12:11:28 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:11:28 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:11:28 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:11:30 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:11:31 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=55260) INFO 06-29 12:11:32 [api_utils.py:339] 
+(APIServer pid=55260) INFO 06-29 12:11:32 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=55260) INFO 06-29 12:11:32 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=55260) INFO 06-29 12:11:32 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=55260) INFO 06-29 12:11:32 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=55260) INFO 06-29 12:11:32 [api_utils.py:339] 
+(APIServer pid=55260) INFO 06-29 12:11:32 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=55260) Traceback (most recent call last):
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=55260)     sys.exit(main())
+(APIServer pid=55260)              ^^^^^^
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=55260)     args.dispatch_function(args)
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=55260)     uvloop.run(run_server(args))
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=55260)     return __asyncio.run(
+(APIServer pid=55260)            ^^^^^^^^^^^^^^
+(APIServer pid=55260)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=55260)     return runner.run(main)
+(APIServer pid=55260)            ^^^^^^^^^^^^^^^^
+(APIServer pid=55260)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=55260)     return self._loop.run_until_complete(task)
+(APIServer pid=55260)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=55260)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=55260)     return await main
+(APIServer pid=55260)            ^^^^^^^^^^
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=55260)     listen_address, sock = setup_server(args)
+(APIServer pid=55260)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=55260)     return func(*args, **kwargs)
+(APIServer pid=55260)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=55260)     sock = create_server_socket(sock_addr)
+(APIServer pid=55260)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=55260)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=55260)     sock.bind(addr)
+(APIServer pid=55260) OSError: [Errno 48] Address already in use
+INFO 06-29 12:13:35 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:13:35 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:13:35 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:13:36 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:13:37 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=56038) INFO 06-29 12:13:38 [api_utils.py:339] 
+(APIServer pid=56038) INFO 06-29 12:13:38 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=56038) INFO 06-29 12:13:38 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=56038) INFO 06-29 12:13:38 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=56038) INFO 06-29 12:13:38 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=56038) INFO 06-29 12:13:38 [api_utils.py:339] 
+(APIServer pid=56038) INFO 06-29 12:13:38 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=56038) Traceback (most recent call last):
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=56038)     sys.exit(main())
+(APIServer pid=56038)              ^^^^^^
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=56038)     args.dispatch_function(args)
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=56038)     uvloop.run(run_server(args))
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=56038)     return __asyncio.run(
+(APIServer pid=56038)            ^^^^^^^^^^^^^^
+(APIServer pid=56038)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=56038)     return runner.run(main)
+(APIServer pid=56038)            ^^^^^^^^^^^^^^^^
+(APIServer pid=56038)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=56038)     return self._loop.run_until_complete(task)
+(APIServer pid=56038)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=56038)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=56038)     return await main
+(APIServer pid=56038)            ^^^^^^^^^^
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=56038)     listen_address, sock = setup_server(args)
+(APIServer pid=56038)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=56038)     return func(*args, **kwargs)
+(APIServer pid=56038)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=56038)     sock = create_server_socket(sock_addr)
+(APIServer pid=56038)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=56038)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=56038)     sock.bind(addr)
+(APIServer pid=56038) OSError: [Errno 48] Address already in use
+INFO 06-29 12:15:36 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:15:36 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:15:36 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:15:38 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:15:38 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=56784) INFO 06-29 12:15:40 [api_utils.py:339] 
+(APIServer pid=56784) INFO 06-29 12:15:40 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=56784) INFO 06-29 12:15:40 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=56784) INFO 06-29 12:15:40 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=56784) INFO 06-29 12:15:40 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=56784) INFO 06-29 12:15:40 [api_utils.py:339] 
+(APIServer pid=56784) INFO 06-29 12:15:40 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=56784) WARNING 06-29 12:15:40 [system_utils.py:299] Found ulimit of 2048 and failed to automatically increase with error current limit exceeds maximum limit. This can cause fd limit errors like `OSError: [Errno 24] Too many open files`. Consider increasing with ulimit -n
+(APIServer pid=56784) INFO 06-29 12:15:40 [model.py:611] Resolved architecture: Qwen3ForCausalLM
+(APIServer pid=56784) INFO 06-29 12:15:40 [model.py:1745] Using max model len 4096
+(APIServer pid=56784) INFO 06-29 12:15:40 [vllm.py:999] Asynchronous scheduling is enabled.
+(APIServer pid=56784) INFO 06-29 12:15:40 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(APIServer pid=56784) INFO 06-29 12:15:40 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(APIServer pid=56784) INFO 06-29 12:15:40 [platform.py:660] Metal memory: 17.2GB total, 8.9GB available
+(APIServer pid=56784) WARNING 06-29 12:15:40 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+INFO 06-29 12:15:46 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:15:46 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:15:46 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:15:46 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:15:46 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(EngineCore pid=56831) INFO 06-29 12:15:46 [core.py:113] Initializing a V1 LLM engine (v0.23.0) with config: model='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', speculative_config=None, tokenizer='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cpu, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::qwen_gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, moe_backend='auto', linear_backend='auto')
+(EngineCore pid=56831) INFO 06-29 12:15:47 [worker.py:123] MLX device set to: Device(gpu, 0)
+(EngineCore pid=56831) INFO 06-29 12:15:47 [utils.py:73] Set Metal wired_limit to 11.8 GB
+(EngineCore pid=56831) INFO 06-29 12:15:47 [worker.py:131] PyTorch device set to: mps
+(EngineCore pid=56831) INFO 06-29 12:15:47 [parallel_state.py:1568] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://192.168.1.113:53027 backend=gloo
+(EngineCore pid=56831) INFO 06-29 12:15:47 [parallel_state.py:1903] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=56831) INFO 06-29 12:15:47 [model_lifecycle.py:151] Loading model: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa (VLM: False)
+(EngineCore pid=56831) INFO 06-29 12:15:50 [model_lifecycle.py:212] Model loaded in 3.14s: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(EngineCore pid=56831) INFO 06-29 12:15:54 [cache_policy.py:743] Paged attention: VLLM_METAL_MEMORY_FRACTION=auto, defaulting to 0.90 for paged path
+(EngineCore pid=56831) INFO 06-29 12:15:54 [cache_policy.py:580] Paged attention memory breakdown: metal_limit=12.71GB, fraction=0.9, usable_metal=11.44GB, model_memory=3.44GB, overhead=0.48GB, kv_budget=7.52GB, per_block_bytes=1835008, num_blocks=4099, max_tokens_cached=65584
+(EngineCore pid=56831) INFO 06-29 12:15:55 [kv_cache.py:167] KV cache: 7521.7 MB (28 layers, 4099 blocks, 16 tokens/block)
+(EngineCore pid=56831) INFO 06-29 12:15:56 [cache_policy.py:606] Paged attention enabled: 28 layers patched, 4099 blocks allocated (block_size=16, mla=False, turboquant=False, k_quant=N/A)
+(EngineCore pid=56831) INFO 06-29 12:15:56 [cache_policy.py:647] Paged attention: reporting MPS cache capacity (4099 blocks × 1835008 bytes = 7.52 GB)
+(EngineCore pid=56831) INFO 06-29 12:15:56 [kv_cache_utils.py:1744] GPU KV cache size: 65,584 tokens
+(EngineCore pid=56831) INFO 06-29 12:15:56 [kv_cache_utils.py:1745] Maximum concurrency for 4,096 tokens per request: 16.01x
+(EngineCore pid=56831) INFO 06-29 12:15:56 [cache_policy.py:315] KV cache config received: 4099 blocks (MLX manages cache internally)
+(EngineCore pid=56831) INFO 06-29 12:15:56 [model_runner.py:690] Warming up model...
+(EngineCore pid=56831) INFO 06-29 12:15:56 [model_runner.py:696] Model warm-up complete
+(EngineCore pid=56831) INFO 06-29 12:15:56 [__init__.py:256] Warming up v2 paged-attention Metal kernels...
+(EngineCore pid=56831) INFO 06-29 12:15:58 [__init__.py:237] Native paged-attention Metal kernels loaded
+(EngineCore pid=56831) INFO 06-29 12:15:58 [__init__.py:264] Paged-attention Metal kernel warm-up complete
+(EngineCore pid=56831) INFO 06-29 12:15:58 [core.py:306] init engine (profile, create kv cache, warmup model) took 7.72 s (compilation: 1.90 s)
+(EngineCore pid=56831) WARNING 06-29 12:15:59 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+(EngineCore pid=56831) INFO 06-29 12:15:59 [vllm.py:999] Asynchronous scheduling is enabled.
+(EngineCore pid=56831) INFO 06-29 12:15:59 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(EngineCore pid=56831) INFO 06-29 12:15:59 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(EngineCore pid=56831) INFO 06-29 12:15:59 [platform.py:660] Metal memory: 17.2GB total, 6.0GB available
+(APIServer pid=56784) INFO 06-29 12:16:00 [api_server.py:579] Supported tasks: ['generate']
+(APIServer pid=56784) WARNING 06-29 12:16:00 [model.py:1502] Default vLLM sampling parameters have been overridden by the model's `generation_config.json`: `{'temperature': 0.6, 'top_k': 20, 'top_p': 0.95}`. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+(APIServer pid=56784) INFO 06-29 12:16:01 [hf.py:548] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(APIServer pid=56784) INFO 06-29 12:16:01 [api_server.py:583] Starting vLLM server on http://127.0.0.1:8000
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:37] Available routes are:
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /openapi.json, Methods: HEAD, GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /docs, Methods: HEAD, GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /docs/oauth2-redirect, Methods: HEAD, GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /redoc, Methods: HEAD, GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /load, Methods: GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /version, Methods: GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /health, Methods: GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /metrics, Methods: GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /tokenize, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /detokenize, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/models, Methods: GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /ping, Methods: GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /ping, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /invocations, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/chat/completions, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/chat/completions/batch, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/responses, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/responses/{response_id}, Methods: GET
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/responses/{response_id}/cancel, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/completions, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/messages, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/messages/count_tokens, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /generative_scoring, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /inference/v1/generate, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /scale_elastic_ep, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /is_scaling_elastic_ep, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/chat/completions/render, Methods: POST
+(APIServer pid=56784) INFO 06-29 12:16:01 [launcher.py:46] Route: /v1/completions/render, Methods: POST
+(APIServer pid=56784) INFO:     127.0.0.1:53100 - "GET /health HTTP/1.1" 200 OK
+(APIServer pid=56784) INFO:     127.0.0.1:53221 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=56784) INFO 06-29 12:16:32 [loggers.py:271] Engine 000: Avg prompt throughput: 3.5 tokens/s, Avg generation throughput: 1.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=56784) INFO 06-29 12:16:42 [loggers.py:271] Engine 000: Avg prompt throughput: 3.4 tokens/s, Avg generation throughput: 0.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 31.7%
+(APIServer pid=56784) INFO 06-29 12:16:52 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.3%, Prefix cache hit rate: 31.7%
+(APIServer pid=56784) INFO 06-29 12:17:02 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.0 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.5%, Prefix cache hit rate: 31.7%
+(APIServer pid=56784) INFO:     127.0.0.1:53251 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=56784) INFO 06-29 12:17:12 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.6 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 31.7%
+mx.metal.device_info is deprecated and will be removed in a future version. Use mx.device_info instead.
+(APIServer pid=56784) INFO:     Started server process [56784]
+(APIServer pid=56784) INFO:     Waiting for application startup.
+(APIServer pid=56784) INFO:     Application startup complete.
+(APIServer pid=56784) INFO:     Shutting down
+(APIServer pid=56784) INFO:     Waiting for application shutdown.
+(APIServer pid=56784) INFO:     Application shutdown complete.
+(APIServer pid=56784) INFO 06-29 12:17:22 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 31.7%
+(APIServer pid=56784) INFO:     127.0.0.1:53441 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=56784) INFO 06-29 12:18:02 [loggers.py:271] Engine 000: Avg prompt throughput: 0.2 tokens/s, Avg generation throughput: 9.5 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 57.5%
+(APIServer pid=56784) INFO:     127.0.0.1:53469 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=56784) INFO 06-29 12:18:12 [loggers.py:271] Engine 000: Avg prompt throughput: 0.2 tokens/s, Avg generation throughput: 0.7 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 68.7%
+(APIServer pid=56784) INFO:     127.0.0.1:53491 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=56784) INFO 06-29 12:18:22 [loggers.py:271] Engine 000: Avg prompt throughput: 1.9 tokens/s, Avg generation throughput: 0.7 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 69.3%
+(APIServer pid=56784) INFO 06-29 12:18:32 [loggers.py:271] Engine 000: Avg prompt throughput: 2.3 tokens/s, Avg generation throughput: 0.5 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.1%, Prefix cache hit rate: 69.0%
+(APIServer pid=56784) INFO:     127.0.0.1:53531 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=56784) INFO 06-29 12:18:42 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.6 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 69.0%
+(APIServer pid=56784) INFO 06-29 12:18:52 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 69.0%
+(APIServer pid=56784) INFO 06-29 12:19:21 [launcher.py:100] [shutdown] API server: shutdown triggered
+(APIServer pid=56784) INFO 06-29 12:19:21 [launcher.py:116] [shutdown] API server: stopping engine client mode=abort timeout=0s
+(APIServer pid=56784) INFO 06-29 12:19:21 [core_client.py:652] [shutdown] MPClient: start timeout=0s
+(APIServer pid=56784) INFO 06-29 12:19:21 [core_client.py:654] [shutdown] MPClient: stopping engine manager
+(EngineCore pid=56831) INFO 06-29 12:19:21 [core.py:1178] [shutdown] EngineCore: trigger received signal=SIGINT
+(EngineCore pid=56831) INFO 06-29 12:19:21 [core.py:1178] [shutdown] EngineCore: trigger received signal=SIGTERM
+(APIServer pid=56784) WARNING 06-29 12:19:21 [utils.py:607] [shutdown] Process manager: force killing remaining processes count=1
+(EngineCore pid=56831) INFO 06-29 12:19:21 [core.py:1297] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=56831) INFO 06-29 12:19:21 [core.py:1328] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=56831) INFO 06-29 12:19:21 [core.py:1191] [shutdown] EngineCore: exiting busy loop
+(EngineCore pid=56831) INFO 06-29 12:19:21 [worker.py:409] Metal worker shutdown complete
+(APIServer pid=56784) INFO 06-29 12:19:21 [core_client.py:656] [shutdown] MPClient: engine manager stopped
+(APIServer pid=56784) INFO 06-29 12:19:21 [core_client.py:657] [shutdown] MPClient: cleaning up background resources
+(APIServer pid=56784) INFO 06-29 12:19:21 [core_client.py:659] [shutdown] MPClient: complete
+(APIServer pid=56784) INFO 06-29 12:19:21 [launcher.py:125] [shutdown] API server: engine client stopped
+(APIServer pid=56784) INFO 06-29 12:19:21 [launcher.py:128] [shutdown] API server: signalling HTTP server shutdown
+(APIServer pid=56784) INFO 06-29 12:19:21 [launcher.py:149] [shutdown] API server: shutting down FastAPI HTTP server
+Traceback (most recent call last):
+  File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 4, in <module>
+    from vllm.entrypoints.cli.main import main
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/__init__.py", line 14, in <module>
+    import vllm.env_override  # noqa: F401
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/env_override.py", line 87, in <module>
+    import torch
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/__init__.py", line 2787, in <module>
+    from torch import (
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/export/__init__.py", line 42, in <module>
+    from .decomp_utils import CustomDecompTable
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/export/decomp_utils.py", line 5, in <module>
+    from torch._export.utils import (
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_export/__init__.py", line 49, in <module>
+    from .wrappers import _wrap_submodules
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_export/wrappers.py", line 10, in <module>
+    from torch._higher_order_ops.flat_apply import (
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_higher_order_ops/__init__.py", line 24, in <module>
+    from torch._higher_order_ops.invoke_subgraph import invoke_subgraph
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_higher_order_ops/invoke_subgraph.py", line 41, in <module>
+    from torch.utils._debug_mode import DebugMode
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/utils/_debug_mode.py", line 665, in <module>
+    @torch.library.custom_op("debug_mode_ops::annotate", mutates_args=())
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_library/custom_ops.py", line 157, in inner
+    result = CustomOpDef(namespace, opname, schema_str, fn, tags)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_library/custom_ops.py", line 215, in __init__
+    self._register_to_dispatcher(self._tags)
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_library/custom_ops.py", line 638, in _register_to_dispatcher
+    lib._register_fake(self._name, fake_impl, _stacklevel=4)
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/library.py", line 183, in _register_fake
+    source = torch._library.utils.get_source(_stacklevel + 1)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/torch/_library/utils.py", line 45, in get_source
+    frame = inspect.getframeinfo(sys._getframe(stacklevel))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/inspect.py", line 1718, in getframeinfo
+    lines, lnum = findsource(frame)
+                  ^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/inspect.py", line 1090, in findsource
+    module = getmodule(object, file)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/inspect.py", line 1013, in getmodule
+    f = getabsfile(module)
+        ^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/inspect.py", line 982, in getabsfile
+    _filename = getsourcefile(object) or getfile(object)
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/inspect.py", line 967, in getsourcefile
+    if os.path.exists(filename):
+       ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen genericpath>", line 19, in exists
+KeyboardInterrupt
+INFO 06-29 12:29:58 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:29:58 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:29:58 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:30:00 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:30:01 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=70617) INFO 06-29 12:30:02 [api_utils.py:339] 
+(APIServer pid=70617) INFO 06-29 12:30:02 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=70617) INFO 06-29 12:30:02 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=70617) INFO 06-29 12:30:02 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=70617) INFO 06-29 12:30:02 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=70617) INFO 06-29 12:30:02 [api_utils.py:339] 
+(APIServer pid=70617) INFO 06-29 12:30:02 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=70617) Traceback (most recent call last):
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=70617)     sys.exit(main())
+(APIServer pid=70617)              ^^^^^^
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=70617)     args.dispatch_function(args)
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=70617)     uvloop.run(run_server(args))
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=70617)     return __asyncio.run(
+(APIServer pid=70617)            ^^^^^^^^^^^^^^
+(APIServer pid=70617)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=70617)     return runner.run(main)
+(APIServer pid=70617)            ^^^^^^^^^^^^^^^^
+(APIServer pid=70617)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=70617)     return self._loop.run_until_complete(task)
+(APIServer pid=70617)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=70617)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=70617)     return await main
+(APIServer pid=70617)            ^^^^^^^^^^
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=70617)     listen_address, sock = setup_server(args)
+(APIServer pid=70617)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=70617)     return func(*args, **kwargs)
+(APIServer pid=70617)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=70617)     sock = create_server_socket(sock_addr)
+(APIServer pid=70617)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=70617)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=70617)     sock.bind(addr)
+(APIServer pid=70617) OSError: [Errno 48] Address already in use
+INFO 06-29 12:38:51 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:38:51 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:38:51 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:38:55 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:38:55 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16130) INFO 06-29 12:38:57 [api_utils.py:339] 
+(APIServer pid=16130) INFO 06-29 12:38:57 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16130) INFO 06-29 12:38:57 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16130) INFO 06-29 12:38:57 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16130) INFO 06-29 12:38:57 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16130) INFO 06-29 12:38:57 [api_utils.py:339] 
+(APIServer pid=16130) INFO 06-29 12:38:57 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16130) WARNING 06-29 12:38:57 [system_utils.py:299] Found ulimit of 2048 and failed to automatically increase with error current limit exceeds maximum limit. This can cause fd limit errors like `OSError: [Errno 24] Too many open files`. Consider increasing with ulimit -n
+(APIServer pid=16130) INFO 06-29 12:38:57 [model.py:611] Resolved architecture: Qwen3ForCausalLM
+(APIServer pid=16130) INFO 06-29 12:38:57 [model.py:1745] Using max model len 4096
+(APIServer pid=16130) INFO 06-29 12:38:57 [vllm.py:999] Asynchronous scheduling is enabled.
+(APIServer pid=16130) INFO 06-29 12:38:57 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(APIServer pid=16130) INFO 06-29 12:38:58 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(APIServer pid=16130) INFO 06-29 12:38:58 [platform.py:660] Metal memory: 17.2GB total, 7.2GB available
+(APIServer pid=16130) WARNING 06-29 12:38:58 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+INFO 06-29 12:39:04 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:39:04 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:39:04 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:39:04 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:39:04 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(EngineCore pid=16149) INFO 06-29 12:39:05 [core.py:113] Initializing a V1 LLM engine (v0.23.0) with config: model='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', speculative_config=None, tokenizer='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cpu, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::qwen_gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, moe_backend='auto', linear_backend='auto')
+(EngineCore pid=16149) INFO 06-29 12:39:05 [worker.py:123] MLX device set to: Device(gpu, 0)
+(EngineCore pid=16149) INFO 06-29 12:39:05 [utils.py:73] Set Metal wired_limit to 11.8 GB
+(EngineCore pid=16149) INFO 06-29 12:39:05 [worker.py:131] PyTorch device set to: mps
+(EngineCore pid=16149) INFO 06-29 12:39:05 [parallel_state.py:1568] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://192.168.1.113:49596 backend=gloo
+(EngineCore pid=16149) INFO 06-29 12:39:05 [parallel_state.py:1903] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=16149) INFO 06-29 12:39:05 [model_lifecycle.py:151] Loading model: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa (VLM: False)
+(EngineCore pid=16149) INFO 06-29 12:39:08 [model_lifecycle.py:212] Model loaded in 2.98s: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(EngineCore pid=16149) INFO 06-29 12:39:12 [cache_policy.py:743] Paged attention: VLLM_METAL_MEMORY_FRACTION=auto, defaulting to 0.90 for paged path
+(EngineCore pid=16149) INFO 06-29 12:39:12 [cache_policy.py:580] Paged attention memory breakdown: metal_limit=12.71GB, fraction=0.9, usable_metal=11.44GB, model_memory=3.44GB, overhead=0.49GB, kv_budget=7.51GB, per_block_bytes=1835008, num_blocks=4094, max_tokens_cached=65504
+(EngineCore pid=16149) INFO 06-29 12:39:14 [kv_cache.py:167] KV cache: 7512.5 MB (28 layers, 4094 blocks, 16 tokens/block)
+(EngineCore pid=16149) INFO 06-29 12:39:14 [cache_policy.py:606] Paged attention enabled: 28 layers patched, 4094 blocks allocated (block_size=16, mla=False, turboquant=False, k_quant=N/A)
+(EngineCore pid=16149) INFO 06-29 12:39:14 [cache_policy.py:647] Paged attention: reporting MPS cache capacity (4094 blocks × 1835008 bytes = 7.51 GB)
+(EngineCore pid=16149) INFO 06-29 12:39:14 [kv_cache_utils.py:1744] GPU KV cache size: 65,504 tokens
+(EngineCore pid=16149) INFO 06-29 12:39:14 [kv_cache_utils.py:1745] Maximum concurrency for 4,096 tokens per request: 15.99x
+(EngineCore pid=16149) INFO 06-29 12:39:14 [cache_policy.py:315] KV cache config received: 4094 blocks (MLX manages cache internally)
+(EngineCore pid=16149) INFO 06-29 12:39:14 [model_runner.py:690] Warming up model...
+(EngineCore pid=16149) INFO 06-29 12:39:14 [model_runner.py:696] Model warm-up complete
+(EngineCore pid=16149) INFO 06-29 12:39:14 [__init__.py:256] Warming up v2 paged-attention Metal kernels...
+(EngineCore pid=16149) INFO 06-29 12:39:15 [__init__.py:237] Native paged-attention Metal kernels loaded
+(EngineCore pid=16149) INFO 06-29 12:39:15 [__init__.py:264] Paged-attention Metal kernel warm-up complete
+(EngineCore pid=16149) INFO 06-29 12:39:15 [core.py:306] init engine (profile, create kv cache, warmup model) took 6.12 s (compilation: 0.57 s)
+(EngineCore pid=16149) WARNING 06-29 12:39:15 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+(EngineCore pid=16149) INFO 06-29 12:39:15 [vllm.py:999] Asynchronous scheduling is enabled.
+(EngineCore pid=16149) INFO 06-29 12:39:15 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(EngineCore pid=16149) INFO 06-29 12:39:15 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(EngineCore pid=16149) INFO 06-29 12:39:15 [platform.py:660] Metal memory: 17.2GB total, 0.7GB available
+(APIServer pid=16130) INFO 06-29 12:39:16 [api_server.py:579] Supported tasks: ['generate']
+(APIServer pid=16130) WARNING 06-29 12:39:16 [model.py:1502] Default vLLM sampling parameters have been overridden by the model's `generation_config.json`: `{'temperature': 0.6, 'top_k': 20, 'top_p': 0.95}`. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+(APIServer pid=16130) INFO 06-29 12:39:16 [hf.py:548] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(APIServer pid=16130) INFO 06-29 12:39:16 [api_server.py:583] Starting vLLM server on http://127.0.0.1:8000
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:37] Available routes are:
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /openapi.json, Methods: GET, HEAD
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /docs, Methods: GET, HEAD
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /docs/oauth2-redirect, Methods: GET, HEAD
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /redoc, Methods: GET, HEAD
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /load, Methods: GET
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /version, Methods: GET
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /health, Methods: GET
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /metrics, Methods: GET
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /tokenize, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /detokenize, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/models, Methods: GET
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /ping, Methods: GET
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /ping, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /invocations, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/chat/completions, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/chat/completions/batch, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/responses, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/responses/{response_id}, Methods: GET
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/responses/{response_id}/cancel, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/completions, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/messages, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/messages/count_tokens, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /generative_scoring, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /inference/v1/generate, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /scale_elastic_ep, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /is_scaling_elastic_ep, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/chat/completions/render, Methods: POST
+(APIServer pid=16130) INFO 06-29 12:39:16 [launcher.py:46] Route: /v1/completions/render, Methods: POST
+(APIServer pid=16130) INFO:     127.0.0.1:49680 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=16130) INFO 06-29 12:39:37 [loggers.py:271] Engine 000: Avg prompt throughput: 3.4 tokens/s, Avg generation throughput: 1.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=16130) INFO 06-29 12:39:47 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=16130) INFO 06-29 12:40:42 [launcher.py:100] [shutdown] API server: shutdown triggered
+(EngineCore pid=16149) INFO 06-29 12:40:42 [core.py:1178] [shutdown] EngineCore: trigger received signal=SIGINT
+(APIServer pid=16130) INFO 06-29 12:40:42 [launcher.py:116] [shutdown] API server: stopping engine client mode=abort timeout=0s
+(EngineCore pid=16149) INFO 06-29 12:40:42 [core.py:1297] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=16149) INFO 06-29 12:40:42 [core.py:1328] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=16149) INFO 06-29 12:40:42 [core.py:1191] [shutdown] EngineCore: exiting busy loop
+(APIServer pid=16130) INFO 06-29 12:40:42 [core_client.py:652] [shutdown] MPClient: start timeout=0s
+(APIServer pid=16130) INFO 06-29 12:40:42 [core_client.py:654] [shutdown] MPClient: stopping engine manager
+(APIServer pid=16130) WARNING 06-29 12:40:42 [utils.py:607] [shutdown] Process manager: force killing remaining processes count=1
+mx.metal.device_info is deprecated and will be removed in a future version. Use mx.device_info instead.
+(APIServer pid=16130) INFO:     Started server process [16130]
+(APIServer pid=16130) INFO:     Waiting for application startup.
+(APIServer pid=16130) INFO:     Application startup complete.
+(APIServer pid=16130) INFO:     Shutting down
+(APIServer pid=16130) INFO:     Waiting for application shutdown.
+(APIServer pid=16130) INFO:     Application shutdown complete.
+(APIServer pid=16130) INFO 06-29 12:40:42 [core_client.py:656] [shutdown] MPClient: engine manager stopped
+(APIServer pid=16130) INFO 06-29 12:40:42 [core_client.py:657] [shutdown] MPClient: cleaning up background resources
+(APIServer pid=16130) INFO 06-29 12:40:42 [core_client.py:659] [shutdown] MPClient: complete
+(APIServer pid=16130) INFO 06-29 12:40:42 [launcher.py:125] [shutdown] API server: engine client stopped
+(APIServer pid=16130) INFO 06-29 12:40:42 [launcher.py:128] [shutdown] API server: signalling HTTP server shutdown
+(APIServer pid=16130) INFO 06-29 12:40:42 [launcher.py:149] [shutdown] API server: shutting down FastAPI HTTP server
+INFO 06-29 12:40:52 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:40:52 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:40:52 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:40:55 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:40:55 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16229) INFO 06-29 12:40:57 [api_utils.py:339] 
+(APIServer pid=16229) INFO 06-29 12:40:57 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16229) INFO 06-29 12:40:57 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16229) INFO 06-29 12:40:57 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16229) INFO 06-29 12:40:57 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16229) INFO 06-29 12:40:57 [api_utils.py:339] 
+(APIServer pid=16229) INFO 06-29 12:40:57 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16229) Traceback (most recent call last):
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16229)     sys.exit(main())
+(APIServer pid=16229)              ^^^^^^
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16229)     args.dispatch_function(args)
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16229)     uvloop.run(run_server(args))
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16229)     return __asyncio.run(
+(APIServer pid=16229)            ^^^^^^^^^^^^^^
+(APIServer pid=16229)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16229)     return runner.run(main)
+(APIServer pid=16229)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16229)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16229)     return self._loop.run_until_complete(task)
+(APIServer pid=16229)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16229)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16229)     return await main
+(APIServer pid=16229)            ^^^^^^^^^^
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16229)     listen_address, sock = setup_server(args)
+(APIServer pid=16229)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16229)     return func(*args, **kwargs)
+(APIServer pid=16229)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16229)     sock = create_server_socket(sock_addr)
+(APIServer pid=16229)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16229)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16229)     sock.bind(addr)
+(APIServer pid=16229) OSError: [Errno 48] Address already in use
+INFO 06-29 12:42:34 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:42:34 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:42:34 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:42:36 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:42:36 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16330) INFO 06-29 12:42:38 [api_utils.py:339] 
+(APIServer pid=16330) INFO 06-29 12:42:38 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16330) INFO 06-29 12:42:38 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16330) INFO 06-29 12:42:38 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16330) INFO 06-29 12:42:38 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16330) INFO 06-29 12:42:38 [api_utils.py:339] 
+(APIServer pid=16330) INFO 06-29 12:42:38 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16330) Traceback (most recent call last):
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16330)     sys.exit(main())
+(APIServer pid=16330)              ^^^^^^
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16330)     args.dispatch_function(args)
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16330)     uvloop.run(run_server(args))
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16330)     return __asyncio.run(
+(APIServer pid=16330)            ^^^^^^^^^^^^^^
+(APIServer pid=16330)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16330)     return runner.run(main)
+(APIServer pid=16330)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16330)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16330)     return self._loop.run_until_complete(task)
+(APIServer pid=16330)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16330)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16330)     return await main
+(APIServer pid=16330)            ^^^^^^^^^^
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16330)     listen_address, sock = setup_server(args)
+(APIServer pid=16330)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16330)     return func(*args, **kwargs)
+(APIServer pid=16330)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16330)     sock = create_server_socket(sock_addr)
+(APIServer pid=16330)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16330)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16330)     sock.bind(addr)
+(APIServer pid=16330) OSError: [Errno 48] Address already in use
+INFO 06-29 12:43:20 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:43:20 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:43:20 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:43:22 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:43:22 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16358) INFO 06-29 12:43:23 [api_utils.py:339] 
+(APIServer pid=16358) INFO 06-29 12:43:23 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16358) INFO 06-29 12:43:23 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16358) INFO 06-29 12:43:23 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16358) INFO 06-29 12:43:23 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16358) INFO 06-29 12:43:23 [api_utils.py:339] 
+(APIServer pid=16358) INFO 06-29 12:43:23 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16358) Traceback (most recent call last):
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16358)     sys.exit(main())
+(APIServer pid=16358)              ^^^^^^
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16358)     args.dispatch_function(args)
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16358)     uvloop.run(run_server(args))
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16358)     return __asyncio.run(
+(APIServer pid=16358)            ^^^^^^^^^^^^^^
+(APIServer pid=16358)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16358)     return runner.run(main)
+(APIServer pid=16358)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16358)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16358)     return self._loop.run_until_complete(task)
+(APIServer pid=16358)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16358)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16358)     return await main
+(APIServer pid=16358)            ^^^^^^^^^^
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16358)     listen_address, sock = setup_server(args)
+(APIServer pid=16358)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16358)     return func(*args, **kwargs)
+(APIServer pid=16358)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16358)     sock = create_server_socket(sock_addr)
+(APIServer pid=16358)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16358)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16358)     sock.bind(addr)
+(APIServer pid=16358) OSError: [Errno 48] Address already in use
+INFO 06-29 12:44:02 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:44:02 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:44:02 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:44:04 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:44:04 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16393) INFO 06-29 12:44:06 [api_utils.py:339] 
+(APIServer pid=16393) INFO 06-29 12:44:06 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16393) INFO 06-29 12:44:06 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16393) INFO 06-29 12:44:06 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16393) INFO 06-29 12:44:06 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16393) INFO 06-29 12:44:06 [api_utils.py:339] 
+(APIServer pid=16393) INFO 06-29 12:44:06 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16393) Traceback (most recent call last):
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16393)     sys.exit(main())
+(APIServer pid=16393)              ^^^^^^
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16393)     args.dispatch_function(args)
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16393)     uvloop.run(run_server(args))
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16393)     return __asyncio.run(
+(APIServer pid=16393)            ^^^^^^^^^^^^^^
+(APIServer pid=16393)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16393)     return runner.run(main)
+(APIServer pid=16393)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16393)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16393)     return self._loop.run_until_complete(task)
+(APIServer pid=16393)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16393)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16393)     return await main
+(APIServer pid=16393)            ^^^^^^^^^^
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16393)     listen_address, sock = setup_server(args)
+(APIServer pid=16393)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16393)     return func(*args, **kwargs)
+(APIServer pid=16393)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16393)     sock = create_server_socket(sock_addr)
+(APIServer pid=16393)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16393)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16393)     sock.bind(addr)
+(APIServer pid=16393) OSError: [Errno 48] Address already in use
+INFO 06-29 12:45:09 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:45:09 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:45:09 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:45:11 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:45:11 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16442) INFO 06-29 12:45:12 [api_utils.py:339] 
+(APIServer pid=16442) INFO 06-29 12:45:12 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16442) INFO 06-29 12:45:12 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16442) INFO 06-29 12:45:12 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16442) INFO 06-29 12:45:12 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16442) INFO 06-29 12:45:12 [api_utils.py:339] 
+(APIServer pid=16442) INFO 06-29 12:45:12 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16442) Traceback (most recent call last):
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16442)     sys.exit(main())
+(APIServer pid=16442)              ^^^^^^
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16442)     args.dispatch_function(args)
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16442)     uvloop.run(run_server(args))
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16442)     return __asyncio.run(
+(APIServer pid=16442)            ^^^^^^^^^^^^^^
+(APIServer pid=16442)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16442)     return runner.run(main)
+(APIServer pid=16442)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16442)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16442)     return self._loop.run_until_complete(task)
+(APIServer pid=16442)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16442)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16442)     return await main
+(APIServer pid=16442)            ^^^^^^^^^^
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16442)     listen_address, sock = setup_server(args)
+(APIServer pid=16442)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16442)     return func(*args, **kwargs)
+(APIServer pid=16442)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16442)     sock = create_server_socket(sock_addr)
+(APIServer pid=16442)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16442)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16442)     sock.bind(addr)
+(APIServer pid=16442) OSError: [Errno 48] Address already in use
+INFO 06-29 12:55:36 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 12:55:36 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 12:55:36 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 12:55:38 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 12:55:38 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16673) INFO 06-29 12:55:39 [api_utils.py:339] 
+(APIServer pid=16673) INFO 06-29 12:55:39 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16673) INFO 06-29 12:55:39 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16673) INFO 06-29 12:55:39 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16673) INFO 06-29 12:55:39 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16673) INFO 06-29 12:55:39 [api_utils.py:339] 
+(APIServer pid=16673) INFO 06-29 12:55:39 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16673) Traceback (most recent call last):
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16673)     sys.exit(main())
+(APIServer pid=16673)              ^^^^^^
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16673)     args.dispatch_function(args)
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16673)     uvloop.run(run_server(args))
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16673)     return __asyncio.run(
+(APIServer pid=16673)            ^^^^^^^^^^^^^^
+(APIServer pid=16673)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16673)     return runner.run(main)
+(APIServer pid=16673)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16673)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16673)     return self._loop.run_until_complete(task)
+(APIServer pid=16673)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16673)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16673)     return await main
+(APIServer pid=16673)            ^^^^^^^^^^
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16673)     listen_address, sock = setup_server(args)
+(APIServer pid=16673)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16673)     return func(*args, **kwargs)
+(APIServer pid=16673)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16673)     sock = create_server_socket(sock_addr)
+(APIServer pid=16673)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16673)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16673)     sock.bind(addr)
+(APIServer pid=16673) OSError: [Errno 48] Address already in use
+INFO 06-29 13:01:00 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:01:00 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:01:00 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:01:02 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:01:02 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16770) INFO 06-29 13:01:03 [api_utils.py:339] 
+(APIServer pid=16770) INFO 06-29 13:01:03 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16770) INFO 06-29 13:01:03 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16770) INFO 06-29 13:01:03 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16770) INFO 06-29 13:01:03 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16770) INFO 06-29 13:01:03 [api_utils.py:339] 
+(APIServer pid=16770) INFO 06-29 13:01:03 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16770) Traceback (most recent call last):
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16770)     sys.exit(main())
+(APIServer pid=16770)              ^^^^^^
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16770)     args.dispatch_function(args)
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16770)     uvloop.run(run_server(args))
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16770)     return __asyncio.run(
+(APIServer pid=16770)            ^^^^^^^^^^^^^^
+(APIServer pid=16770)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16770)     return runner.run(main)
+(APIServer pid=16770)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16770)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16770)     return self._loop.run_until_complete(task)
+(APIServer pid=16770)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16770)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16770)     return await main
+(APIServer pid=16770)            ^^^^^^^^^^
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16770)     listen_address, sock = setup_server(args)
+(APIServer pid=16770)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16770)     return func(*args, **kwargs)
+(APIServer pid=16770)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16770)     sock = create_server_socket(sock_addr)
+(APIServer pid=16770)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16770)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16770)     sock.bind(addr)
+(APIServer pid=16770) OSError: [Errno 48] Address already in use
+INFO 06-29 13:04:09 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:04:09 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:04:09 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:04:11 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:04:11 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16857) INFO 06-29 13:04:12 [api_utils.py:339] 
+(APIServer pid=16857) INFO 06-29 13:04:12 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16857) INFO 06-29 13:04:12 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16857) INFO 06-29 13:04:12 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16857) INFO 06-29 13:04:12 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16857) INFO 06-29 13:04:12 [api_utils.py:339] 
+(APIServer pid=16857) INFO 06-29 13:04:12 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16857) Traceback (most recent call last):
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16857)     sys.exit(main())
+(APIServer pid=16857)              ^^^^^^
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16857)     args.dispatch_function(args)
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16857)     uvloop.run(run_server(args))
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16857)     return __asyncio.run(
+(APIServer pid=16857)            ^^^^^^^^^^^^^^
+(APIServer pid=16857)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16857)     return runner.run(main)
+(APIServer pid=16857)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16857)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16857)     return self._loop.run_until_complete(task)
+(APIServer pid=16857)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16857)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16857)     return await main
+(APIServer pid=16857)            ^^^^^^^^^^
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16857)     listen_address, sock = setup_server(args)
+(APIServer pid=16857)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16857)     return func(*args, **kwargs)
+(APIServer pid=16857)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16857)     sock = create_server_socket(sock_addr)
+(APIServer pid=16857)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16857)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16857)     sock.bind(addr)
+(APIServer pid=16857) OSError: [Errno 48] Address already in use
+INFO 06-29 13:05:54 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:05:54 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:05:54 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:05:56 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:05:56 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=16921) INFO 06-29 13:05:57 [api_utils.py:339] 
+(APIServer pid=16921) INFO 06-29 13:05:57 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=16921) INFO 06-29 13:05:57 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=16921) INFO 06-29 13:05:57 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=16921) INFO 06-29 13:05:57 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=16921) INFO 06-29 13:05:57 [api_utils.py:339] 
+(APIServer pid=16921) INFO 06-29 13:05:57 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=16921) Traceback (most recent call last):
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=16921)     sys.exit(main())
+(APIServer pid=16921)              ^^^^^^
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=16921)     args.dispatch_function(args)
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=16921)     uvloop.run(run_server(args))
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=16921)     return __asyncio.run(
+(APIServer pid=16921)            ^^^^^^^^^^^^^^
+(APIServer pid=16921)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=16921)     return runner.run(main)
+(APIServer pid=16921)            ^^^^^^^^^^^^^^^^
+(APIServer pid=16921)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=16921)     return self._loop.run_until_complete(task)
+(APIServer pid=16921)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16921)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=16921)     return await main
+(APIServer pid=16921)            ^^^^^^^^^^
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=16921)     listen_address, sock = setup_server(args)
+(APIServer pid=16921)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=16921)     return func(*args, **kwargs)
+(APIServer pid=16921)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=16921)     sock = create_server_socket(sock_addr)
+(APIServer pid=16921)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=16921)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=16921)     sock.bind(addr)
+(APIServer pid=16921) OSError: [Errno 48] Address already in use
+INFO 06-29 13:07:56 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:07:56 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:07:56 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:07:57 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:07:58 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=17007) INFO 06-29 13:07:59 [api_utils.py:339] 
+(APIServer pid=17007) INFO 06-29 13:07:59 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=17007) INFO 06-29 13:07:59 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=17007) INFO 06-29 13:07:59 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=17007) INFO 06-29 13:07:59 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=17007) INFO 06-29 13:07:59 [api_utils.py:339] 
+(APIServer pid=17007) INFO 06-29 13:07:59 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=17007) Traceback (most recent call last):
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=17007)     sys.exit(main())
+(APIServer pid=17007)              ^^^^^^
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=17007)     args.dispatch_function(args)
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=17007)     uvloop.run(run_server(args))
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=17007)     return __asyncio.run(
+(APIServer pid=17007)            ^^^^^^^^^^^^^^
+(APIServer pid=17007)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=17007)     return runner.run(main)
+(APIServer pid=17007)            ^^^^^^^^^^^^^^^^
+(APIServer pid=17007)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=17007)     return self._loop.run_until_complete(task)
+(APIServer pid=17007)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17007)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=17007)     return await main
+(APIServer pid=17007)            ^^^^^^^^^^
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=17007)     listen_address, sock = setup_server(args)
+(APIServer pid=17007)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=17007)     return func(*args, **kwargs)
+(APIServer pid=17007)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=17007)     sock = create_server_socket(sock_addr)
+(APIServer pid=17007)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17007)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=17007)     sock.bind(addr)
+(APIServer pid=17007) OSError: [Errno 48] Address already in use
+INFO 06-29 13:11:09 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:11:09 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:11:09 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:11:11 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:11:11 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=17241) INFO 06-29 13:11:12 [api_utils.py:339] 
+(APIServer pid=17241) INFO 06-29 13:11:12 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=17241) INFO 06-29 13:11:12 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=17241) INFO 06-29 13:11:12 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=17241) INFO 06-29 13:11:12 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=17241) INFO 06-29 13:11:12 [api_utils.py:339] 
+(APIServer pid=17241) INFO 06-29 13:11:12 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=17241) WARNING 06-29 13:11:12 [system_utils.py:299] Found ulimit of 2048 and failed to automatically increase with error current limit exceeds maximum limit. This can cause fd limit errors like `OSError: [Errno 24] Too many open files`. Consider increasing with ulimit -n
+(APIServer pid=17241) INFO 06-29 13:11:12 [model.py:611] Resolved architecture: Qwen3ForCausalLM
+(APIServer pid=17241) INFO 06-29 13:11:12 [model.py:1745] Using max model len 4096
+(APIServer pid=17241) INFO 06-29 13:11:12 [vllm.py:999] Asynchronous scheduling is enabled.
+(APIServer pid=17241) INFO 06-29 13:11:12 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(APIServer pid=17241) INFO 06-29 13:11:13 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(APIServer pid=17241) INFO 06-29 13:11:13 [platform.py:660] Metal memory: 17.2GB total, 7.3GB available
+(APIServer pid=17241) WARNING 06-29 13:11:13 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+INFO 06-29 13:11:18 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:11:18 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:11:18 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:11:18 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:11:18 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(EngineCore pid=17261) INFO 06-29 13:11:19 [core.py:113] Initializing a V1 LLM engine (v0.23.0) with config: model='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', speculative_config=None, tokenizer='/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, pipeline_parallel_size=1, data_parallel_size=1, decode_context_parallel_size=1, dcp_comm_backend=ag_rs, disable_custom_all_reduce=True, quantization=None, quantization_config=None, enforce_eager=False, enable_return_routed_experts=False, kv_cache_dtype=auto, device_config=cpu, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser='', reasoning_parser_plugin='', enable_in_reasoning=False), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None, kv_cache_metrics=False, kv_cache_metrics_sample=0.01, cudagraph_metrics=False, enable_layerwise_nvtx_tracing=False, enable_mfu_metrics=False, enable_mm_processor_stats=False, enable_logging_iteration_details=False), seed=0, served_model_name=/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa, enable_prefix_caching=True, enable_chunked_prefill=True, pooler_config=None, compilation_config={'mode': <CompilationMode.VLLM_COMPILE: 3>, 'debug_dump_path': None, 'cache_dir': '', 'compile_cache_save_format': 'binary', 'backend': 'inductor', 'custom_ops': ['none'], 'ir_enable_torch_wrap': True, 'splitting_ops': ['vllm::unified_attention_with_output', 'vllm::unified_mla_attention_with_output', 'vllm::mamba_mixer2', 'vllm::mamba_mixer', 'vllm::short_conv', 'vllm::linear_attention', 'vllm::plamo2_mamba_mixer', 'vllm::qwen_gdn_attention_core', 'vllm::gdn_attention_core_xpu', 'vllm::olmo_hybrid_gdn_full_forward', 'vllm::kda_attention', 'vllm::sparse_attn_indexer', 'vllm::rocm_aiter_sparse_attn_indexer', 'vllm::deepseek_v4_attention', 'vllm::unified_kv_cache_update', 'vllm::unified_mla_kv_cache_update'], 'compile_mm_encoder': False, 'cudagraph_mm_encoder': False, 'encoder_cudagraph_token_budgets': [], 'encoder_cudagraph_max_vision_items_per_batch': 0, 'encoder_cudagraph_max_frames_per_batch': None, 'compile_sizes': None, 'compile_ranges_endpoints': [2048], 'inductor_compile_config': {'enable_auto_functionalized_v2': False, 'size_asserts': False, 'alignment_asserts': False, 'scalar_asserts': False, 'combo_kernels': True, 'benchmark_combo_kernel': True}, 'inductor_passes': {}, 'cudagraph_mode': <CUDAGraphMode.NONE: 0>, 'cudagraph_num_of_warmups': 0, 'cudagraph_capture_sizes': None, 'cudagraph_copy_inputs': False, 'cudagraph_specialize_lora': True, 'use_inductor_graph_partition': False, 'pass_config': {'fuse_norm_quant': False, 'fuse_act_quant': False, 'fuse_attn_quant': False, 'enable_sp': False, 'fuse_gemm_comms': False, 'fuse_allreduce_rms': False, 'fuse_rope_kvcache_cat_mla': False, 'fuse_act_padding': False}, 'max_cudagraph_capture_size': None, 'dynamic_shapes_config': {'type': <DynamicShapesType.BACKED: 'backed'>, 'evaluate_guards': False, 'assume_32_bit_indexing': False}, 'local_cache_dir': None, 'fast_moe_cold_start': False, 'static_all_moe_layers': []}, kernel_config=KernelConfig(ir_op_priority=IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native']), enable_flashinfer_autotune=True, moe_backend='auto', linear_backend='auto')
+(EngineCore pid=17261) INFO 06-29 13:11:19 [worker.py:123] MLX device set to: Device(gpu, 0)
+(EngineCore pid=17261) INFO 06-29 13:11:19 [utils.py:73] Set Metal wired_limit to 11.8 GB
+(EngineCore pid=17261) INFO 06-29 13:11:19 [worker.py:131] PyTorch device set to: mps
+(EngineCore pid=17261) INFO 06-29 13:11:19 [parallel_state.py:1568] world_size=1 rank=0 local_rank=0 distributed_init_method=tcp://192.168.1.113:50213 backend=gloo
+(EngineCore pid=17261) INFO 06-29 13:11:19 [parallel_state.py:1903] rank 0 in world size 1 is assigned as DP rank 0, PP rank 0, PCP rank 0, TP rank 0, EP rank N/A, EPLB rank N/A
+(EngineCore pid=17261) INFO 06-29 13:11:20 [model_lifecycle.py:151] Loading model: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa (VLM: False)
+(EngineCore pid=17261) INFO 06-29 13:11:22 [model_lifecycle.py:212] Model loaded in 2.97s: /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(EngineCore pid=17261) INFO 06-29 13:11:26 [cache_policy.py:743] Paged attention: VLLM_METAL_MEMORY_FRACTION=auto, defaulting to 0.90 for paged path
+(EngineCore pid=17261) INFO 06-29 13:11:26 [cache_policy.py:580] Paged attention memory breakdown: metal_limit=12.71GB, fraction=0.9, usable_metal=11.44GB, model_memory=3.44GB, overhead=0.48GB, kv_budget=7.52GB, per_block_bytes=1835008, num_blocks=4099, max_tokens_cached=65584
+(EngineCore pid=17261) INFO 06-29 13:11:28 [kv_cache.py:167] KV cache: 7521.7 MB (28 layers, 4099 blocks, 16 tokens/block)
+(EngineCore pid=17261) INFO 06-29 13:11:28 [cache_policy.py:606] Paged attention enabled: 28 layers patched, 4099 blocks allocated (block_size=16, mla=False, turboquant=False, k_quant=N/A)
+(EngineCore pid=17261) INFO 06-29 13:11:28 [cache_policy.py:647] Paged attention: reporting MPS cache capacity (4099 blocks × 1835008 bytes = 7.52 GB)
+(EngineCore pid=17261) INFO 06-29 13:11:28 [kv_cache_utils.py:1744] GPU KV cache size: 65,584 tokens
+(EngineCore pid=17261) INFO 06-29 13:11:28 [kv_cache_utils.py:1745] Maximum concurrency for 4,096 tokens per request: 16.01x
+(EngineCore pid=17261) INFO 06-29 13:11:28 [cache_policy.py:315] KV cache config received: 4099 blocks (MLX manages cache internally)
+(EngineCore pid=17261) INFO 06-29 13:11:28 [model_runner.py:690] Warming up model...
+(EngineCore pid=17261) INFO 06-29 13:11:28 [model_runner.py:696] Model warm-up complete
+(EngineCore pid=17261) INFO 06-29 13:11:28 [__init__.py:256] Warming up v2 paged-attention Metal kernels...
+(EngineCore pid=17261) INFO 06-29 13:11:29 [__init__.py:237] Native paged-attention Metal kernels loaded
+(EngineCore pid=17261) INFO 06-29 13:11:29 [__init__.py:264] Paged-attention Metal kernel warm-up complete
+(EngineCore pid=17261) INFO 06-29 13:11:29 [core.py:306] init engine (profile, create kv cache, warmup model) took 6.22 s (compilation: 0.54 s)
+(EngineCore pid=17261) WARNING 06-29 13:11:29 [vllm.py:528] Model Runner V2 requires Triton; using the V1 model runner instead.
+(EngineCore pid=17261) INFO 06-29 13:11:30 [vllm.py:999] Asynchronous scheduling is enabled.
+(EngineCore pid=17261) INFO 06-29 13:11:30 [kernel.py:270] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'])
+(EngineCore pid=17261) INFO 06-29 13:11:30 [platform.py:561] Metal: chunked prefill enabled (paged attention), max_num_batched_tokens=2048
+(EngineCore pid=17261) INFO 06-29 13:11:30 [platform.py:660] Metal memory: 17.2GB total, 0.7GB available
+(APIServer pid=17241) INFO 06-29 13:11:30 [api_server.py:579] Supported tasks: ['generate']
+(APIServer pid=17241) WARNING 06-29 13:11:30 [model.py:1502] Default vLLM sampling parameters have been overridden by the model's `generation_config.json`: `{'temperature': 0.6, 'top_k': 20, 'top_p': 0.95}`. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+(APIServer pid=17241) INFO 06-29 13:11:31 [hf.py:548] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(APIServer pid=17241) INFO 06-29 13:11:31 [api_server.py:583] Starting vLLM server on http://127.0.0.1:8000
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:37] Available routes are:
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /openapi.json, Methods: GET, HEAD
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /docs, Methods: GET, HEAD
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /docs/oauth2-redirect, Methods: GET, HEAD
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /redoc, Methods: GET, HEAD
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /load, Methods: GET
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /version, Methods: GET
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /health, Methods: GET
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /metrics, Methods: GET
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /tokenize, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /detokenize, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/models, Methods: GET
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /ping, Methods: GET
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /ping, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /invocations, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/chat/completions, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/chat/completions/batch, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/responses, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/responses/{response_id}, Methods: GET
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/responses/{response_id}/cancel, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/completions, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/messages, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/messages/count_tokens, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /generative_scoring, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /inference/v1/generate, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /scale_elastic_ep, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /is_scaling_elastic_ep, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/chat/completions/render, Methods: POST
+(APIServer pid=17241) INFO 06-29 13:11:31 [launcher.py:46] Route: /v1/completions/render, Methods: POST
+(APIServer pid=17241) INFO:     127.0.0.1:50259 - "GET /health HTTP/1.1" 200 OK
+(APIServer pid=17241) INFO:     127.0.0.1:50277 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=17241) INFO 06-29 13:12:01 [loggers.py:271] Engine 000: Avg prompt throughput: 3.5 tokens/s, Avg generation throughput: 1.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=17241) INFO 06-29 13:12:11 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+(APIServer pid=17241) INFO:     127.0.0.1:50297 - "POST /v1/chat/completions HTTP/1.1" 200 OK
+(APIServer pid=17241) INFO 06-29 13:12:31 [loggers.py:271] Engine 000: Avg prompt throughput: 0.3 tokens/s, Avg generation throughput: 1.2 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 45.7%
+(APIServer pid=17241) INFO 06-29 13:12:41 [loggers.py:271] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 45.7%
+(EngineCore pid=17261) INFO 06-29 13:13:21 [core.py:1178] [shutdown] EngineCore: trigger received signal=SIGINT
+(APIServer pid=17241) INFO 06-29 13:13:21 [launcher.py:100] [shutdown] API server: shutdown triggered
+(APIServer pid=17241) INFO 06-29 13:13:21 [launcher.py:116] [shutdown] API server: stopping engine client mode=abort timeout=0s
+mx.metal.device_info is deprecated and will be removed in a future version. Use mx.device_info instead.
+(APIServer pid=17241) INFO:     Started server process [17241]
+(APIServer pid=17241) INFO:     Waiting for application startup.
+(APIServer pid=17241) INFO:     Application startup complete.
+(APIServer pid=17241) INFO:     Shutting down
+(APIServer pid=17241) INFO:     Waiting for application shutdown.
+(APIServer pid=17241) INFO:     Application shutdown complete.
+(EngineCore pid=17261) INFO 06-29 13:13:21 [core.py:1297] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=17261) INFO 06-29 13:13:21 [core.py:1328] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=17261) INFO 06-29 13:13:21 [core.py:1191] [shutdown] EngineCore: exiting busy loop
+(APIServer pid=17241) INFO 06-29 13:13:21 [core_client.py:652] [shutdown] MPClient: start timeout=0s
+(APIServer pid=17241) INFO 06-29 13:13:21 [core_client.py:654] [shutdown] MPClient: stopping engine manager
+(APIServer pid=17241) WARNING 06-29 13:13:21 [utils.py:607] [shutdown] Process manager: force killing remaining processes count=1
+(APIServer pid=17241) INFO 06-29 13:13:21 [core_client.py:656] [shutdown] MPClient: engine manager stopped
+(APIServer pid=17241) INFO 06-29 13:13:21 [core_client.py:657] [shutdown] MPClient: cleaning up background resources
+(APIServer pid=17241) INFO 06-29 13:13:21 [core_client.py:659] [shutdown] MPClient: complete
+(APIServer pid=17241) INFO 06-29 13:13:21 [launcher.py:125] [shutdown] API server: engine client stopped
+(APIServer pid=17241) INFO 06-29 13:13:21 [launcher.py:128] [shutdown] API server: signalling HTTP server shutdown
+(APIServer pid=17241) INFO 06-29 13:13:21 [launcher.py:149] [shutdown] API server: shutting down FastAPI HTTP server
+INFO 06-29 13:13:26 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:13:26 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:13:26 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:13:28 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:13:29 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=17346) INFO 06-29 13:13:30 [api_utils.py:339] 
+(APIServer pid=17346) INFO 06-29 13:13:30 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=17346) INFO 06-29 13:13:30 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=17346) INFO 06-29 13:13:30 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=17346) INFO 06-29 13:13:30 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=17346) INFO 06-29 13:13:30 [api_utils.py:339] 
+(APIServer pid=17346) INFO 06-29 13:13:30 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=17346) Traceback (most recent call last):
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=17346)     sys.exit(main())
+(APIServer pid=17346)              ^^^^^^
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=17346)     args.dispatch_function(args)
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=17346)     uvloop.run(run_server(args))
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=17346)     return __asyncio.run(
+(APIServer pid=17346)            ^^^^^^^^^^^^^^
+(APIServer pid=17346)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=17346)     return runner.run(main)
+(APIServer pid=17346)            ^^^^^^^^^^^^^^^^
+(APIServer pid=17346)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=17346)     return self._loop.run_until_complete(task)
+(APIServer pid=17346)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17346)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=17346)     return await main
+(APIServer pid=17346)            ^^^^^^^^^^
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=17346)     listen_address, sock = setup_server(args)
+(APIServer pid=17346)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=17346)     return func(*args, **kwargs)
+(APIServer pid=17346)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=17346)     sock = create_server_socket(sock_addr)
+(APIServer pid=17346)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17346)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=17346)     sock.bind(addr)
+(APIServer pid=17346) OSError: [Errno 48] Address already in use
+INFO 06-29 13:16:08 [__init__.py:44] Available plugins for group vllm.platform_plugins:
+INFO 06-29 13:16:08 [__init__.py:46] - metal -> vllm_metal:register
+INFO 06-29 13:16:08 [__init__.py:49] All plugins in this group will be loaded. Set `VLLM_PLUGINS` to control which plugins to load.
+INFO 06-29 13:16:09 [__init__.py:238] Platform plugin metal is activated
+INFO 06-29 13:16:10 [importing.py:81] Triton not installed or not compatible; certain GPU-related functions will not be available.
+(APIServer pid=17535) INFO 06-29 13:16:11 [api_utils.py:339] 
+(APIServer pid=17535) INFO 06-29 13:16:11 [api_utils.py:339]        █     █     █▄   ▄█
+(APIServer pid=17535) INFO 06-29 13:16:11 [api_utils.py:339]  ▄▄ ▄█ █     █     █ ▀▄▀ █  version 0.23.0
+(APIServer pid=17535) INFO 06-29 13:16:11 [api_utils.py:339]   █▄█▀ █     █     █     █  model   /Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa
+(APIServer pid=17535) INFO 06-29 13:16:11 [api_utils.py:339]    ▀▀  ▀▀▀▀▀ ▀▀▀▀▀ ▀     ▀
+(APIServer pid=17535) INFO 06-29 13:16:11 [api_utils.py:339] 
+(APIServer pid=17535) INFO 06-29 13:16:11 [api_utils.py:273] non-default args: {'model_tag': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'host': '127.0.0.1', 'model': '/Users/mpaga/poc-agent-triage-medical/models/merged_dpo_final_chsa', 'max_model_len': 4096, 'gpu_memory_utilization': 0.7}
+(APIServer pid=17535) Traceback (most recent call last):
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/bin/vllm", line 10, in <module>
+(APIServer pid=17535)     sys.exit(main())
+(APIServer pid=17535)              ^^^^^^
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/main.py", line 95, in main
+(APIServer pid=17535)     args.dispatch_function(args)
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/cli/serve.py", line 148, in cmd
+(APIServer pid=17535)     uvloop.run(run_server(args))
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 96, in run
+(APIServer pid=17535)     return __asyncio.run(
+(APIServer pid=17535)            ^^^^^^^^^^^^^^
+(APIServer pid=17535)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+(APIServer pid=17535)     return runner.run(main)
+(APIServer pid=17535)            ^^^^^^^^^^^^^^^^
+(APIServer pid=17535)   File "/opt/homebrew/Cellar/python@3.12/3.12.13/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+(APIServer pid=17535)     return self._loop.run_until_complete(task)
+(APIServer pid=17535)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17535)   File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/uvloop/__init__.py", line 48, in wrapper
+(APIServer pid=17535)     return await main
+(APIServer pid=17535)            ^^^^^^^^^^
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 664, in run_server
+(APIServer pid=17535)     listen_address, sock = setup_server(args)
+(APIServer pid=17535)                            ^^^^^^^^^^^^^^^^^^
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/tracing/otel.py", line 178, in sync_wrapper
+(APIServer pid=17535)     return func(*args, **kwargs)
+(APIServer pid=17535)            ^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 543, in setup_server
+(APIServer pid=17535)     sock = create_server_socket(sock_addr)
+(APIServer pid=17535)            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+(APIServer pid=17535)   File "/Users/mpaga/.venv-vllm-metal/lib/python3.12/site-packages/vllm/entrypoints/openai/api_server.py", line 492, in create_server_socket
+(APIServer pid=17535)     sock.bind(addr)
+(APIServer pid=17535) OSError: [Errno 48] Address already in use

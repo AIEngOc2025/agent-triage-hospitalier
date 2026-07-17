@@ -1,0 +1,18 @@
+Metadata-Version: 2.4
+Name: agent-triage-hospitalier
+Version: 0.1.1
+Summary: Agent IA de triage médical pour le CHSA
+Author: Mpaga Christophe
+Requires-Python: >=3.12
+Requires-Dist: fastapi>=0.110.0
+Requires-Dist: uvicorn[standard]>=0.29.0
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: gunicorn>=22.0.0
+Requires-Dist: pytest-asyncio>=1.4.0
+Provides-Extra: gpu
+Requires-Dist: vllm>=0.6.0; extra == "gpu"
+Requires-Dist: torch>=2.4.0; extra == "gpu"
+Requires-Dist: transformers<5.0.0,>=4.46.0; extra == "gpu"
+Requires-Dist: peft>=0.19.1; extra == "gpu"
+Provides-Extra: apple-silicon
+Requires-Dist: mlx-lm>=0.15.0; extra == "apple-silicon"
