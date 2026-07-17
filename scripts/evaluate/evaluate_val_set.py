@@ -29,7 +29,7 @@ def evaluate_validation_light():
 
     def format_chatml(ex):
         return {
-            formatted_prompt = (
+            "formatted_prompt": (
                 f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
                 f"<|im_start|>user\n{ex['instruction']}<|im_end|>\n"
                 f"<|im_start|>assistant\n{ex['response']}<|im_end|>"
