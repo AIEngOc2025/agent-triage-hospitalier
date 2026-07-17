@@ -8,4 +8,4 @@ __pycache__/
 
 # Lock file
 uv.lock
-requirements.lock
+requirements.lockbuild/
