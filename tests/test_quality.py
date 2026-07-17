@@ -19,5 +19,6 @@ def test_code_formatting():
         text=True,
     )
     assert result.returncode == 0, (
-        f"Le code n'est pas formaté avec Ruff. Lancez 'ruff format .'\n{result.stdout}\n{result.stderr}"
+        "Le code n'est pas formaté avec Ruff. "
+        f"Lancez 'ruff format .'\n{result.stdout}\n{result.stderr}"
     )

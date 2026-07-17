@@ -32,7 +32,11 @@ def calculate_matrix():
     print(f"📊 Génération de la matrice quantitative sur {len(test_samples)} cas...")
 
     for item in tqdm(test_samples):
-        prompt = f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n<|im_start|>user\n{item['instruction']}<|im_end|>\n<|im_start|>assistant\n"
+        prompt = (
+        f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
+        f"<|im_start|>user\n{item['instruction']}<|im_end|>\n"
+        f"<|im_start|>assistant\n"
+    )
         inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
         with torch.no_grad():
@@ -99,7 +103,9 @@ def calculate_matrix():
     matrix = {
         "Précision Linguistique": f"{(df['lang_ok'].mean() * 100):.2f}%",
         "Précision Triage (Mots-clés)": f"{(df['urgence_match'].mean() * 100):.2f}%",
-        "Taux de Sécurité (Sans Hallucination)": f"{((1 - df['hallucination'].mean()) * 100):.2f}%",
+        "Taux de Sécurité (Sans Hallucination)": (
+            f"{((1 - df['hallucination'].mean()) * 100):.2f}%"
+        ),
     }
 
     print("\n" + "═" * 45)

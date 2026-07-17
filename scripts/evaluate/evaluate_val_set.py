@@ -29,7 +29,11 @@ def evaluate_validation_light():
 
     def format_chatml(ex):
         return {
-            "text": f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n<|im_start|>user\n{ex['instruction']}<|im_end|>\n<|im_start|>assistant\n{ex['response']}<|im_end|>"
+            formatted_prompt = (
+                f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
+                f"<|im_start|>user\n{ex['instruction']}<|im_end|>\n"
+                f"<|im_start|>assistant\n{ex['response']}<|im_end|>"
+            )
         }
 
     val_dataset = val_dataset.map(format_chatml)
