@@ -1,3 +1,10 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:aa0b7449870ab21621a393618e6c2abaf3ac72cb260d12c3dc3de618ed116899
-size 341
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+
+# Lock file
+uv.lock
