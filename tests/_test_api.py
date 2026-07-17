@@ -13,8 +13,7 @@ def test_triage_endpoint_success():
             "/triage",
             json={
                 "symptomes": (
-                    "Le patient a une forte fièvre et des "
-                    "difficultés à respirer."
+                    "Le patient a une forte fièvre et des difficultés à respirer."
                 )
             },
         )

@@ -33,10 +33,10 @@ def calculate_matrix():
 
     for item in tqdm(test_samples):
         prompt = (
-        f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
-        f"<|im_start|>user\n{item['instruction']}<|im_end|>\n"
-        f"<|im_start|>assistant\n"
-    )
+            f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
+            f"<|im_start|>user\n{item['instruction']}<|im_end|>\n"
+            f"<|im_start|>assistant\n"
+        )
         inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
         with torch.no_grad():
