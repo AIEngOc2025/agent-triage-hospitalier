@@ -5,7 +5,6 @@ pydantic-settings
 pydantic
 
 # Model dependencies
-mlx-lm
 huggingface-hub
 
 # For merging script (if run outside of a dedicated env)

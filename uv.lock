@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:da26c9d2a43b3abdf913915c9abce28bcb07cdaa953727f753c5f85ee091b4eb
-size 107
+version = 1
+revision = 3
+requires-python = ">=3.11"
+
+[[package]]
+name = "agent-triage-hospitalier"
+version = "0.1.0"
+source = { virtual = "." }
