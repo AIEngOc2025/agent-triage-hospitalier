@@ -1,13 +1,4 @@
-fastapi==0.139.0
-gunicorn==26.0.0
-uvicorn==0.51.0
+fastapi
+uvicorn
 pydantic-settings
-pydantic
-
-# Model dependencies
-huggingface-hub
-
-# For merging script (if run outside of a dedicated env)
-torch
-transformers
-peft
+gradio
