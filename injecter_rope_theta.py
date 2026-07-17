@@ -23,7 +23,8 @@ if os.path.exists(config_path):
         print("✅ Fichier config.json mis à jour avec succès.")
     else:
         print(
-            "ℹ️ 'rope_theta' est déjà présent. Le problème vient peut-être d'une version de mlx-lm trop récente."
+            "ℹ️ 'rope_theta' est déjà présent. Le problème vient peut-être d'une "
+            "version de mlx-lm trop récente."
         )
 else:
     print(f"❌ Erreur : Fichier introuvable à l'adresse {config_path}")

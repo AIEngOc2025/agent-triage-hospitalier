@@ -87,7 +87,8 @@ class MedicalDataFinalProcessor:
             for entry in self.final_data:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
         print(
-            f"\n🚀 SUCCESS : {len(self.final_data)} exemples bilingues anonymisés créés."
+            f"\n🚀 SUCCESS : {len(self.final_data)} "
+            "exemples bilingues anonymisés créés."
         )
 
 

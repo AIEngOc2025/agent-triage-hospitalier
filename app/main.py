@@ -30,7 +30,9 @@ class ModelEngine:
 
     def initialize(self):
         print(
-            f"🔍 Initializing engine... APP_ENV: {settings.APP_ENV}, IS_PRODUCTION: {settings.IS_PRODUCTION}"
+            "🔍 Initializing engine... "
+            f"APP_ENV: {settings.APP_ENV}, "
+            f"IS_PRODUCTION: {settings.IS_PRODUCTION}"
         )
         try:
             if settings.IS_MACOS:
@@ -171,7 +173,8 @@ engine = ModelEngine()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    # Start model loading in the background to allow the health check to respond immediately
+    # Start model loading in the background to allow the health check to
+    # respond immediately
     asyncio.create_task(asyncio.to_thread(engine.initialize))
     yield
     print("🛑 Arrêt de la tentative du chargement de l'orchestrateur")
@@ -198,15 +201,17 @@ async def api_chat(request: ChatRequest):
     start_time = time.time()
     messages = request.history
     if not messages or messages[0].get("role") != "system":
-        system_prompt = """Tu es un infirmier de triage pour le Centre Hospitalier Sud-Aveyron (CHSA).
-
-**Instructions strictes :**
-1.  **Présentation :** Commence TOUJOURS par te présenter et demander la raison de la venue.
-2.  **Une seule question :** Pose UNE SEULE question courte et simple à la fois pour préciser les symptômes.
-3.  **Rôle limité :** Ne donne JAMAIS de diagnostic, d'explication, de conseil ou de niveau d'urgence. Ton unique objectif est de poser la question suivante pour recueillir de l'information.
-4.  **Bilinguisme :** Réponds en français ou en anglais selon la langue de l'utilisateur.
-5.  **Anti-Répétition :** Ne répète JAMAIS les mêmes phrases. Sois extrêmement concis. Une seule phrase courte suffit.
-6.  **Anti-Exemple :** Ne génère JAMAIS de cas cliniques ou de questions à choix multiples. Tu dois converser naturellement."""
+        system_prompt = (
+            "Tu es un infirmier de triage pour le Centre Hospitalier "
+            "Sud-Aveyron (CHSA).\n\n"
+            "**Instructions strictes :**\n"
+            "1. **Présentation :** Présente-toi et demande la raison de la venue.\n"
+            "2. **Une seule question :** Pose une seule question courte à la fois.\n"
+            "3. **Rôle limité :** Ne donne aucun diagnostic ni conseil.\n"
+            "4. **Bilinguisme :** Réponds en français ou en anglais.\n"
+            "5. **Anti-Répétition :** Sois concis. Une phrase suffit.\n"
+            "6. **Anti-Exemple :** Pas de cas cliniques ni de QCM."
+        )
         messages.insert(0, {"role": "system", "content": system_prompt})
 
     if request.stream:

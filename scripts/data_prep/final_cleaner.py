@@ -10,7 +10,8 @@ try:
     print("✅ Modèles SpaCy chargés.")
 except OSError:
     print(
-        "❌ Erreur : Modèles SpaCy manquants. Lance : python -m spacy download fr_core_news_lg"
+        "❌ Erreur : Modèles SpaCy manquants. "
+        "Lance : python -m spacy download fr_core_news_lg"
     )
     raise
 

@@ -35,7 +35,8 @@ def balance_and_limit():
     # Vérification des quotas
     if len(fr_pool) < 2500 or len(en_pool) < 2500:
         print(
-            "⚠️ Attention : Un des pools est inférieur à 2500. On prendra le maximum possible."
+            "⚠️ Attention : Un des pools est inférieur à 2500. "
+            "On prendra le maximum possible."
         )
 
     # Échantillonnage aléatoire pour la diversité

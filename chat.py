@@ -6,7 +6,10 @@ llm = LLM(
 conversation = [
     {
         "role": "system",
-        "content": "Tu es l'infirmier de triage du CHSA. Pose une question courte à la fois pour évaluer l'urgence. Sois bilingue.",
+        "content": (
+            "Tu es l'infirmier de triage du CHSA. Pose une question courte à la fois "
+            "pour évaluer l'urgence. Sois bilingue."
+        ),
     },
     {
         "role": "user",

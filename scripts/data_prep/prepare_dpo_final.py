@@ -40,7 +40,11 @@ def prepare_dpo():
 
             final_dpo.append(
                 {
-                    "prompt": f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n<|im_start|>user\n{anonymize(prompt)}<|im_end|>\n<|im_start|>assistant\n",
+                    "prompt": (
+                        f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
+                        f"<|im_start|>user\n{anonymize(prompt)}<|im_end|>\n"
+                        "<|im_start|>assistant\n"
+                    ),
                     "chosen": anonymize(chosen),
                     "rejected": anonymize(rejected),
                 }
