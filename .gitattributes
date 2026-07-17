@@ -26,4 +26,5 @@ models/**/*.pt filter=lfs diff=lfs merge=lfs -text
 *.dockerignore filter=lfs diff=lfs merge=lfs -text
 /app/Dockerfile filter=lfs diff=lfs merge=lfs -text
 *.jinja filter=lfs diff=lfs merge=lfs -text
+*.cloudrun filter=lfs diff=lfs merge=lfs -text
 *.py !text !filter !merge !diff
