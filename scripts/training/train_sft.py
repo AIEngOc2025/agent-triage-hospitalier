@@ -1,10 +1,7 @@
 import torch
 from datasets import load_dataset
-from peft import LoraConfig
-from peft import get_peft_model
-from transformers import AutoModelForCausalLM
-from transformers import AutoTokenizer
-from transformers import TrainingArguments
+from peft import LoraConfig, get_peft_model
+from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments
 from trl import SFTTrainer
 
 # 1. CONFIGURATION

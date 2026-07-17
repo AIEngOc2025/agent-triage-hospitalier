@@ -1,7 +1,7 @@
+import argparse
 import json
 
 from anonymize import MedicalAnonymizer  # On importe ton script précédent
-import argparse
 from datasets import load_dataset
 
 

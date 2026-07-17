@@ -1,15 +1,16 @@
 # --- 1. INSTALLATION ---
 
 import argparse
+
 import torch
 from datasets import load_dataset
+from peft import PeftModel
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    TrainingArguments,
     BitsAndBytesConfig,
+    TrainingArguments,
 )
-from peft import PeftModel
 from trl import DPOTrainer
 
 parser = argparse.ArgumentParser(description="DPO Training Script")

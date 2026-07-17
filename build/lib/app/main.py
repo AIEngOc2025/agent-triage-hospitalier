@@ -4,8 +4,7 @@ import re
 import time
 import uuid
 from contextlib import asynccontextmanager
-
-from typing import List, AsyncGenerator
+from typing import AsyncGenerator, List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
@@ -49,7 +48,7 @@ class ModelEngine:
 
     def _init_vllm(self):
         try:
-            from vllm import AsyncLLMEngine, AsyncEngineArgs, SamplingParams
+            from vllm import AsyncEngineArgs, AsyncLLMEngine, SamplingParams
         except ImportError:
             raise ImportError("vLLM AsyncLLMEngine package not installed.")
 

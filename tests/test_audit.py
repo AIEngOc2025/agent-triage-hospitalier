@@ -1,9 +1,10 @@
 import json
+from unittest.mock import ANY, AsyncMock, mock_open, patch
+
 import pytest
-from unittest.mock import AsyncMock, patch, mock_open, ANY
-from app.main import log_audit
 from fastapi.testclient import TestClient
-from app.main import app
+
+from app.main import app, log_audit
 
 
 @pytest.fixture

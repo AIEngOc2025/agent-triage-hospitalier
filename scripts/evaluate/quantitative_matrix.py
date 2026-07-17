@@ -2,8 +2,8 @@ import json
 
 import pandas as pd
 import torch
+from langdetect import LangDetectException, detect
 from peft import PeftModel
-from langdetect import detect, LangDetectException
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 

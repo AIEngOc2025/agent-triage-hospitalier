@@ -1,8 +1,9 @@
+import argparse
 import json
 import os
+
 import pandas as pd
 from anonymize import MedicalAnonymizer
-import argparse
 
 
 class LocalDataProcessor:

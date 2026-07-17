@@ -1,5 +1,5 @@
-from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 
 # Détermine quel 'app' importer en fonction de l'environnement
 # Les imports sont maintenant alignés avec la structure du projet (app/)

@@ -1,7 +1,8 @@
+import traceback
+
+import torch
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
-import torch
-import traceback
 
 # Use the base model that matches the SFT/DPO training
 base_model_id = "Qwen/Qwen3-1.7B-Base"

@@ -1,5 +1,6 @@
-from app.settings import settings
 from transformers import AutoModelForCausalLM, AutoTokenizer
+
+from app.settings import settings
 
 
 def test_inference():
