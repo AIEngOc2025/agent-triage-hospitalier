@@ -75,7 +75,7 @@ jobs:
           uv pip sync --system requirements.lock
 
       - name: Run inference test
-        run: python scripts/test_inference.py
+        run: PYTHONPATH=. python scripts/test_inference.py
 
   deploy-to-hub:
     name: Deploy model to Hugging Face Hub
