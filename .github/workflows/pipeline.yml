@@ -25,12 +25,8 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Generate uv.lock and install dependencies
+      - name: install dependencies
         run: |
-          # Supprime le fichier de lock existant pour éviter les corruptions Git LFS
-          rm -f uv.lock
-          # Génère le fichier de lock à partir des requirements
-          uv pip compile requirements.txt -o uv.lock
           # Installe les dépendances en utilisant le fichier de lock pour la reproductibilité
           uv pip sync --system --lock-file uv.lock
 
