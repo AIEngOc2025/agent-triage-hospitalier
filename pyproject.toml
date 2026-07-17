@@ -2,7 +2,7 @@
 name = "agent-triage-hospitalier"
 version = "0.1.0"
 description = "A hospital triage agent using LLMs."
-requires-python = ">=3.12"
+requires-python = ">=3.11"
 
 [tool.ruff]
 line-length = 88
