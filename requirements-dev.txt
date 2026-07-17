@@ -3,4 +3,5 @@ black
 ruff
 uv
 pytest
+wheel
 pytest-asyncio
