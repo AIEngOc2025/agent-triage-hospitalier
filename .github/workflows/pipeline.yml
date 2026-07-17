@@ -34,9 +34,9 @@ jobs:
           # Generate a flat lock file for maximum compatibility
           uv pip compile requirements-dev.txt -o requirements.lock
           mv requirements.lock ${{ github.workspace }}
-          cd ${{ github.workspace }}
-          # Install dependencies using the generated lock file with pip
-          pip install --system -r requirements.lock
+          cd ${{ github.workspace }}          
+          # Sync dependencies using the uv-generated lock file for speed and consistency
+          uv pip sync --system requirements.lock
 
       - name: Lint with ruff
         run: uv run ruff check .
@@ -69,8 +69,8 @@ jobs:
           cd /tmp/deps
           uv pip compile requirements.txt -o requirements.lock
           mv requirements.lock ${{ github.workspace }}
-          cd ${{ github.workspace }}
-          pip install --system -r requirements.lock
+          cd ${{ github.workspace }}          
+          uv pip sync --system requirements.lock
 
       - name: Run inference test
         run: python scripts/test_inference.py
