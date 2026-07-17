@@ -58,12 +58,6 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Generate uv.lock and install dependencies
-        run: |
-          # Supprime le fichier de lock existant pour éviter les corruptions Git LFS
-          rm -f uv.lock
-          uv pip sync --system --lock-file uv.lock
-
       - name: Run inference test
         run: python scripts/test_inference.py
 
