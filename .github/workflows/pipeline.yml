@@ -25,8 +25,12 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Install dependencies with uv
-        run: uv pip install --system -r requirements.txt
+      - name: Generate uv.lock and install dependencies
+        run: |
+          # Génère le fichier de lock à partir des requirements
+          uv pip compile requirements.txt -o uv.lock
+          # Installe les dépendances en utilisant le fichier de lock pour la reproductibilité
+          uv pip sync --system --lock-file uv.lock
 
       - name: Lint with ruff
         run: uv run ruff check .
@@ -52,8 +56,10 @@ jobs:
       - name: Install uv
         run: pip install uv
 
-      - name: Install dependencies with uv
-        run: uv pip install --system -r requirements.txt
+      - name: Generate uv.lock and install dependencies
+        run: |
+          uv pip compile requirements.txt -o uv.lock
+          uv pip sync --system --lock-file uv.lock
 
       - name: Run inference test
         run: python scripts/test_inference.py
