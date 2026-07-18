@@ -105,6 +105,9 @@ jobs:
           MODEL_PATH: ./model # Surcharge le chemin du modèle pour le test
         run: PYTHONPATH=. uv run python scripts/test_inference.py
 
+      - name: Run full test suite
+        run: PYTHONPATH=. uv run pytest tests/
+
   deploy-to-space:
     name: Deploy to Hugging Face Space
     runs-on: ubuntu-latest
