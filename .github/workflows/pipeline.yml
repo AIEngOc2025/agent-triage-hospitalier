@@ -111,10 +111,7 @@ jobs:
 
       - name: Build and push Docker image to the Hub
         uses: docker/build-push-action@v5
-        run: |
-          # Le nom de l'image doit correspondre à votre Space
-          IMAGE_NAME="huggingface.co/spaces/dataChaser/agent-triage-hospitalier"
-          
-          # Construction et push de l'image
-          docker build -t $IMAGE_NAME:latest .
-          docker push $IMAGE_NAME:latest
+        with:
+          context: .
+          push: true
+          tags: huggingface.co/spaces/dataChaser/agent-triage-hospitalier:latest
