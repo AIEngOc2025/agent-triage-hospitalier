@@ -10,3 +10,9 @@ __pycache__/
 uv.lock
 requirements.lockbuild/
 .env
+
+#data
+data/
+
+# modèles
+models/

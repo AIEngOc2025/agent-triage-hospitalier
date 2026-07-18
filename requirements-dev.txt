@@ -6,4 +6,3 @@ pytest
 wheel
 pytest-asyncio
 hf_transfer
-hf_transfer
