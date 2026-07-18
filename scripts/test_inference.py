@@ -1,3 +1,5 @@
+import os
+import pytest
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from app.settings import settings
@@ -8,7 +10,26 @@ def test_inference():
     @definition : Test qualitatif du modèle fusionné DPO sur un cas de triage.
     @return : None
     """
-    print(f"📥 Chargement du modèle depuis : {settings.MODEL_PATH}")
+    # Check if model path exists and isn't just an LFS pointer
+    model_path = str(settings.MODEL_PATH)
+    
+    if not os.path.exists(model_path):
+        pytest.skip(f"Model path {model_path} not found.")
+        
+    # Check for LFS pointer file
+    if os.path.exists(os.path.join(model_path, "model.safetensors.index.json")):
+        # If the index exists, check if the actual weight files are pointers
+        # This is a heuristic.
+        pass
+    
+    # Check if the main model file is a pointer
+    main_model_file = os.path.join(model_path, "model-00001-of-00002.safetensors")
+    if os.path.exists(main_model_file):
+        with open(main_model_file, "r", encoding="utf-8", errors="ignore") as f:
+            if f.read(100).startswith("version https://git-lfs"):
+                pytest.skip(f"Model file {main_model_file} is an LFS pointer, skipping inference test.")
+
+    print(f"📥 Chargement du modèle depuis : {model_path}")
 
     # Utilisation de transformers pour une compatibilité maximale (CPU/GPU/Mac)
     try:
