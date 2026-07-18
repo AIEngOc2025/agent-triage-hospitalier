@@ -113,5 +113,6 @@ jobs:
           git config --global credential.helper store
           echo "https://dataChaser:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
           
-          # Pousse la branche 'dev' vers la branche 'main' du Hub
-          git push https://huggingface.co/spaces/dataChaser/agent-triage-hospitalier/tree/main
+          # Pousse la branche actuelle (dev) vers la branche 'main' du Space sur le Hub.
+          # L'option --force est souvent nécessaire pour les déploiements sur les Spaces.
+          git push --force https://huggingface.co/spaces/dataChaser/agent-triage-hospitalier HEAD:main
