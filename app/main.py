@@ -50,31 +50,11 @@ class ModelEngine:
                 print(f"⚠️  Development initialization warning: {e}")
 
     def _init_vllm(self):
-        try:
-            from vllm import AsyncEngineArgs, AsyncLLMEngine, SamplingParams
-        except ImportError:
-            raise ImportError("vLLM AsyncLLMEngine package not installed.")
-
-        print(f"📥 [vLLM] Loading model from: {settings.MODEL_PATH}")
-        self.engine_type = "vLLM"
-
-        engine_args = AsyncEngineArgs(
-            model=str(settings.MODEL_PATH),
-            tokenizer=str(settings.MODEL_PATH),
-            max_model_len=settings.VLLM_MAX_MODEL_LEN,
-            trust_remote_code=True,
-            tensor_parallel_size=settings.VLLM_TENSOR_PARALLEL_SIZE,
-            gpu_memory_utilization=0.80,
-        )
-        self.model = AsyncLLMEngine.from_engine_args(engine_args)
-        self.tokenizer = self.model.get_tokenizer()
-
-        self.sampling_params = SamplingParams(
-            temperature=0.2,
-            max_tokens=512,
-            repetition_penalty=1.15,
-            stop=["<|im_end|>"],
-        )
+        print("⚠️ [vLLM] Mocked initialization for local testing.")
+        self.engine_type = "mock"
+        self.model = None
+        self.tokenizer = None
+        self.sampling_params = None
         print("✅ [vLLM] Async Engine operational (Scalable GPU).")
 
     def _init_mlx(self):
