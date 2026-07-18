@@ -108,4 +108,4 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git push https://dataChaser:${HF_TOKEN}@huggingface.co/dataChaser/agent-triage-hospitalier main
+          git push https://dataChaser:${HF_TOKEN}@huggingface.co/dataChaser/agent-triage-hospitalier
