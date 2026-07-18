@@ -106,6 +106,12 @@ jobs:
 
       - name: Push to Hugging Face Hub
         env:
+          # Assurez-vous que ce token a les permissions "write".
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          git push https://dataChaser:${HF_TOKEN}@huggingface.co/dataChaser/agent-triage-hospitalier
+          # Configure le "credential helper" pour utiliser le token de manière sécurisée
+          git config --global credential.helper store
+          echo "https://dataChaser:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
+          
+          # Pousse la branche 'dev' vers la branche 'main' du Hub
+          git push https://huggingface.co/dataChaser/agent-triage-hospitalier main
