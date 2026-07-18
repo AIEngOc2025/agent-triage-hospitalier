@@ -45,9 +45,9 @@ jobs:
           APP_TEST_MODE: "1"
         run: uv run python -m pytest
 
-  # --- PHASE 2: BUILD, PUSH & DEPLOY SUR GOOGLE CLOUD RUN ---
+  # --- PHASE 2: DEPLOYMENT SUR GOOGLE CLOUD RUN ---
   deploy-to-cloud-run:
-    name: "Build & Deploy to Cloud Run via Cloud Build"
+    name: "Deploy to Google Cloud Run"
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev' || github.event_name == 'workflow_dispatch'
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          lfs: true # Nécessaire pour les fichiers de config Docker/scripts si besoin, mais le modèle est dans GCS
+          lfs: true
 
       - name: Authenticate to Google Cloud
         uses: 'google-github-actions/auth@v2'
