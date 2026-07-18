@@ -1,0 +1,22 @@
+steps:
+  # 1. Construction de l'image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'Dockerfile.cloudrun', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA', '.']
+
+  # 2. Pousse de l'image vers AR
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA']
+
+  # 3. Déploiement sur Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'agent-triage-service'
+      - '--image'
+      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA'
+      - '--region'
+      - 'europe-west1'
+      - '--platform'
+      - 'managed'

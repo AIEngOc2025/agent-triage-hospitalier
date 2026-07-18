@@ -107,7 +107,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: 'projects/agent-hospitalier/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
-          audience: '//iam.googleapis.com/projects/agent-hospitalier/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
+          #audience: 'https://iam.googleapis.com/projects/414294705487/locations/global/workloadIdentityPools/github-triage/providers/github'
           service_account: 'tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com'
 
       - name: Deploy to Cloud Run
