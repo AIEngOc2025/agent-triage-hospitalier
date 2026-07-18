@@ -34,6 +34,7 @@ jobs:
 
       - name: Sync dependencies
         run: |
+          uv venv
           uv pip compile requirements-dev.txt -o requirements.lock
           uv pip sync requirements.lock
 
