@@ -30,15 +30,12 @@ jobs:
         uses: astral-sh/setup-uv@v1
         with:
           enable-cache: true
-          cache-dependency-glob: '**/uv.lock'
-
-      - name: Update lock file if needed
-        run: uv lock --upgrade
+          cache-dependency-glob: 'requirements.lock'
 
       - name: Sync dependencies
         run: |
-          uv sync --all-extras
-          uv pip install ruff pytest
+          uv pip compile requirements-dev.txt -o requirements.lock
+          uv pip sync requirements.lock
 
       - name: Lint with Ruff
         run: uv run ruff check .
