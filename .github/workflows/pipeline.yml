@@ -64,8 +64,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          lfs: true
+        # LFS n'est plus nécessaire ici car le modèle sera téléchargé
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -92,8 +91,19 @@ jobs:
         # Utilise le même lockfile pour garantir un environnement identique.
         run: uv pip sync --system requirements.lock
 
+      - name: Download Model from HF Bucket
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Installe hf_transfer pour des téléchargements optimisés
+          uv pip install hf_transfer
+          # Synchronise le contenu du bucket dans un dossier local 'model'
+          hf-transfer download hf://buckets/dataChaser/agent-triage-hospitalier-storage ./model
+
       - name: Run inference test
-        run: PYTHONPATH=. python scripts/test_inference.py
+        env:
+          MODEL_PATH: ./model # Surcharge le chemin du modèle pour le test
+        run: PYTHONPATH=. uv run python scripts/test_inference.py
 
   deploy-to-space:
     name: Deploy to Hugging Face Space
@@ -104,13 +114,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Nécessaire pour pousser vers une autre branche/repo
-          lfs: true # Très important pour pousser les modèles
+          fetch-depth: 0 # Nécessaire pour l'action push-to-hub
       
       - name: Push to Hugging Face Hub
         uses: huggingface-hub/push-to-hub@V0
         with:
           repo_id: dataChaser/agent-triage-hospitalier
           repo_type: space
-          token: ${{ secrets.HF_TOKEN }} # Token classique avec droits d'écriture
+          token: ${{ secrets.HF_TOKEN }}
           commit_message: "🚀 Deploy new version from GitHub Actions"
+          # Exclut le dossier du modèle du push, car il sera dans le bucket
+          allow_patterns: "app/*,scripts/*,tests/*,*.txt,*.md,*.lock,*.yml,Dockerfile"
