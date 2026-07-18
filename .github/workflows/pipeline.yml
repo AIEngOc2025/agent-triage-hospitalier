@@ -104,6 +104,9 @@ jobs:
           git config --global user.name "GitHub Action"
           git lfs install
 
+      - name: Install Hugging Face Hub library
+        run: pip install huggingface-hub
+
       - name: Push to Hugging Face Hub
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
