@@ -1,17 +1,17 @@
 import asyncio
 import json
 import re
-import uuid
 from contextlib import asynccontextmanager
 from time import perf_counter, strftime
+import uuid
 from typing import AsyncGenerator, Dict, List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from app.settings import settings
 from app.system_prompts import SYSTEM_PROMPT_FR
+from app.settings import settings
 
 # --- 2. ENGINE ABSTRACTION ---
 
