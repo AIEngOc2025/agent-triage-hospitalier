@@ -5,3 +5,4 @@ uv
 pytest
 wheel
 pytest-asyncio
+hf_transfer
