@@ -92,6 +92,6 @@ jobs:
       - name: Push to Hub
         uses: huggingface/hub-action@v0.1.0
         with:
-          repo_id: "dataChaser/agent-triage-hospitalier"
+          repo_id: "https://huggingface.co/spaces/dataChaser/agent-triage-hospitalier"
           token: ${{ secrets.HF_TOKEN }}
           commit_message: "Push model to Hub from GitHub Actions"
