@@ -2,11 +2,11 @@ name: "Deploy to Google Cloud Run"
 
 on:
   push:
-    branches: [ dev ] # Déclenché sur un push vers la branche 'main'
+    branches: [ dev ]
   workflow_dispatch:
 
 jobs:
-  # --- PHASE 1: VALIDATION (Identique au pipeline existant) ---
+  # --- PHASE 1: VALIDATION ---
   test:
     name: "Quality Gate (CI)"
     runs-on: ubuntu-latest
@@ -45,73 +45,32 @@ jobs:
           APP_TEST_MODE: "1"
         run: uv run python -m pytest
 
-  # --- PHASE 2: BUILD & PUSH ( pousse vers GHCR) ---
-  build-and-push:
-    name: "Build & Push to GHCR"
+  # --- PHASE 2: BUILD, PUSH & DEPLOY SUR GOOGLE CLOUD RUN ---
+  deploy-to-cloud-run:
+    name: "Build & Deploy to Cloud Run via Cloud Build"
     runs-on: ubuntu-latest
     needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev' || github.event_name == 'workflow_dispatch'
     permissions:
-      contents: read
-      packages: write
+      contents: 'read'
+      id-token: 'write'
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          lfs: true
+          lfs: true # Nécessaire pour les fichiers de config Docker/scripts si besoin, mais le modèle est dans GCS
 
-      - name: Pull LFS files
-        run: git lfs pull
-
-      - name: Set lowercase repo name
-        run: echo "REPO_LOWER=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile.cloudrun # Utilise le Dockerfile optimisé pour Cloud Run
-          push: true
-          tags: ghcr.io/${{ env.REPO_LOWER }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-  # --- PHASE 3: DEPLOYMENT SUR GOOGLE CLOUD RUN ---
-  deploy-to-cloud-run:
-    name: "Deploy to Google Cloud Run"
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    if: github.event_name == 'push' && github.ref == 'refs/heads/dev' || github.event_name == 'workflow_dispatch'
-    permissions:
-      contents: 'read'
-      id-token: 'write' # Nécessaire pour l'authentification à Google Cloud
-
-    steps:
       - name: Authenticate to Google Cloud
         uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: 'projects/agent-hospitalier/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
-          #audience: 'https://iam.googleapis.com/projects/414294705487/locations/global/workloadIdentityPools/github-triage/providers/github'
           service_account: 'tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com'
 
-      - name: Deploy to Cloud Run
-        uses: 'google-github-actions/deploy-cloudrun@v2'
-        with:
-          service: 'agent-hospitalier' # Nom de votre service Cloud Run
-          region: 'europe-west1' # ou la région de votre choix
-          ingress: 'all' # Permet l'accès depuis internet
-          image: ghcr.io/${{ github.repository_owner }}/agent-triage-hospitalier:${{ github.sha }}
-          flags: '--add-gpu=type=nvidia-l4,count=1 --set-env-vars=PORT=8080 --startup-cpu-boost --cpu-boost --timeout=600 --startup-probe-timeout=600s --startup-probe-request-path=/health'
-          # Nous utilisons 'flags' pour passer des options avancées à gcloud.
-          # --add-gpu: Demande un GPU. Le type 'nvidia-l4' est un excellent choix moderne pour l'inférence.
-          # --set-env-vars: Nous déplaçons la variable PORT ici, car 'flags' et 'env_vars' ne peuvent pas être utilisés ensemble.
+      - name: Set up Cloud SDK
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Submit Cloud Build and Deploy
+        run: |
+          gcloud builds submit --config=cloudbuild.yml \
+            --substitutions=PROJECT_ID=agent-hospitalier,COMMIT_SHA=$GITHUB_SHA
