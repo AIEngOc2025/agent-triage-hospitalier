@@ -1,14 +1,20 @@
 import json
+import os
+import pytest
 
 SFT_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
 DPO_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_DPO_052026.jsonl"
 
 
 def load_jsonl(path):
+    if not os.path.exists(path):
+        pytest.skip(f"Dataset file {path} not found.")
+    
     data = []
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
-            data.append(json.loads(line))
+            if line.strip(): # Skip empty lines
+                data.append(json.loads(line))
     return data
 
 
