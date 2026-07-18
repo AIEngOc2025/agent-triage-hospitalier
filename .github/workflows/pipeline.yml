@@ -93,6 +93,10 @@ jobs:
         # Utilise le même lockfile pour garantir un environnement identique.
         run: uv pip sync --system requirements.lock
 
+      - name: Install development dependencies
+        # Installe les dépendances de test comme pytest et hf_transfer
+        run: uv pip install --system -r requirements-dev.txt
+
       - name: Download Model from HF Bucket
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -106,7 +110,7 @@ jobs:
         run: PYTHONPATH=. uv run python scripts/test_inference.py
 
       - name: Run full test suite
-        run: PYTHONPATH=. uv run pytest tests/
+        run: PYTHONPATH=. uv run pytest
 
   deploy-to-space:
     name: Deploy to Hugging Face Space
