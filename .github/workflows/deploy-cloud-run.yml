@@ -30,7 +30,6 @@ jobs:
         uses: astral-sh/setup-uv@v1
         with:
           enable-cache: true
-          cache-dependency-glob: 'requirements.lock'
 
       - name: Sync dependencies
         run: |
