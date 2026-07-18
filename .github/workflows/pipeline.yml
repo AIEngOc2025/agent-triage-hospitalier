@@ -106,13 +106,11 @@ jobs:
 
       - name: Push to Hugging Face Hub
         env:
-          # Assurez-vous que ce token a les permissions "write".
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Configure le "credential helper" pour utiliser le token de manière sécurisée
-          git config --global credential.helper store
-          echo "https://dataChaser:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
+          # Se connecter au Hub en utilisant le token
+          huggingface-cli login --token $HF_TOKEN
           
-          # Pousse la branche actuelle (dev) vers la branche 'main' du Space sur le Hub.
+          # Pousse la branche actuelle (dev) vers la branche 'main' du Space.
           # L'option --force est souvent nécessaire pour les déploiements sur les Spaces.
           git push --force https://huggingface.co/spaces/dataChaser/agent-triage-hospitalier HEAD:main
