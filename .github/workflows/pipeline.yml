@@ -112,7 +112,7 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           # Se connecter au Hub en utilisant le token
-          huggingface-cli login --token $HF_TOKEN
+          hf auth login
           
           # Pousse la branche actuelle (dev) vers la branche 'main' du Space.
           # L'option --force est souvent nécessaire pour les déploiements sur les Spaces.
