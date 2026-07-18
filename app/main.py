@@ -1,16 +1,17 @@
 import asyncio
 import json
 import re
-import time
 import uuid
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator, List
+from time import perf_counter, strftime
+from typing import AsyncGenerator, Dict, List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.settings import settings
+from app.system_prompts import SYSTEM_PROMPT_FR
 
 # --- 2. ENGINE ABSTRACTION ---
 
@@ -94,6 +95,14 @@ class ModelEngine:
     async def generate_stream(
         self, messages: List[dict], request_id: str
     ) -> AsyncGenerator[str, None]:
+        """
+        @definition: Generates a stream of text from the model based on the
+        message history.
+        @args/params:
+            - messages (List[dict]): The conversation history.
+            - request_id (str): A unique ID for the generation request.
+        @return: An async generator yielding text chunks.
+        """
         if not self.model:
             yield "❌ Erreur : Moteur non initialisé."
             return
@@ -134,6 +143,12 @@ class ModelEngine:
             yield "❌ Erreur : Moteur non supporté."
 
     async def generate(self, messages: List[dict]) -> str:
+        """
+        @definition: Generates a complete text response by consuming the entire stream.
+        @args/params:
+            - messages (List[dict]): The conversation history.
+        @return: The final, complete response string from the model.
+        """
         request_id = str(uuid.uuid4())
         full_text = ""
         async for chunk in self.generate_stream(messages, request_id):
@@ -142,17 +157,27 @@ class ModelEngine:
         return self.clean_response(full_text)
 
     def clean_response(self, text: str) -> str:
+        """
+        @definition: Removes specific tags (like <think>) and any other
+        HTML-like tags from the model's output.
+        @args/params:
+            - text (str): The raw text from the model.
+        @return: The cleaned text string.
+        """
         clean_text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
         clean_text = re.sub(r"<[^>]+>", "", clean_text)
         return clean_text.strip()
 
 
+# --- UTILITIES ---
+
+
 async def log_audit(entry: dict):
     """
-    Writes an audit log entry to the configured log file in JSONL format.
-
-    @args/params : entry (dict) - The log entry to record.
-    @return : None
+    @definition: Writes an audit log entry to the configured log file in JSONL format.
+    @args/params:
+        - entry (dict): The log entry to record.
+    @return: None.
     """
     try:
 
@@ -165,6 +190,28 @@ async def log_audit(entry: dict):
         print(f"❌ Audit logging failed: {e}")
 
 
+def create_log_entry(
+    patient_id: str, decision: str, latency: float, stream: bool
+) -> Dict:
+    """
+    @definition: Creates a standardized dictionary for an audit log entry.
+    @args/params:
+        - patient_id (str): The patient's identifier.
+        - decision (str): The final model response.
+        - latency (float): The request processing time in seconds.
+        - stream (bool): Whether the request was streaming.
+    @return: A dictionary representing the log entry.
+    """
+    return {
+        "audit_id": str(uuid.uuid4()),
+        "patient_id": patient_id,
+        "decision": decision,
+        "latency_sec": round(latency, 3),
+        "timestamp": strftime("%Y-%m-%d %H:%M:%S"),
+        "stream": stream,
+    }
+
+
 # Global engine instance
 engine = ModelEngine()
 
@@ -172,6 +219,11 @@ engine = ModelEngine()
 # --- 3. LIFESPAN ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    @definition: Manages the application's lifespan events (startup and shutdown).
+    @args/params:
+        - app (FastAPI): The FastAPI application instance.
+    """
     settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     # Start model loading in the background to allow the health check to
     # respond immediately
@@ -186,6 +238,11 @@ app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
 
 @app.get("/health", status_code=200, tags=["Monitoring"])
 async def health_check():
+    """
+    @definition: Provides a health check endpoint to verify service and model
+    engine status.
+    @return: A dictionary with the service status and engine type.
+    """
     print(f"🩺 Health check called. Engine: {engine.engine_type}")
     return {"status": "ok", "engine": engine.engine_type}
 
@@ -198,21 +255,20 @@ class ChatRequest(BaseModel):
 
 @app.post("/chat")
 async def api_chat(request: ChatRequest):
-    start_time = time.time()
+    """
+    @definition: Main endpoint for handling chat requests, supporting both
+    streaming and non-streaming responses.
+    @args/params:
+        - request (ChatRequest): The incoming request containing patient ID and
+        history.
+    @return: A StreamingResponse or a JSON object with the model's response.
+    """
+    start_time = perf_counter()
     messages = request.history
+
+    # Ensure a system prompt is always present
     if not messages or messages[0].get("role") != "system":
-        system_prompt = (
-            "Tu es un infirmier de triage pour le Centre Hospitalier "
-            "Sud-Aveyron (CHSA).\n\n"
-            "**Instructions strictes :**\n"
-            "1. **Présentation :** Présente-toi et demande la raison de la venue.\n"
-            "2. **Une seule question :** Pose une seule question courte à la fois.\n"
-            "3. **Rôle limité :** Ne donne aucun diagnostic ni conseil.\n"
-            "4. **Bilinguisme :** Réponds en français ou en anglais.\n"
-            "5. **Anti-Répétition :** Sois concis. Une phrase suffit.\n"
-            "6. **Anti-Exemple :** Pas de cas cliniques ni de QCM."
-        )
-        messages.insert(0, {"role": "system", "content": system_prompt})
+        messages.insert(0, {"role": "system", "content": SYSTEM_PROMPT_FR})
 
     if request.stream:
 
@@ -224,14 +280,10 @@ async def api_chat(request: ChatRequest):
                     yield f"data: {chunk}\n\n"
 
                 # Log completion of streaming request
-                log_entry = {
-                    "audit_id": str(uuid.uuid4()),
-                    "patient_id": request.patient_id,
-                    "decision": "".join(full_response),
-                    "latency_sec": round(time.time() - start_time, 3),
-                    "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-                    "stream": True,
-                }
+                latency = perf_counter() - start_time
+                log_entry = create_log_entry(
+                    request.patient_id, "".join(full_response), latency, True
+                )
                 await log_audit(log_entry)
             except Exception as e:
                 yield f"data: Error: {str(e)}\n\n"
@@ -240,14 +292,8 @@ async def api_chat(request: ChatRequest):
 
     try:
         response = await engine.generate(messages)
-        log_entry = {
-            "audit_id": str(uuid.uuid4()),
-            "patient_id": request.patient_id,
-            "decision": response,
-            "latency_sec": round(time.time() - start_time, 3),
-            "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
-            "stream": False,
-        }
+        latency = perf_counter() - start_time
+        log_entry = create_log_entry(request.patient_id, response, latency, False)
         await log_audit(log_entry)
         return {"response": response, "audit_ref": log_entry["audit_id"]}
     except Exception as e:
