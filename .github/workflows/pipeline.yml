@@ -87,11 +87,25 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          lfs: true
 
-      - name: Push to Hub
-        uses: huggingface/hub-action@v0.1.0
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          repo_id: "dataChaser/agent-triage-hospitalier"
-          token: ${{ secrets.HF_TOKEN }}
-          commit_message: "Push model to Hub from GitHub Actions"
+          python-version: "3.11"
+
+      - name: Install Git LFS
+        run: |
+          sudo apt-get update
+          sudo apt-get install git-lfs
+
+      - name: Configure Git and LFS
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          git lfs install
+
+      - name: Push to Hugging Face Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git push https://dataChaser:${HF_TOKEN}@huggingface.co/dataChaser/agent-triage-hospitalier main
