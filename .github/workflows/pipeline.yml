@@ -97,13 +97,10 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Installe hf_transfer pour des téléchargements optimisés
-          uv pip install hf_transfer
           # Synchronise le contenu du bucket dans un dossier local 'model'
           hf-transfer download hf://buckets/dataChaser/agent-triage-hospitalier-storage ./model
 
       - name: Run inference test
-        run: PYTHONPATH=. python scripts/test_inference.py
         env:
           MODEL_PATH: ./model # Surcharge le chemin du modèle pour le test
         run: PYTHONPATH=. uv run python scripts/test_inference.py
@@ -119,12 +116,11 @@ jobs:
         with:
           fetch-depth: 0 # Nécessaire pour pousser vers une autre branche/repo
           lfs: true # Très important pour pousser les modèles
-          #fetch-depth: 0 # Nécessaire pour l'action push-to-hub
       
       - name: Push to Hugging Face Hub
         uses: huggingface-hub/push-to-hub@V0
         with:
-          repo_id: https://huggingface.co/spaces/dataChaser/agent-triage-hospitalier
+          repo_id: dataChaser/agent-triage-hospitalier
           repo_type: space
           token: ${{ secrets.HF_TOKEN }} # Token classique avec droits d'écriture
           commit_message: "🚀 Deploy new version from GitHub Actions"
