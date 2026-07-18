@@ -108,7 +108,7 @@ jobs:
           lfs: true # Très important pour pousser les modèles
       
       - name: Push to Hugging Face Hub
-        uses: huggingface-hub/push-to-hub@v0
+        uses: huggingface-hub/push-to-hub@V0
         with:
           repo_id: dataChaser/agent-triage-hospitalier
           repo_type: space
