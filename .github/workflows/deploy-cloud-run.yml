@@ -64,7 +64,7 @@ jobs:
       - name: Authenticate to Google Cloud
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: 'projects/agent-hospitalier/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
+          workload_identity_provider: 'projects/414294705487/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
           service_account: 'tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com'
 
       - name: Set up Cloud SDK
