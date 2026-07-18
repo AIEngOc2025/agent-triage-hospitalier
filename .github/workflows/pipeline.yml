@@ -114,4 +114,4 @@ jobs:
           echo "https://dataChaser:${HF_TOKEN}@huggingface.co" > ~/.git-credentials
           
           # Pousse la branche 'dev' vers la branche 'main' du Hub
-          git push https://huggingface.co/dataChaser/agent-triage-hospitalier main
+          git push https://huggingface.co/spaces/dataChaser/agent-triage-hospitalier/tree/main
