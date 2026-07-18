@@ -11,17 +11,25 @@ def load_jsonl(path):
     if not os.path.exists(path):
         pytest.skip(f"Dataset file {path} not found.")
 
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+        if content.startswith("version https://git-lfs"):
+            pytest.skip(f"Dataset file {path} is an LFS pointer, skipping.")
+
     data = []
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
-            # Skip empty lines and LFS pointers
-            if not line or line.startswith("version https://git-lfs"):
+            if not line:
                 continue
             try:
                 data.append(json.loads(line))
             except json.JSONDecodeError:
-                continue  # Skip malformed lines
+                continue # Skip malformed lines
+
+    if not data:
+         pytest.skip(f"Dataset file {path} loaded no valid data.")
+
     return data
 
 
