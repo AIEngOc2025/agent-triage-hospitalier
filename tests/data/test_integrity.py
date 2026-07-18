@@ -1,5 +1,6 @@
 import json
 import os
+
 import pytest
 
 SFT_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
@@ -9,12 +10,18 @@ DPO_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_DPO_052026.jsonl"
 def load_jsonl(path):
     if not os.path.exists(path):
         pytest.skip(f"Dataset file {path} not found.")
-    
+
     data = []
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
-            if line.strip(): # Skip empty lines
+            line = line.strip()
+            # Skip empty lines and LFS pointers
+            if not line or line.startswith("version https://git-lfs"):
+                continue
+            try:
                 data.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue  # Skip malformed lines
     return data
 
 
