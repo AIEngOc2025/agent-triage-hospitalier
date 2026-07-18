@@ -64,6 +64,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          lfs: true
         # LFS n'est plus nécessaire ici car le modèle sera téléchargé
 
       - name: Set up Python
@@ -95,35 +97,36 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
+          # Installe hf_transfer pour des téléchargements optimisés
+          uv pip install hf_transfer
           # Synchronise le contenu du bucket dans un dossier local 'model'
           hf-transfer download hf://buckets/dataChaser/agent-triage-hospitalier-storage ./model
 
       - name: Run inference test
+        run: PYTHONPATH=. python scripts/test_inference.py
         env:
           MODEL_PATH: ./model # Surcharge le chemin du modèle pour le test
         run: PYTHONPATH=. uv run python scripts/test_inference.py
 
-  deploy-to-gcp:
-    name: Build & Deploy to Cloud Run
+  deploy-to-space:
+    name: Deploy to Hugging Face Space
     runs-on: ubuntu-latest
     needs: test-inference
-    if: github.ref == 'refs/heads/dev' && github.event_name == 'push' && secrets.GCP_SA_KEY != ''
+    if: github.ref == 'refs/heads/dev' && github.event_name == 'push'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          lfs: true
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
+          fetch-depth: 0 # Nécessaire pour pousser vers une autre branche/repo
+          lfs: true # Très important pour pousser les modèles
+          #fetch-depth: 0 # Nécessaire pour l'action push-to-hub
+      
+      - name: Push to Hugging Face Hub
+        uses: huggingface-hub/push-to-hub@V0
         with:
-          workload_identity_provider: 'projects/414294705487/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
-          service_account: 'github-actions-deployer@agent-hospitalier.iam.gserviceaccount.com'
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Submit Build and Deploy
-        run: |
-          gcloud builds submit --config=cloudbuild.yaml \
-            --substitutions=PROJECT_ID=agent-hospitalier,COMMIT_SHA=$GITHUB_SHA
+          repo_id: https://huggingface.co/spaces/dataChaser/agent-triage-hospitalier
+          repo_type: space
+          token: ${{ secrets.HF_TOKEN }} # Token classique avec droits d'écriture
+          commit_message: "🚀 Deploy new version from GitHub Actions"
+          # Exclut le dossier du modèle du push, car il sera dans le bucket
+          allow_patterns: "app/*,scripts/*,tests/*,*.txt,*.md,*.lock,*.yml,Dockerfile"
