@@ -25,7 +25,7 @@ steps:
       - 'managed'
       - '--allow-unauthenticated'
       - '--startup-probe-path=/health'
-      - '--startup-probe-port=8080'
+      - '--startup-probe-port=8000'
 
 # Utilisation du champ 'images' pour automatiser le push vers AR
 images:
