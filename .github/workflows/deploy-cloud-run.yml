@@ -66,6 +66,7 @@ jobs:
         with:
           workload_identity_provider: 'projects/414294705487/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
           impersonate_service_account: 'tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com'
+          project_id: 'agent-hospitalier'
 
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2.1.0'
