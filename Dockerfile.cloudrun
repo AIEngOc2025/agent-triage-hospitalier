@@ -1,30 +1,32 @@
-# --- 1. Image de base ---
-# Utilisation de l'image officielle vLLM qui contient déjà CUDA, PyTorch, et vLLM.
-FROM vllm/vllm-openai:latest
+# Utilisation de l'image de base qui contient déjà python et les outils nécessaires
+FROM python:3.12-slim
 
-# --- 2. Configuration de l'environnement ---
+# Définir le répertoire de travail
 WORKDIR /app
-ENV APP_ENV=production
-ENV PYTHONUNBUFFERED=1
-# La variable PORT sera fournie par Cloud Run au démarrage.
-# Nous n'avons plus besoin de GRADIO_SERVER_PORT.
 
-# --- 3. Installation des dépendances manquantes ---
-# Nous installons uniquement les dépendances nécessaires à notre application
-# qui ne sont pas déjà incluses dans l'image de base vLLM. `gradio` is not used by the FastAPI app.
-RUN pip install --no-cache-dir pydantic-settings
+# Installation de gsutil (pour récupérer les modèles) et docker (si besoin de manipuler)
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    google-cloud-sdk \
+    && rm -rf /var/lib/apt/lists/*
 
-# --- 4. Copie du code de l'application ---
-# Copier le reste du code de l'application.
+# Copier les fichiers de dépendances
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# --- ÉTAPE CRUCIALE : Téléchargement des modèles ---
+# On suppose que gsutil est configuré ou que le service account a les droits
+RUN mkdir -p /app/models
+# Téléchargement des modèles depuis GCS
+RUN gsutil -m cp -r gs://modeles-triage-hospitalier/merged_dpo_final_chsa /app/models/
+
+# Copier le code de l'application
 COPY ./app /app/app
-COPY ./models/ /app/models
+COPY ./models /app/models
 
-# --- 5. Exposition du port ---
-# Cloud Run s'attend à ce que le conteneur écoute sur le port défini par la variable PORT,
-# qui est 8080 par défaut.
+# Exposition du port
 EXPOSE 8080
 
-# --- 6. Commande de démarrage pour Cloud Run ---
-# Lancer l'application en utilisant le port fourni par l'environnement ($PORT).
-# Uvicorn est idéal pour un environnement de production comme Cloud Run.
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
+# Commande de lancement
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]

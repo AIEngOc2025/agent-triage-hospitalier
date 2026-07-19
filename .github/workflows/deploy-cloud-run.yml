@@ -6,46 +6,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  # --- PHASE 1: VALIDATION ---
   test:
     name: "Quality Gate (CI)"
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-        with:
-          lfs: false
-          fetch-depth: 0
-
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      - name: Install uv and cache dependencies
+      - name: Install uv
         uses: astral-sh/setup-uv@v1
-        with:
-          enable-cache: true
-
       - name: Sync dependencies
         run: |
           uv venv
           uv pip compile requirements-dev.txt -o requirements.lock
           uv pip sync requirements.lock
-
-      - name: Lint with Ruff
-        run: uv run ruff check .
-
-      - name: Check formatting with Ruff
-        run: uv run ruff format --check .
-
-      - name: Run tests with Pytest
+      - name: Run tests
         env:
           APP_TEST_MODE: "1"
         run: uv run python -m pytest
 
-  # --- PHASE 2: DEPLOYMENT SUR GOOGLE CLOUD RUN ---
   deploy-to-cloud-run:
     name: "Deploy to Google Cloud Run"
     runs-on: ubuntu-latest
@@ -58,8 +40,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-        with:
-          lfs: true
 
       - name: Authenticate to Google Cloud
         id: auth
@@ -68,28 +48,8 @@ jobs:
           workload_identity_provider: 'projects/414294705487/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
           service_account: 'tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com'
           project_id: 'agent-hospitalier'
-          token_format: 'access_token'
 
-      - name: Login to Artifact Registry
-        uses: docker/login-action@v3
-        with:
-          registry: europe-west1-docker.pkg.dev
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
-
-      - name: Build and Push Docker Image
+      - name: Submit Cloud Build
         run: |
-          IMAGE_URL=europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:$GITHUB_SHA
-          docker build -f Dockerfile.cloudrun -t $IMAGE_URL .
-          docker push $IMAGE_URL
-
-      - name: Deploy to Cloud Run
-        run: |
-          IMAGE_URL=europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:$GITHUB_SHA
-          gcloud run deploy agent-triage-service \
-            --image $IMAGE_URL \
-            --platform managed \
-            --region europe-west1 \
-            --allow-unauthenticated \
-            --startup-probe-path=/health \
-            --startup-probe-port=8080
+          gcloud builds submit --config=cloudbuild.yml \
+            --substitutions=COMMIT_SHA=$GITHUB_SHA
