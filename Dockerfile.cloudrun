@@ -4,19 +4,19 @@ FROM python:3.12-slim
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Installation de gsutil (pour récupérer les modèles) et docker (si besoin de manipuler)
+# Installation de curl et git
 RUN apt-get update && apt-get install -y \
     curl \
     git \
-    google-cloud-sdk \
     && rm -rf /var/lib/apt/lists/*
 
 # Copier les fichiers de dépendances
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+# Installation de gsutil (via pip pour éviter les problèmes de dépôts apt)
+RUN pip install --no-cache-dir gsutil
 
 # --- ÉTAPE CRUCIALE : Téléchargement des modèles ---
-# On suppose que gsutil est configuré ou que le service account a les droits
 RUN mkdir -p /app/models
 # Téléchargement des modèles depuis GCS
 RUN gsutil -m cp -r gs://modeles-triage-hospitalier/merged_dpo_final_chsa /app/models/
