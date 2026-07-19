@@ -52,4 +52,4 @@ jobs:
       - name: Submit Cloud Build
         run: |
           gcloud builds submit --config=cloudbuild.yml \
-            --substitutions=COMMIT_SHA=$GITHUB_SHA
+            --substitutions=COMMIT_SHA=$GITHUB_SHA,_PROJECT_ID=agent-hospitalier,_PROJECT_NUMBER=414294705487
