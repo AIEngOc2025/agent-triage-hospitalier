@@ -11,16 +11,12 @@ ENV PYTHONUNBUFFERED=1
 
 # --- 3. Installation des dépendances manquantes ---
 # Nous installons uniquement les dépendances nécessaires à notre application
-# qui ne sont pas déjà incluses dans l'image de base vLLM.
-RUN pip install --no-cache-dir \
-    gradio \
-    pydantic-settings \
-    uv \
-    python-dotenv
+# qui ne sont pas déjà incluses dans l'image de base vLLM. `gradio` is not used by the FastAPI app.
+RUN pip install --no-cache-dir pydantic-settings
 
 # --- 4. Copie du code de l'application ---
 # Copier le reste du code de l'application.
-COPY ./app/ /app
+COPY ./app /app/app
 COPY ./models/ /app/models
 
 # --- 5. Exposition du port ---
