@@ -52,4 +52,5 @@ jobs:
       - name: Submit Cloud Build
         run: |
           gcloud builds submit --config=cloudbuild.yml \
-            --substitutions=COMMIT_SHA=$GITHUB_SHA
+            --substitutions=COMMIT_SHA=$GITHUB_SHA \
+            --impersonate-service-account=tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com
