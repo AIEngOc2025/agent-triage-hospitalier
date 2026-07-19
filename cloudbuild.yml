@@ -1,6 +1,7 @@
 steps:
   # 0. Download weights from GCS (parallel download with -m)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Download Model Weights'
     entrypoint: 'bash'
     args:
       - '-c'
@@ -8,10 +9,12 @@ steps:
 
   # 1. Construction de l'image
   - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Docker Image'
     args: ['build', '-f', 'Dockerfile.cloudrun', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA', '.']
 
   # 2. Déploiement sur Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy to Cloud Run'
     entrypoint: 'gcloud'
     args:
       - 'run'
@@ -19,13 +22,12 @@ steps:
       - 'agent-triage-service'
       - '--image'
       - 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA'
-      - '--region'
-      - 'europe-west1'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+      - '--region=europe-west1' # Utiliser une substitution est encore mieux
       - '--startup-probe-path=/health'
-      - '--startup-probe-port=8000'
+      - '--startup-probe-port=8080'
 
 # Utilisation du champ 'images' pour automatiser le push vers AR
 images:
