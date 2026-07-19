@@ -62,17 +62,20 @@ jobs:
           lfs: true
 
       - name: Authenticate to Google Cloud
+        id: auth
         uses: 'google-github-actions/auth@v3'
         with:
           workload_identity_provider: 'projects/414294705487/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
           impersonate_service_account: 'tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com'
           project_id: 'agent-hospitalier'
+          token_format: 'access_token'
 
-      - name: Set up Cloud SDK
-        uses: 'google-github-actions/setup-gcloud@v2.1.0'
-
-      - name: Configure Docker
-        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+      - name: Login to Artifact Registry
+        uses: docker/login-action@v3
+        with:
+          registry: europe-west1-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build and Push Docker Image
         run: |
