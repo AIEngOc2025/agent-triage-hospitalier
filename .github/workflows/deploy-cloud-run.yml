@@ -71,7 +71,22 @@ jobs:
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2.1.0'
 
-      - name: Submit Cloud Build and Deploy
+      - name: Configure Docker
+        run: gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+
+      - name: Build and Push Docker Image
         run: |
-          gcloud builds submit --config=cloudbuild.yml \
-            --substitutions=PROJECT_ID=agent-hospitalier,COMMIT_SHA=$GITHUB_SHA
+          IMAGE_URL=europe-west1-docker.pkg.dev/agent-hospitalier/mon-depot-modeles/agent-triage:$GITHUB_SHA
+          docker build -f Dockerfile.cloudrun -t $IMAGE_URL .
+          docker push $IMAGE_URL
+
+      - name: Deploy to Cloud Run
+        run: |
+          IMAGE_URL=europe-west1-docker.pkg.dev/agent-hospitalier/mon-depot-modeles/agent-triage:$GITHUB_SHA
+          gcloud run deploy agent-triage-service \
+            --image $IMAGE_URL \
+            --platform managed \
+            --region europe-west1 \
+            --allow-unauthenticated \
+            --startup-probe-path=/health \
+            --startup-probe-port=8080
