@@ -10,7 +10,7 @@ steps:
   # 1. Construction de l'image
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Docker Image'
-    args: ['build', '-f', 'Dockerfile.cloudrun', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA', '.']
+    args: ['build', '-f', 'Dockerfile.cloudrun', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/mon-depot-modeles/agent-triage:${COMMIT_SHA}', '.']
 
   # 2. Déploiement sur Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -21,7 +21,7 @@ steps:
       - 'deploy'
       - 'agent-triage-service'
       - '--image'
-      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA'
+      - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/mon-depot-modeles/agent-triage:${COMMIT_SHA}'
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
@@ -31,4 +31,4 @@ steps:
 
 # Utilisation du champ 'images' pour automatiser le push vers AR
 images:
-  - 'europe-west1-docker.pkg.dev/$PROJECT_ID/mon-depot-modeles/agent-triage:$COMMIT_SHA'
+  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/mon-depot-modeles/agent-triage:${COMMIT_SHA}'
