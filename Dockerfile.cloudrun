@@ -13,17 +13,13 @@ RUN apt-get update && apt-get install -y \
 # Copier les fichiers de dépendances
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-# Installation de gsutil (via pip pour éviter les problèmes de dépôts apt)
-RUN pip install --no-cache-dir gsutil
 
-# --- ÉTAPE CRUCIALE : Téléchargement des modèles ---
+# --- ÉTAPE : Copie des modèles (préalablement téléchargés par Cloud Build) ---
 RUN mkdir -p /app/models
-# Téléchargement des modèles depuis GCS
-RUN gsutil -m cp -r gs://modeles-triage-hospitalier/merged_dpo_final_chsa /app/models/
+COPY ./models /app/models
 
 # Copier le code de l'application
 COPY ./app /app/app
-COPY ./models /app/models
 
 # Exposition du port
 EXPOSE 8080

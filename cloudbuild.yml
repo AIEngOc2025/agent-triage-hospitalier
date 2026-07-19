@@ -1,4 +1,12 @@
 steps:
+  # 0. Téléchargement des modèles en local dans le build
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Download Model Weights'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'mkdir -p ./models && gsutil -m cp -r gs://modeles-triage-hospitalier/merged_dpo_final_chsa ./models/'
+
   # 1. Construction de l'image
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Docker Image'
