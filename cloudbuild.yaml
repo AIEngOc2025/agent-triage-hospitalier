@@ -21,4 +21,4 @@ images:
   - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}'
 
 options:
-  logging: REGIONAL_USER_OWNED_BUCKET
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
