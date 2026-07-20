@@ -1,0 +1,21 @@
+steps:
+  # 0. Téléchargement des modèles en local dans le build
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Download Model Weights'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - 'mkdir -p ./models && gsutil -m cp -r gs://modeles-triage-hospitalier/merged_dpo_final_chsa ./models/'
+
+  # 1. Construction de l'image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Docker Image'
+    args: ['build', '-f', 'Dockerfile.cloudrun', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}', '.']
+
+  # 2. Push de l'image vers Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Docker Image'
+    args: ['push', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}']
+
+images:
+  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}'
