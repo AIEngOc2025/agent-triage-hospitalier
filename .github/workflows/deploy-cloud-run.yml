@@ -1,4 +1,4 @@
-name: "Deploy to Google Cloud Run"
+name: "CI/CD Pipeline - Test and Trigger Build"
 
 on:
   push:
@@ -26,30 +26,8 @@ jobs:
       - name: Run tests
         env:
           APP_TEST_MODE: "1"
-        run: uv run python -m pytest
+        run: uv run python -m pytest tests/
 
-  deploy-to-cloud-run:
-    name: "Deploy to Google Cloud Run"
-    runs-on: ubuntu-latest
-    needs: test
-    if: (github.ref == 'refs/heads/dev' && github.event_name == 'push') || github.event_name == 'workflow_dispatch'
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: 'google-github-actions/auth@v3'
-        with:
-          workload_identity_provider: 'projects/414294705487/locations/global/workloadIdentityPools/agent-triage-gh/providers/github'
-          service_account: 'tri-svc-deployer@agent-hospitalier.iam.gserviceaccount.com'
-          project_id: 'agent-hospitalier'
-
-      - name: Submit Cloud Build
-        run: |
-          gcloud builds submit --config=cloudbuild.yml \
-            --substitutions=COMMIT_SHA=$GITHUB_SHA,_PROJECT_ID=agent-hospitalier,_PROJECT_NUMBER=414294705487
+  # Note: Actual build and deployment are now handled by Google Cloud Build,
+  # which is connected directly to the GitHub repository.
+  # This workflow ensures code quality before Cloud Build triggers.
