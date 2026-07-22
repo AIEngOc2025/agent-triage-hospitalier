@@ -1,10 +1,11 @@
 import json
-from unittest.mock import ANY, AsyncMock, mock_open, patch
+from unittest.mock import AsyncMock, mock_open, patch
 
 import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app, log_audit
+from app.settings import settings
 
 
 @pytest.fixture
@@ -18,14 +19,21 @@ async def test_log_audit_writes_file():
     """Tests that log_audit writes the correct JSON line to the log file."""
     entry = {"audit_id": "123", "patient_id": "PAT-001", "decision": "Hello"}
 
-    with patch("builtins.open", mock_open()) as mocked_file:
+    m = mock_open()
+
+    # Patch app.main.open to mock the file and patch anonymize_text
+    # to avoid spaCy loading
+    with (
+        patch("app.main.open", m) as mocked_file,
+        patch("app.main.anonymize_text", side_effect=lambda x: x),
+    ):
         await log_audit(entry)
 
         # Check if file was opened in append mode
-        mocked_file.assert_called_once_with(ANY, "a", encoding="utf-8")
+        mocked_file.assert_called_once_with(settings.LOG_FILE, "a", encoding="utf-8")
 
         # Check if the written content is the JSON string of the entry
-        handle = mocked_file()
+        handle = m()
         written_data = "".join(call.args[0] for call in handle.write.call_args_list)
         assert json.loads(written_data) == entry
 

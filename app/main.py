@@ -202,12 +202,7 @@ def anonymize_text(text: str) -> str:
     """
     global analyzer
     if analyzer is None:
-        # Load the model directly using absolute path to ensure Presidio finds it
-        model_path = (
-            "/Users/mpaga/.pyenv/versions/3.11.9/lib/python3.11/"
-            "site-packages/fr_core_news_sm/fr_core_news_sm-3.8.0"
-        )
-        nlp = spacy.load(model_path)
+        nlp = spacy.load("fr_core_news_sm")
         nlp_engine = SpacyNlpEngine(models={"fr": nlp})
         analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
     results = analyzer.analyze(text=text, language="fr")
