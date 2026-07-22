@@ -8,6 +8,8 @@ from typing import AsyncGenerator, Dict, List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
+from presidio_analyzer import AnalyzerEngine
+from presidio_anonymizer import AnonymizerEngine
 from pydantic import BaseModel
 
 from app.settings import settings
@@ -31,10 +33,10 @@ class ModelEngine:
         class DefaultTokenizer:
             def apply_chat_template(self, messages, **kwargs):
                 return ""
+
         self.tokenizer = DefaultTokenizer()
         print(f"DEBUG: Initialized tokenizer: {self.tokenizer}")
         self.sampling_params = None
-
 
     def initialize(self):
         print(
@@ -49,14 +51,16 @@ class ModelEngine:
             else:
                 print("🚀 Initializing Async vLLM engine (Scalable GPU)...")
                 self._init_vllm()
-            
+
             # Assurer que self.tokenizer est défini
             if self.tokenizer is None:
+
                 class DefaultTokenizer:
                     def apply_chat_template(self, messages, **kwargs):
                         return ""
+
                 self.tokenizer = DefaultTokenizer()
-                
+
         except Exception as e:
             if settings.IS_PRODUCTION:
                 print(f"❌ Critical error during production engine initialization: {e}")
@@ -153,14 +157,34 @@ class ModelEngine:
 # --- UTILITIES ---
 
 
+analyzer = AnalyzerEngine()
+anonymizer = AnonymizerEngine()
+
+
+def anonymize_text(text: str) -> str:
+    """
+    @definition: Anonymise les entités sensibles dans le texte.
+    @args/params: text (str)
+    @return: str (texte anonymisé)
+    """
+    results = analyzer.analyze(text=text, language="fr")
+    anonymized_result = anonymizer.anonymize(text=text, analyzer_results=results)
+    return anonymized_result.text
+
+
+# ...
+
+
 async def log_audit(entry: dict):
     """
-    @definition: Writes an audit log entry to the configured log file in JSONL format.
+    @definition: Writes an audit log entry in JSONL format, anonymized.
     @args/params:
         - entry (dict): The log entry to record.
     @return: None.
     """
     try:
+        # Anonymiser la décision avant de loguer
+        entry["decision"] = anonymize_text(entry["decision"])
 
         def write_log():
             with open(settings.LOG_FILE, "a", encoding="utf-8") as f:
@@ -196,6 +220,8 @@ def create_log_entry(
 # Global engine instance
 engine = ModelEngine()
 # Initialisation immédiate au chargement du module pour éviter les problèmes de timing
+# Forcer la production
+settings.IS_PRODUCTION = True
 engine.initialize()
 
 

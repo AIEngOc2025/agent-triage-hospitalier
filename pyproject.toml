@@ -3,6 +3,18 @@ name = "agent-triage-hospitalier"
 version = "0.1.0"
 description = "A hospital triage agent using LLMs."
 requires-python = ">=3.11"
+dependencies = [
+    "gradio>=6.20.0",
+    "requests>=2.34.2",
+    "fastapi",
+    "uvicorn",
+    "pydantic-settings",
+    "transformers",
+    "mlx-lm",
+    "presidio-analyzer",
+    "presidio-anonymizer",
+    "spacy",
+]
 
 [tool.ruff]
 line-length = 88

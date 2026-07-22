@@ -1,0 +1,30 @@
+# --- ÉTAPE 1: Base de Production ---
+# Utilisation de l'image officielle vllm-openai. Elle contient déjà :
+# - vllm, torch, transformers
+# - CUDA (pour les GPU)
+# - gcsfs pour télécharger les modèles depuis GCS (`gs://`)
+FROM vllm/vllm-openai:v0.5.1
+
+# --- ÉTAPE 2: Installation des dépendances de l'application ---
+# On copie uniquement les fichiers de dépendances pour profiter du cache Docker.
+COPY requirements.txt .
+COPY requirements-dev.txt . # Copié pour que la commande suivante ne casse pas
+
+# Installation des dépendances manquantes (gradio, presidio, etc.)
+# On utilise uv, qui est plus rapide que pip.
+RUN pip install uv
+RUN uv pip install -r requirements.txt
+
+# Installation de spacy et de son modèle de langue français
+RUN uv pip install spacy && \
+    python -m spacy download fr_core_news_sm
+
+# --- ÉTAPE 3: Copie du code de l'application ---
+WORKDIR /app
+COPY ./app ./app
+COPY ./start_prod.sh .
+
+# --- ÉTAPE 4: Point d'entrée ---
+# Rendre le script de démarrage exécutable et le définir comme commande de lancement.
+RUN chmod +x ./start_prod.sh
+CMD ["./start_prod.sh"]

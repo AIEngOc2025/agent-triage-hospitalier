@@ -6,3 +6,4 @@ pytest
 wheel
 pytest-asyncio
 hf_transfer
+vllm # Pour le serveur de modèle local

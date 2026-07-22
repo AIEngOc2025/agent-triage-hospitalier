@@ -3,5 +3,8 @@ uvicorn
 pydantic-settings
 gradio
 transformers
-vllm
 torch
+mlx-lm
+presidio-analyzer
+presidio-anonymizer
+spacy
