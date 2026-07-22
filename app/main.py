@@ -6,9 +6,13 @@ from contextlib import asynccontextmanager
 from time import perf_counter, strftime
 from typing import AsyncGenerator, Dict, List
 
+import spacy
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
+
+# ...
 from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer.nlp_engine import SpacyNlpEngine
 from presidio_anonymizer import AnonymizerEngine
 from pydantic import BaseModel
 
@@ -48,17 +52,17 @@ class ModelEngine:
             # En production, on utilise le vrai moteur VLLM.
             # En développement, on utilise TOUJOURS le moteur mocké.
             if settings.IS_PRODUCTION:
-                print("🚀 Initializing Async vLLM engine (Scalable GPU)...")
+                print("🚀 [PROD] Initializing Async vLLM engine (GPU)...")
                 self._init_vllm()
+            elif settings.IS_MACOS:
+                print(
+                    "💻 [DEV] macOS detected. Initializing MLX engine "
+                    "(Apple Silicon)..."
+                )
+                self._init_mlx()
             else:
-                print("💻 Development mode: initializing mocked engine...")
+                print("💻 [DEV] Fallback. Initializing mocked engine...")
                 self._init_vllm_mock()
-
-                class DefaultTokenizer:
-                    def apply_chat_template(self, messages, **kwargs):
-                        return ""
-
-                self.tokenizer = DefaultTokenizer()
 
         except Exception as e:
             if settings.IS_PRODUCTION:
@@ -122,27 +126,53 @@ class ModelEngine:
         """
         @definition: Generates a stream of text. Simplified for dev.
         """
-        print(f"DEBUG: tokenizer={self.tokenizer}")
-        yield "Ceci est une réponse factice en mode développement. "
-        yield "Pourriez-vous préciser vos symptômes et votre âge ?"
+        if self.engine_type == "MLX":
+            prompt = self.tokenizer.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True
+            )
+            # mlx_lm.generate est un générateur, parfait pour le streaming
+            stream = self.model.generate(prompt)
+            for chunk in stream:
+                yield chunk
+        else:  # Fallback to mock for other dev environments
+            yield "Ceci est une réponse factice en mode développement. "
+            yield "Pourriez-vous préciser vos symptômes et votre âge ?"
 
     async def generate(self, messages: List[dict]) -> str:
         """
         @definition: Generates a complete text response. Simplified for dev.
+        @args/params: messages (List[dict])
+        @return: str (The generated response)
         """
-        print(f"DEBUG: engine_type={self.engine_type}, model={self.model}")
-        if not settings.IS_PRODUCTION:
-            return (
-                "Ceci est une réponse factice en mode développement. "
-                "Pourriez-vous préciser vos symptômes et votre âge ?"
+        if self.engine_type == "MLX":
+            import mlx_lm
+
+            prompt = self.tokenizer.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True
             )
-
-        request_id = str(uuid.uuid4())
-        full_text = ""
-        async for chunk in self.generate_stream(messages, request_id):
-            full_text += chunk
-
-        return self.clean_response(full_text)
+            # Pour la génération non-streamée, on utilise mlx_lm.generate
+            response = mlx_lm.generate(
+                self.model,
+                self.tokenizer,
+                prompt=prompt,
+                verbose=False,
+                # 'temp' is not supported in this version of mlx_lm.generate
+            )
+            return self.clean_response(response)
+        elif self.engine_type == "MockEngine":
+            mock_response = (
+                "Ceci est une réponse factice du triage. "
+                "Pourriez-vous me donner votre âge et décrire "
+                "vos symptômes principaux ?"
+            )
+            return self.clean_response(mock_response)
+        else:  # Production (vLLM)
+            request_id = str(uuid.uuid4())
+            full_text = ""
+            # En production, la génération non-streamée est une accumulation du stream
+            async for chunk in self.generate_stream(messages, request_id):
+                full_text += chunk
+            return self.clean_response(full_text)
 
     def clean_response(self, text: str) -> str:
         """
@@ -160,7 +190,7 @@ class ModelEngine:
 # --- UTILITIES ---
 
 
-analyzer = AnalyzerEngine()
+analyzer = None
 anonymizer = AnonymizerEngine()
 
 
@@ -170,6 +200,16 @@ def anonymize_text(text: str) -> str:
     @args/params: text (str)
     @return: str (texte anonymisé)
     """
+    global analyzer
+    if analyzer is None:
+        # Load the model directly using absolute path to ensure Presidio finds it
+        model_path = (
+            "/Users/mpaga/.pyenv/versions/3.11.9/lib/python3.11/"
+            "site-packages/fr_core_news_sm/fr_core_news_sm-3.8.0"
+        )
+        nlp = spacy.load(model_path)
+        nlp_engine = SpacyNlpEngine(models={"fr": nlp})
+        analyzer = AnalyzerEngine(nlp_engine=nlp_engine)
     results = analyzer.analyze(text=text, language="fr")
     anonymized_result = anonymizer.anonymize(text=text, analyzer_results=results)
     return anonymized_result.text
@@ -222,7 +262,6 @@ def create_log_entry(
 
 # Global engine instance
 engine = ModelEngine()
-engine.initialize()
 
 
 # --- 3. LIFESPAN ---
@@ -232,8 +271,10 @@ async def lifespan(app: FastAPI):
     @definition: Manages the application's lifespan events (startup and shutdown).
     @args/params:
         - app (FastAPI): The FastAPI application instance.
+    @return: None (générateur asynchrone).
     """
     settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
+    engine.initialize()
     yield
     print("🛑 Arrêt de la tentative du chargement de l'orchestrateur")
 
