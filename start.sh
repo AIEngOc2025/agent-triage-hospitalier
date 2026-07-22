@@ -40,57 +40,39 @@ if [ -z "$MODEL_ID" ]; then
     exit 1
 fi
 
-VLLM_PORT=${VLLM_PORT:-8000}
-VLLM_HOST=${VLLM_HOST:-"localhost"}
-VLLM_API_BASE="http://${VLLM_HOST}:${VLLM_PORT}"
+API_PORT=${API_PORT:-8000}
+API_HOST=${API_HOST:-"localhost"}
+VLLM_API_BASE="http://${API_HOST}:${API_PORT}" # L'UI pointera vers notre API mockée
 
-# Construire les arguments pour VLLM
-VLLM_ARGS=("--trust-remote-code")
-
-# Sur macOS, ajouter le drapeau pour activer le support Metal (MLX)
-if [[ "$(uname)" == "Darwin" ]]; then
-    echo "🍏 macOS détecté, activation du support Metal pour VLLM."
-    VLLM_ARGS+=(
-        "--device" "metal"
-        "--gpu-memory-utilization" "0.80" # Limite l'usage à 80% de la mémoire unifiée
-    )
-fi
-
-# --- 1. Lancement du serveur VLLM ---
-echo "🚀 Lancement du serveur VLLM en arrière-plan (logs dans ${VLLM_LOG_FILE})..."
+# --- 1. Lancement du serveur API Mocké ---
+echo "🚀 Lancement du serveur API mocké en arrière-plan (logs dans ${VLLM_LOG_FILE})..."
 # 'set -m' active le contrôle des tâches, nécessaire pour tuer le groupe de processus.
-(set -m; python -m vllm.entrypoints.openai.api_server \
-      --model "$MODEL_ID" \
-      --host "$VLLM_HOST" \
-      --port "$VLLM_PORT" \
-      "${VLLM_ARGS[@]}" \
+(set -m; uvicorn app.main:app --host "${API_HOST}" --port "${API_PORT}" \
       > "$VLLM_LOG_FILE" 2>&1 &)
 
-# Sauvegarder le PID (Process ID) du serveur VLLM
+# Sauvegarder le PID (Process ID) du serveur API
 VLLM_PID=$!
 
-# --- 2. Attente du serveur VLLM ---
-echo "⏳ Attente du démarrage du serveur VLLM..."
+# --- 2. Attente du serveur API ---
+echo "⏳ Attente du démarrage du serveur API..."
 HEALTH_CHECK_URL="${VLLM_API_BASE}/health"
-MAX_WAIT_SECONDS=120
-SECONDS=0
 
-until curl -s --fail "$HEALTH_CHECK_URL" > /dev/null; do
-    # Vérifier si le processus VLLM est toujours en cours d'exécution
+until curl -s --fail "$HEALTH_CHECK_URL" > /dev/null 2>&1; do
+    # Vérifier si le processus API est toujours en cours d'exécution
     if ! kill -0 $VLLM_PID 2>/dev/null; then
-        echo "❌ ERREUR: Le serveur VLLM a cessé de fonctionner."
+        echo "❌ ERREUR: Le serveur API a cessé de fonctionner."
         echo "   Veuillez consulter les logs pour plus de détails : cat ${VLLM_LOG_FILE}"
         cleanup
     fi
 
-    echo "   Serveur VLLM non disponible, nouvelle tentative dans 2s..."
+    echo "   Serveur API non disponible, nouvelle tentative dans 2s..."
     sleep 2
 done
-echo "✅ Serveur VLLM opérationnel."
+echo "✅ Serveur API mocké opérationnel."
 
 # --- 3. Lancement de l'interface Gradio ---
 echo "💻 Lancement de l'interface Gradio..."
-export VLLM_API_BASE="${VLLM_API_BASE}/v1"
+export VLLM_API_BASE="${VLLM_API_BASE}" # L'URL de base pour l'UI
 python app/ui.py
 
 # --- Fin du script ---

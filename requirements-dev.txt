@@ -1,9 +1,6 @@
 -r requirements.txt
 black
 ruff
-uv
 pytest
 wheel
 pytest-asyncio
-hf_transfer
-vllm # Pour le serveur de modèle local

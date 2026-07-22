@@ -10,9 +10,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import argparse
 # L'URL de base de l'API VLLM est fournie par le script de démarrage via une variable d'environnement.
-# Si elle n'est pas définie, on utilise une valeur par défaut pour le développement local.
-VLLM_API_BASE = os.getenv("VLLM_API_BASE", "http://localhost:8000/v1")
-CHAT_COMPLETIONS_URL = f"{VLLM_API_BASE}/chat/completions"
+# En local, elle pointera vers notre API FastAPI mockée. En prod, vers le vrai serveur VLLM.
+API_BASE_URL = os.getenv("VLLM_API_BASE", "http://localhost:8000")
 
 
 def chat_function(message, history):
@@ -22,25 +21,28 @@ def chat_function(message, history):
     @return : str (la réponse de l'assistant)
     """
 
-    # Préparation du format historique pour l'API OpenAI
-    api_history = []
+    # Préparation du format historique pour notre API FastAPI (/chat)
+    api_history = [] 
     for human, assistant in history:
         api_history.append({"role": "user", "content": human})
         api_history.append({"role": "assistant", "content": assistant})
     api_history.append({"role": "user", "content": message})
 
-    # Le modèle est défini par le serveur VLLM, pas besoin de le spécifier ici.
+    # Le payload pour notre endpoint /chat
     payload = {
-        "messages": api_history,
+        "history": api_history,
+        "patient_id": "local-dev-patient",
         "stream": False
     }
 
     try:
-        # On appelle l'endpoint de chat completions du serveur VLLM local
-        response = requests.post(CHAT_COMPLETIONS_URL, json=payload)
+        # On appelle l'endpoint /chat de notre API FastAPI
+        chat_url = f"{API_BASE_URL}/chat"
+        print(f"DEBUG: Calling mock API at {chat_url}")
+        response = requests.post(chat_url, json=payload)
         response.raise_for_status()
         data = response.json()
-        return data["choices"][0]["message"]["content"]
+        return data["response"]
     except Exception as e:
         return f"Erreur de connexion à l'API : {str(e)}"
 

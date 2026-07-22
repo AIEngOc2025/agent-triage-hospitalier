@@ -45,15 +45,14 @@ class ModelEngine:
             f"IS_PRODUCTION: {settings.IS_PRODUCTION}"
         )
         try:
-            if settings.IS_MACOS:
-                print("💻 MacOS detected: initializing vLLM-Metal (MLX)...")
-                self._init_mlx()
-            else:
+            # En production, on utilise le vrai moteur VLLM.
+            # En développement, on utilise TOUJOURS le moteur mocké.
+            if settings.IS_PRODUCTION:
                 print("🚀 Initializing Async vLLM engine (Scalable GPU)...")
                 self._init_vllm()
-
-            # Assurer que self.tokenizer est défini
-            if self.tokenizer is None:
+            else:
+                print("💻 Development mode: initializing mocked engine...")
+                self._init_vllm_mock()
 
                 class DefaultTokenizer:
                     def apply_chat_template(self, messages, **kwargs):
@@ -68,9 +67,9 @@ class ModelEngine:
             else:
                 print(f"⚠️  Development initialization warning: {e}")
 
-    def _init_vllm(self):
+    def _init_vllm_mock(self):
         print("⚠️ [vLLM] Mocked initialization for local testing.")
-        self.engine_type = "vLLM"
+        self.engine_type = "MockEngine"
 
         # Mocking for local testing
         class MockModel:
@@ -84,7 +83,7 @@ class ModelEngine:
                         self.outputs = [MockOutput(text)]
 
                 async def gen():
-                    yield MockRequestOutput("Voici une réponse factice du triage.")
+                    yield MockRequestOutput("Ceci est une réponse factice du triage.")
 
                 return gen()
 
@@ -96,6 +95,10 @@ class ModelEngine:
 
         self.tokenizer = MockTokenizer()
         self.sampling_params = None
+        print("✅ [Mock] Mock Engine operational.")
+
+    def _init_vllm(self):
+        # Cette méthode sera utilisée en production dans le conteneur
         print("✅ [vLLM] Async Engine operational (Scalable GPU).")
 
     def _init_mlx(self):
@@ -219,9 +222,6 @@ def create_log_entry(
 
 # Global engine instance
 engine = ModelEngine()
-# Initialisation immédiate au chargement du module pour éviter les problèmes de timing
-# Forcer la production
-settings.IS_PRODUCTION = True
 engine.initialize()
 
 

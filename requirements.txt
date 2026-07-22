@@ -2,9 +2,6 @@ fastapi
 uvicorn
 pydantic-settings
 gradio
-transformers
-torch
-mlx-lm
 presidio-analyzer
 presidio-anonymizer
 spacy
