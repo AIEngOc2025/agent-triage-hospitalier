@@ -26,4 +26,5 @@ COPY ./start_prod.sh .
 # --- ÉTAPE 4: Point d'entrée ---
 # Rendre le script de démarrage exécutable et le définir comme commande de lancement.
 RUN chmod +x ./start_prod.sh
+EXPOSE 8080
 CMD ["./start_prod.sh"]
