@@ -104,21 +104,7 @@ class ModelEngine:
     def _init_vllm(self):
         # Cette méthode sera utilisée en production dans le conteneur
         print("✅ [vLLM] Async Engine operational (Scalable GPU).")
-
-    def _init_mlx(self):
-        try:
-            from mlx_lm import load
-        except ImportError:
-            print("❌ [MLX] Package mlx-lm not installed.")
-            return
-
-        print(f"📥 [MLX] Loading model from: {settings.MODEL_PATH}")
-        try:
-            self.model, self.tokenizer = load(str(settings.MODEL_PATH))
-            self.engine_type = "MLX"
-            print("✅ [MLX] Engine operational.")
-        except Exception as e:
-            print(f"❌ [MLX] Failed to load model: {e}")
+        self.engine_type = "vLLM"
 
     async def generate_stream(
         self, messages: List[dict], request_id: str
@@ -126,17 +112,8 @@ class ModelEngine:
         """
         @definition: Generates a stream of text. Simplified for dev.
         """
-        if self.engine_type == "MLX":
-            prompt = self.tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True
-            )
-            # mlx_lm.generate est un générateur, parfait pour le streaming
-            stream = self.model.generate(prompt)
-            for chunk in stream:
-                yield chunk
-        else:  # Fallback to mock for other dev environments
-            yield "Ceci est une réponse factice en mode développement. "
-            yield "Pourriez-vous préciser vos symptômes et votre âge ?"
+        yield "Ceci est une réponse factice en mode développement. "
+        yield "Pourriez-vous préciser vos symptômes et votre âge ?"
 
     async def generate(self, messages: List[dict]) -> str:
         """
@@ -144,22 +121,7 @@ class ModelEngine:
         @args/params: messages (List[dict])
         @return: str (The generated response)
         """
-        if self.engine_type == "MLX":
-            import mlx_lm
-
-            prompt = self.tokenizer.apply_chat_template(
-                messages, tokenize=False, add_generation_prompt=True
-            )
-            # Pour la génération non-streamée, on utilise mlx_lm.generate
-            response = mlx_lm.generate(
-                self.model,
-                self.tokenizer,
-                prompt=prompt,
-                verbose=False,
-                # 'temp' is not supported in this version of mlx_lm.generate
-            )
-            return self.clean_response(response)
-        elif self.engine_type == "MockEngine":
+        if self.engine_type == "MockEngine":
             mock_response = (
                 "Ceci est une réponse factice du triage. "
                 "Pourriez-vous me donner votre âge et décrire "
