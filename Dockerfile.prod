@@ -7,12 +7,12 @@ FROM vllm/vllm-openai:v0.5.1
 
 # --- ÉTAPE 2: Installation des dépendances de l'application ---
 # On copie uniquement les fichiers de dépendances pour profiter du cache Docker.
-COPY requirements.txt .
+COPY requirements-prod.txt .
 
 # Installation des dépendances manquantes (gradio, presidio, etc.)
 # On utilise uv, qui est plus rapide que pip.
 RUN pip install uv
-RUN uv pip install --system -r requirements.txt
+RUN uv pip install --system -r requirements-prod.txt
 
 # Installation de spacy et de son modèle de langue français
 RUN uv pip install --system spacy && \
