@@ -12,10 +12,10 @@ COPY requirements.txt .
 # Installation des dépendances manquantes (gradio, presidio, etc.)
 # On utilise uv, qui est plus rapide que pip.
 RUN pip install uv
-RUN uv pip install -r requirements.txt
+RUN uv pip install --system -r requirements.txt
 
 # Installation de spacy et de son modèle de langue français
-RUN uv pip install spacy && \
+RUN uv pip install --system spacy && \
     python -m spacy download fr_core_news_sm
 
 # --- ÉTAPE 3: Copie du code de l'application ---
