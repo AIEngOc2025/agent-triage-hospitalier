@@ -16,7 +16,7 @@ RUN uv pip install --system -r requirements-linux.txt
 
 # Installation de spacy et de son modèle de langue français
 RUN uv pip install --system spacy && \
-    python -m spacy download fr_core_news_sm
+    python3 -m spacy download fr_core_news_sm
 
 # --- ÉTAPE 3: Copie du code de l'application ---
 WORKDIR /app
