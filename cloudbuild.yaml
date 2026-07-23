@@ -23,7 +23,12 @@ steps:
         '--region', 'europe-west1',
         '--allow-unauthenticated',
         '--set-env-vars', 'MODEL_ID=gs://modeles-triage-hospitalier/merged_dpo_final_chsa',
-        '--port', '8080' # Le port exposé par Gradio
+        '--port', '8080',
+        '--cpu', '4',
+        '--memory', '16Gi',
+        '--gpu', '1',
+        '--gpu-type', 'nvidia-l4',
+        '--timeout', '1800s'
       ]
 
 images:
