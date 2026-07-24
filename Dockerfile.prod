@@ -21,7 +21,7 @@ RUN uv pip install --system -r requirements-linux.txt
 RUN uv pip install --system "torch>=2.4" "transformers[torch]" spacy &&     python3 -m spacy download fr_core_news_sm
 
 # --- ÉTAPE 3: Copie du code de l'application ---
-COPY ./app ./app # Copie le code local dans /app/app
+COPY app/ ./app/ # Copie le contenu de ./app dans /app (le WORKDIR)
 COPY ./start_prod.sh .
 
 # --- ÉTAPE 4: Point d'entrée ---
