@@ -24,6 +24,7 @@ RUN python3 -m spacy download fr_core_news_sm
 
 # --- ÉTAPE 4: Point d'entrée ---
 # Rendre le script de démarrage exécutable et le définir comme commande de lancement.
+RUN chmod +x start_light_prod.sh
 EXPOSE 8080
 ENTRYPOINT []
-CMD ["./start_prod.sh"]
+CMD ["./start_light_prod.sh"]
