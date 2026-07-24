@@ -10,8 +10,8 @@ WORKDIR /app
 
 # --- ÉTAPE 2: Copie du projet et installation des dépendances ---
 # Copier tout le contexte de build (sauf les fichiers dans .dockerignore)
-COPY ./app ./app/app
-COPY start_prod.sh .
+COPY . .
+
 
 # Installer uv, puis les dépendances de production.
 # L'image de base contient déjà torch et transformers, pas besoin de les réinstaller.

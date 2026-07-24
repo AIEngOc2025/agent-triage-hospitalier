@@ -1,3 +1,31 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:dc5a0ab86f3914addd5e268620ee139fa5266f4ca8d1f64774e2e20335ff75ee
-size 148
+# --- Fichiers et répertoires lourds ---
+# Exclure les données brutes et traitées, non nécessaires à l'exécution.
+data/
+
+# Exclure les modèles de ML locaux. En production, ils sont chargés depuis GCS.
+models/
+
+# --- Environnements et dépendances ---
+# Exclure les environnements virtuels Python.
+.venv/
+venv/
+env/
+
+# --- Fichiers de cache et de compilation Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info
+
+# --- Fichiers de configuration d'IDE et système ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- Logs et rapports ---
+*.log
+logs/
+
+# --- Git ---
+.git/
+.gitignore
