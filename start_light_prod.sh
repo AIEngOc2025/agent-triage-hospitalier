@@ -2,29 +2,17 @@
 set -e
 
 # Configuration
-export VLLM_PORT=${VLLM_PORT:-8000}
-export PORT=${PORT:-8080}
-# Utilisation de Qwen2.5-1.5B (léger et performant)
+# On force le port à 8080 pour que la startup probe de Cloud Run le détecte
+export VLLM_PORT=${PORT:-8080}
 export MODEL_ID=${MODEL_ID:-"Qwen/Qwen2.5-1.5B-Instruct"}
 
-echo "🚀 [CONSOLIDATED] Lancement VLLM et API..."
+echo "🚀 [VLLM ONLY] Lancement VLLM sur port $VLLM_PORT..."
 
-# 1. Lancement VLLM en arrière-plan
-python -m vllm.entrypoints.openai.api_server \
+# Lancement VLLM en foreground (Main Process)
+# Cloud Run attend qu'un processus écoute sur le port PORT
+exec python -m vllm.entrypoints.openai.api_server \
     --model "$MODEL_ID" \
     --host 0.0.0.0 \
     --port "$VLLM_PORT" \
     --trust-remote-code \
-    --gpu-memory-utilization 0.5 &
-VLLM_PID=$!
-
-# 2. Attente VLLM opérationnel
-echo "⏳ Attente de VLLM..."
-until curl -s http://localhost:${VLLM_PORT}/health > /dev/null; do
-    sleep 2
-done
-
-# 3. Lancement API FastAPI en foreground (Main Process)
-echo "📡 Lancement API sur port $PORT..."
-export VLLM_API_BASE="http://localhost:${VLLM_PORT}/v1"
-exec python -m app.main
+    --gpu-memory-utilization 0.5
