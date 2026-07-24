@@ -26,4 +26,4 @@ RUN python3 -m spacy download fr_core_news_sm
 # Rendre le script de démarrage exécutable et le définir comme commande de lancement.
 EXPOSE 8080
 ENTRYPOINT []
-CMD ["./start_prod.sh"]
+CMD ["python3", "-m", "app.minimal_health"]
