@@ -29,9 +29,11 @@ until curl -s http://localhost:${VLLM_PORT}/health > /dev/null; do
 done
 
 # 2. Lancement API FastAPI (C'est lui qui doit écouter sur $PORT)
+echo "📡 [PROD] Lancement API FastAPI sur port $PORT..."
 export VLLM_API_BASE="http://localhost:${VLLM_PORT}/v1"
-python -m app.main &
+exec python -m app.main &
 API_PID=$!
+echo "📡 [PROD] API FastAPI lancée avec PID $API_PID"
 
 # 3. Lancement Gradio
 python app/ui.py --server-name 0.0.0.0 --server-port 7860 &
