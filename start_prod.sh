@@ -48,20 +48,30 @@ until curl -s --fail "$HEALTH_CHECK_URL" > /dev/null; do
 done
 echo "✅ [PROD] Serveur VLLM opérationnel."
 
-# --- 3. Lancement de l'interface Gradio ---
-echo "💻 [PROD] Lancement de l'interface Gradio..."
+# --- 3. Lancement de l'interface Gradio et de l'API ---
+echo "💻 [PROD] Lancement de l'interface Gradio et de l'API..."
 export VLLM_API_BASE="http://localhost:${VLLM_PORT}/v1"
-python app/ui.py --server-name 0.0.0.0 --server-port "${GRADIO_PORT}" \
+export PORT="${GRADIO_PORT}"
+
+# Lancer FastAPI (Main app) sur le port défini par PORT
+python -m app.main &
+API_PID=$!
+
+# Lancer Gradio (UI) sur un port différent
+python app/ui.py --server-name 0.0.0.0 --server-port 7860 \
     &
 GRADIO_PID=$!
 
 # --- 4. Superviseur de processus ---
-wait -n $VLLM_PID $GRADIO_PID
+wait -n $VLLM_PID $API_PID $GRADIO_PID
 
 if ! kill -0 $VLLM_PID 2>/dev/null; then
     echo "❌ ERREUR: Le serveur VLLM s'est arrêté."
+elif ! kill -0 $API_PID 2>/dev/null; then
+    echo "❌ ERREUR: L'API s'est arrêtée."
 elif ! kill -0 $GRADIO_PID 2>/dev/null; then
     echo "❌ ERREUR: L'interface Gradio s'est arrêtée."
 fi
+
 
 cleanup

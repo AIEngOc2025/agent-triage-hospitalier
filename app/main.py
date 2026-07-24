@@ -239,6 +239,14 @@ async def lifespan(app: FastAPI):
 # --- 4. API FASTAPI ---
 app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
 
+if __name__ == "__main__":
+    import os
+
+    import uvicorn
+
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
+
 
 @app.get("/health", status_code=200, tags=["Monitoring"])
 async def health_check():
