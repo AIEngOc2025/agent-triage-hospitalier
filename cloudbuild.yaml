@@ -30,7 +30,7 @@ steps:
         '--gpu-type', 'nvidia-l4',
         '--timeout', '1800s',
         #'--startup-probe', 'tcp',
-        '--startup-probe-timeout', '600'
+        #'--startup-probe-timeout', '600'
       ]
 
 images:
