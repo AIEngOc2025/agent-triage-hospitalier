@@ -14,9 +14,10 @@ COPY . .
 
 
 # Installer uv, puis les dépendances de production.
-# L'image de base contient déjà vllm, mais nous forçons l'installation 
-# des dépendances du projet pour s'assurer de la compatibilité.
+# On force l'installation de torch et transformers pour garantir leur présence
+# avant d'installer les dépendances du projet.
 RUN pip install uv
+RUN uv pip install --system "torch>=2.4.0" "transformers[torch]==5.14.1"
 RUN uv pip install --system -r requirements-linux.txt
 
 # Installer le modèle de langue pour Spacy (utilisé par Presidio)
