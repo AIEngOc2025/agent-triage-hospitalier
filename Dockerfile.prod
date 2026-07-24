@@ -16,7 +16,7 @@ COPY . .
 # Installer uv, puis les dépendances de production.
 # L'image de base contient déjà torch et transformers, pas besoin de les réinstaller.
 RUN pip install uv
-RUN uv pip install --system -r requirements-linux.txt
+RUN uv pip install --system -r requirements-linux.txt "torch>=2.4.0"
 
 # Installer le modèle de langue pour Spacy (utilisé par Presidio)
 RUN python3 -m spacy download fr_core_news_sm
