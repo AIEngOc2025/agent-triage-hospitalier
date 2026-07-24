@@ -28,7 +28,7 @@ steps:
         '--memory', '16Gi',
         '--gpu', '1',
         '--gpu-type', 'nvidia-l4',
-        '--timeout', '1800s',
+        '--timeout', '2400s',
         #'--startup-probe', 'tcp',
         #'--startup-probe-timeout', '600'
       ]
