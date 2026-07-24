@@ -1,78 +1,42 @@
 #!/usr/bin/env bash
 
-# Script de démarrage pour l'environnement de PRODUCTION (conteneur Docker).
-# Ce script utilise un superviseur de processus simple pour s'assurer que si l'un
-# des services (VLLM ou Gradio) tombe, le conteneur entier s'arrête et redémarre.
-
 # --- Fonction de nettoyage ---
 cleanup() {
-    echo "🛑 [PROD] Signal d'arrêt reçu. Nettoyage des processus..."
-    # Killing processes safely
+    echo "🛑 [PROD] Signal d'arrêt reçu."
     kill -TERM $VLLM_PID $API_PID $GRADIO_PID 2>/dev/null
     exit 0
 }
 trap cleanup SIGINT SIGTERM
 
 # --- Configuration ---
-if [ -z "$MODEL_ID" ]; then
-    echo "❌ ERREUR: La variable d'environnement MODEL_ID est requise."
-    exit 1
-fi
+export VLLM_PORT=${VLLM_PORT:-8000}
+export PORT=${PORT:-8080}
 
-VLLM_PORT=${VLLM_PORT:-8000}
-VLLM_HOST="0.0.0.0" # Utiliser 0.0.0.0 pour écouter sur toutes les interfaces
-GRADIO_PORT=${PORT:-8080}
+echo "🚀 [PROD] Démarrage... (PORT: $PORT, VLLM: $VLLM_PORT)"
 
-# --- 1. Lancement du serveur VLLM ---
-echo "🚀 [PROD] Lancement du serveur VLLM..."
-# On limite la mémoire VRAM à 90% pour éviter l'OOM Killer
+# 1. Lancement VLLM
 python -m vllm.entrypoints.openai.api_server \
     --model "$MODEL_ID" \
-    --host "$VLLM_HOST" \
+    --host 0.0.0.0 \
     --port "$VLLM_PORT" \
     --trust-remote-code \
-    --gpu-memory-utilization 0.90 \
-    &
-
+    --gpu-memory-utilization 0.90 &
 VLLM_PID=$!
 
-# --- 2. Attente du serveur VLLM ---
-echo "⏳ [PROD] Attente du démarrage du serveur VLLM..."
-HEALTH_CHECK_URL="http://localhost:${VLLM_PORT}/health"
-
-until curl -s --fail "$HEALTH_CHECK_URL" > /dev/null; do
-    if ! kill -0 $VLLM_PID 2>/dev/null; then
-        echo "❌ ERREUR: Le serveur VLLM a cessé de fonctionner."
-        exit 1
-    fi
+# Attente VLLM
+until curl -s http://localhost:${VLLM_PORT}/health > /dev/null; do
     sleep 2
 done
-echo "✅ [PROD] Serveur VLLM opérationnel."
 
-# --- 3. Lancement de l'interface Gradio et de l'API ---
-echo "💻 [PROD] Lancement de l'interface Gradio et de l'API..."
+# 2. Lancement API FastAPI (C'est lui qui doit écouter sur $PORT)
 export VLLM_API_BASE="http://localhost:${VLLM_PORT}/v1"
-export PORT="${GRADIO_PORT}"
-
-# Lancer FastAPI (Main app) sur le port défini par PORT
 python -m app.main &
 API_PID=$!
 
-# Lancer Gradio (UI) sur un port différent
-python app/ui.py --server-name 0.0.0.0 --server-port 7860 \
-    &
+# 3. Lancement Gradio
+python app/ui.py --server-name 0.0.0.0 --server-port 7860 &
 GRADIO_PID=$!
 
-# --- 4. Superviseur de processus ---
-wait -n $VLLM_PID $API_PID $GRADIO_PID
-
-if ! kill -0 $VLLM_PID 2>/dev/null; then
-    echo "❌ ERREUR: Le serveur VLLM s'est arrêté."
-elif ! kill -0 $API_PID 2>/dev/null; then
-    echo "❌ ERREUR: L'API s'est arrêtée."
-elif ! kill -0 $GRADIO_PID 2>/dev/null; then
-    echo "❌ ERREUR: L'interface Gradio s'est arrêtée."
-fi
-
-
+# 4. Garder le conteneur vivant
+wait -n $API_PID
 cleanup
