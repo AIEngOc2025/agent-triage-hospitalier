@@ -1,25 +1,29 @@
-FROM vllm/vllm-openai:latest
+# Use a clean python base image
+FROM python:3.12-slim
 
-# Set environment variables for CUDA compatibility as per vLLM docs
-ENV VLLM_ENABLE_CUDA_COMPATIBILITY=1
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-# Clean existing conflicting packages and force reinstall correct versions
-RUN pip uninstall -y transformers torch && \
-    pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir torch>=2.4.0 transformers[torch]==5.14.1
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
-# Installer FastAPI et Gradio
-RUN pip install --no-cache-dir fastapi gradio
+# Set up environment
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# Copier le script d'orchestration
-COPY start_orchestrated.sh .
-RUN chmod +x start_orchestrated.sh
+# Install vLLM
+RUN uv pip install --no-cache-dir vllm --torch-backend=auto
 
-# Exposer les ports
 EXPOSE 8000
-EXPOSE 7860
-EXPOSE 8080
 
-# Démarrage
-ENTRYPOINT []
-CMD ["./start_orchestrated.sh"]
+# Start vLLM
+CMD ["python3", "-m", "vllm.entrypoints.openai.api_server", \
+     "--model", "Qwen/Qwen3-1.7B-Base", \
+     "--host", "0.0.0.0", \
+     "--port", "8000", \
+     "--gpu-memory-utilization", "0.5"]
