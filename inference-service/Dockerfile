@@ -3,9 +3,15 @@ FROM vllm/vllm-openai:latest
 # Installer FastAPI et Gradio
 RUN pip install fastapi gradio
 
-# Exposer le port utilisé par vLLM et Gradio
+# Copier le script d'orchestration
+COPY start_orchestrated.sh .
+RUN chmod +x start_orchestrated.sh
+
+# Exposer les ports
 EXPOSE 8000
 EXPOSE 7860
+EXPOSE 8080
 
-# Démarrage vLLM
-CMD ["--model", "Qwen/Qwen3-1.7B-Base", "--host", "0.0.0.0", "--port", "8000"]
+# Démarrage
+ENTRYPOINT []
+CMD ["./start_orchestrated.sh"]
