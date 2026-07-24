@@ -10,7 +10,7 @@ echo "🚀 [VLLM ONLY] Lancement VLLM sur port $VLLM_PORT..."
 
 # Lancement VLLM en foreground (Main Process)
 # Cloud Run attend qu'un processus écoute sur le port PORT
-exec python -m vllm.entrypoints.openai.api_server \
+exec python3 -m vllm.entrypoints.openai.api_server \
     --model "$MODEL_ID" \
     --host 0.0.0.0 \
     --port "$VLLM_PORT" \
