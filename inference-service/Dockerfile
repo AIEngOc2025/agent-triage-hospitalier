@@ -3,9 +3,10 @@ FROM vllm/vllm-openai:latest
 # Set environment variables for CUDA compatibility as per vLLM docs
 ENV VLLM_ENABLE_CUDA_COMPATIBILITY=1
 
-# Force reinstall vLLM and dependencies to ensure clean environment and fix import errors
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir vllm[audio] transformers[torch]
+# Clean existing conflicting packages and force reinstall correct versions
+RUN pip uninstall -y transformers torch && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir torch>=2.4.0 transformers[torch]==5.14.1
 
 # Installer FastAPI et Gradio
 RUN pip install --no-cache-dir fastapi gradio
