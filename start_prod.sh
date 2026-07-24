@@ -21,8 +21,6 @@ fi
 VLLM_PORT=${VLLM_PORT:-8000}
 VLLM_HOST="0.0.0.0" # Utiliser 0.0.0.0 pour écouter sur toutes les interfaces
 GRADIO_PORT=${PORT:-8080}
-LOG_DIR="/var/log/app"
-mkdir -p "$LOG_DIR"
 
 # --- 1. Lancement du serveur VLLM ---
 echo "🚀 [PROD] Lancement du serveur VLLM..."
@@ -33,7 +31,7 @@ python -m vllm.entrypoints.openai.api_server \
     --port "$VLLM_PORT" \
     --trust-remote-code \
     --gpu-memory-utilization 0.90 \
-    > "$LOG_DIR/vllm.log" 2>&1 &
+    &
 
 VLLM_PID=$!
 
@@ -54,7 +52,7 @@ echo "✅ [PROD] Serveur VLLM opérationnel."
 echo "💻 [PROD] Lancement de l'interface Gradio..."
 export VLLM_API_BASE="http://localhost:${VLLM_PORT}/v1"
 python app/ui.py --server-name 0.0.0.0 --server-port "${GRADIO_PORT}" \
-    > "$LOG_DIR/gradio.log" 2>&1 &
+    &
 GRADIO_PID=$!
 
 # --- 4. Superviseur de processus ---
