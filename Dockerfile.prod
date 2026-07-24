@@ -5,6 +5,9 @@
 # - gcsfs pour télécharger les modèles depuis GCS (`gs://`)
 FROM vllm/vllm-openai:v0.5.1
 
+# Définir le répertoire de travail principal pour toutes les opérations suivantes
+WORKDIR /app
+
 # --- ÉTAPE 2: Installation des dépendances de l'application ---
 # On copie uniquement les fichiers de dépendances pour profiter du cache Docker.
 COPY requirements-linux.txt .
@@ -18,8 +21,7 @@ RUN uv pip install --system -r requirements-linux.txt
 RUN uv pip install --system "torch>=2.4" "transformers[torch]" spacy &&     python3 -m spacy download fr_core_news_sm
 
 # --- ÉTAPE 3: Copie du code de l'application ---
-WORKDIR /app
-COPY ./app ./app
+COPY ./app ./app # Copie le code local dans /app/app
 COPY ./start_prod.sh .
 
 # --- ÉTAPE 4: Point d'entrée ---

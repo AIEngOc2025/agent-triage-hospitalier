@@ -23,7 +23,7 @@ steps:
         '--region', 'europe-west1',
         '--allow-unauthenticated',
         '--set-env-vars', 'MODEL_ID=gs://modeles-triage-hospitalier/merged_dpo_final_chsa',
-        '--port', '8080',
+        '--set-env-vars', 'PORT=8080',
         '--cpu', '4',
         '--memory', '16Gi',
         '--gpu', '1',
