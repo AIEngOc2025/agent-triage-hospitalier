@@ -28,9 +28,9 @@ steps:
         '--gpu', '1',
         '--gpu-type', 'nvidia-l4',
         '--timeout', '2400s',
-        '--startup-cpu-boost',
+        '--cpu-boost',
         '--no-cpu-throttling',
-        '--startup-probe-timeout', '600s'
+        #'--startup-probe', '600s'
       ]
 
 images:
