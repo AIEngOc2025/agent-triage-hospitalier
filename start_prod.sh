@@ -7,7 +7,8 @@
 # --- Fonction de nettoyage ---
 cleanup() {
     echo "🛑 [PROD] Signal d'arrêt reçu. Nettoyage des processus..."
-    kill -TERM $VLLM_PID $GRADIO_PID 2>/dev/null
+    # Killing processes safely
+    kill -TERM $VLLM_PID $API_PID $GRADIO_PID 2>/dev/null
     exit 0
 }
 trap cleanup SIGINT SIGTERM
