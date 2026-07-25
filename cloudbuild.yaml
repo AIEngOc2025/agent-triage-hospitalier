@@ -30,7 +30,7 @@ steps:
         '--timeout', '2400s',
         '--cpu-boost',
         '--no-cpu-throttling',
-        '--startup-probe=timeout=1200s'
+        '--startup-probe','2400'
       ]
 
 images:
