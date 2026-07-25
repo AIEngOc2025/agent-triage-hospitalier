@@ -15,6 +15,7 @@ COPY . .
 
 # Installer uv, puis les dépendances de production.
 # On installe explicitement transformers avec torch pour éviter les conflits
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 RUN pip install uv
 RUN uv pip install --system --upgrade pip
 RUN uv pip install --system "torch>=2.4.0" "transformers[torch]==5.14.1"
