@@ -13,8 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # 3. Mettre à jour pip et installer explicitement les bonnes versions
 RUN pip install --no-cache-dir --upgrade pip
-
-RUN pip install --no-cache-dir "transformers[torch]>=4.40.0" vllm lm-format-enforcer
+RUN pip install --no-cache-dir "transformers[torch]" vllm
 
 
 
