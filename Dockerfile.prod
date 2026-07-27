@@ -1,35 +1,21 @@
-# 1. Utiliser l'image officielle PyTorch avec CUDA (indispensable pour l'usage du GPU L4)
-FROM pytorch/pytorch:2.2.1-cuda12.1-cudnn8-runtime
+# Utilisation de l'image officielle vLLM optimisée pour l'API compatible OpenAI
+FROM vllm/vllm-openai:v0.5.4
 
-# Définir le répertoire de travail
 WORKDIR /app
-
-# 2. Installer les dépendances système requises pour vLLM
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    git \
-    libsndfile1 \
-    && rm -rf /var/lib/apt/lists/*
-
-# 3. Mettre à jour pip et installer explicitement les bonnes versions
-RUN pip install --no-cache-dir --upgrade pip
-RUN pip install --no-cache-dir "transformers[torch]" vllm
+COPY . /app
 
 
-
-
-
-# Installer vLLM (compatible avec CUDA 12.1)
-RUN pip install --no-cache-dir vllm==0.4.2
-
-# 4. Copier votre code applicatif si vous avez des scripts personnalisés
-COPY . .
-
-# 5. Définir les variables d'environnement pour s'assurer que vLLM utilise le port de Cloud Run
+# Définition du port par défaut pour Cloud Run (8080)
 ENV PORT=8080
 ENV HOST=0.0.0.0
 
-# 6. Commande de démarrage par défaut pour vLLM en mode serveur compatible OpenAI
-# Note : Nous passons le modèle via la variable d'environnement ou directement en argument
+# Copie éventuelle de scripts personnalisés ou de configurations si nécessaire
+# (Par exemple, si vous avez un script d'initialisation ou des fichiers locaux)
+
+
+# Cloud Run injecte la variable d'environnement $PORT. 
+# On configure le point d'entrée pour lancer le serveur OpenAI de vLLM sur le port dynamique.
 ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
-CMD ["--model", "gs://modeles-triage-hospitalier/merged_dpo_final_chsa", "--port", "8080"]
+
+# Les arguments par défaut. Ils seront complétés ou écrasés par vos variables d'environnement.
+CMD ["--host", "0.0.0.0", "--port", "8080"]
