@@ -3,12 +3,12 @@ steps:
   #    On utilise le Dockerfile.prod qui se base sur l'image vllm/vllm-openai
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Production Image'
-    args: ['build', '-f', 'Dockerfile.prod', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}', '.']
+    args: ['build', '-f', 'Dockerfile.prod', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest', '.']
 
   # 2. Push de l'image vers Google Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Push Docker Image'
-    args: ['push', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}']
+    args: ['push', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest']
 
   # 3. Déploiement sur Cloud Run
   #    On met à jour le service en passant le chemin du modèle GCS via une variable d'environnement.
@@ -19,7 +19,7 @@ steps:
     args:
       [
         'run', 'deploy', 'agent-triage-hospitalier',
-        '--image', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}',
+        '--image', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest',
         '--region', 'europe-west1',
         '--allow-unauthenticated',
         '--set-env-vars', 'MODEL_ID=gs://modeles-triage-hospitalier/merged_dpo_final_chsa',
@@ -29,12 +29,11 @@ steps:
         '--gpu-type', 'nvidia-l4',
         '--timeout', '2400s',
         '--cpu-boost',
-        '--no-cpu-throttling',
-        '--startup-probe', 'timeout-seconds=1200'
+        '--no-cpu-throttling'
       ]
 
 images:
-  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:${COMMIT_SHA}'
+  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest'
 
 options:
   default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
