@@ -7,10 +7,22 @@ from datasets import load_dataset
 
 class MedicalDataProcessor:
     def __init__(self):
+        """
+        @definition : Initialise le processeur de données médicales avec un anonymiseur.
+        @args/params : Aucune.
+        @return : Aucun résultat retourné.
+        """
         self.anonymizer = MedicalAnonymizer()
         self.final_data = []
 
     def format_french_med_mcqa(self):
+        """
+        @definition : Charge et transforme le dataset FrenchMedMCQA
+        en format instruction/réponse.
+        @args/params : Aucune.
+        @return : Aucun résultat retourné (données stockées dans
+        self.final_data).
+        """
         print("Chargement de FrenchMedMCQA...")
         # Dataset de QCM médicaux en Français (limité pour le test)
         ds = load_dataset(
@@ -42,6 +54,13 @@ class MedicalDataProcessor:
             self.add_to_final(instruction, response)
 
     def format_mediqa(self):
+        """
+        @definition : Charge et transforme le dataset MediQA
+        (Anglais) en format instruction/réponse.
+        @args/params : Aucune.
+        @return : Aucun résultat retourné (données stockées dans
+        self.final_data).
+        """
         print("Chargement de MediQA (English)...")
         # Questions/Réponses médicales (Anglais)
         # Limité pour le test
@@ -57,6 +76,13 @@ class MedicalDataProcessor:
             self.add_to_final(instruction, response)
 
     def add_to_final(self, instruction, response):
+        """
+        @definition : Anonymise l'instruction et la réponse,
+        puis les ajoute à la liste finale.
+        @args/params : instruction (str), response (str).
+        @return : Aucun résultat retourné (données stockées dans
+        self.final_data).
+        """
         # On anonymise avant d'ajouter
         clean_instruction = self.anonymizer.anonymize_text(instruction)
         clean_response = self.anonymizer.anonymize_text(response)
@@ -66,6 +92,11 @@ class MedicalDataProcessor:
         )
 
     def save_to_jsonl(self, filepath):
+        """
+        @definition : Sauvegarde les données traitées dans un fichier au format JSONL.
+        @args/params : filepath (str).
+        @return : Aucun résultat retourné.
+        """
         with open(filepath, "w", encoding="utf-8") as f:
             for entry in self.final_data:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")

@@ -246,7 +246,9 @@ tqdm==4.69.0
     #   huggingface-hub
     #   spacy
     #   transformers
-transformers==5.14.1
+transformers>=4.40.0
+vllm>=0.4.0
+lm-format-enforcer>=0.10.0
     # via
     #   agent-triage-hospitalier (pyproject.toml)
 typer==0.27.0

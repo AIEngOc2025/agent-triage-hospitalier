@@ -18,6 +18,8 @@ RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir "transformers>=4.40.0,<5.0.0" "lm-format-enforcer"
 
 
+
+
 # Installer vLLM (compatible avec CUDA 12.1)
 RUN pip install --no-cache-dir vllm==0.4.2
 

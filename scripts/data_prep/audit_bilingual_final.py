@@ -14,6 +14,12 @@ except Exception:
 
 
 def detect_lang_by_content(text):
+    """
+    @definition : Détecte si un texte est en français ou en
+    anglais basé sur des mots outils fréquents.
+    @args/params : text (str).
+    @return : Code langue ('fr' ou 'en').
+    """
     # Mots outils très fréquents en français
     fr_words = {
         " le ",
@@ -33,6 +39,12 @@ def detect_lang_by_content(text):
 
 
 def anonymize_text(text, lang):
+    """
+    @definition : Anonymise les noms des personnes dans un
+    texte en utilisant SpaCy.
+    @args/params : text (str), lang (str).
+    @return : Texte anonymisé (str).
+    """
     nlp = nlp_fr if lang == "fr" else nlp_en
     doc = nlp(text)
     new_text = text
@@ -44,6 +56,12 @@ def anonymize_text(text, lang):
 
 
 def process():
+    """
+    @definition : Analyse le fichier SFT, anonymise les textes
+    et sauvegarde les résultats en ajoutant des métadonnées.
+    @args/params : Aucune.
+    @return : Aucun résultat retourné (fichiers sauvegardés).
+    """
     input_path = "data/processed/train_sft.jsonl"
     output_path = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
 

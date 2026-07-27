@@ -1,0 +1,19 @@
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+[transformers] PyTorch was not found. Models won't be available and only tokenizers, configuration and file/data utilities can be used.
+INFO:     Started server process [13889]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 48] error while attempting to bind on address ('127.0.0.1', 8000): address already in use
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+DEBUG: Initialized tokenizer: <app.main.ModelEngine.__init__.<locals>.DefaultTokenizer object at 0x10bbf3390>
+🔍 Initializing engine... APP_ENV: development, IS_PRODUCTION: False
+💻 [DEV] macOS detected. Initializing MLX engine (Apple Silicon)...
+⚠️  Development initialization warning: 'ModelEngine' object haDEBUG: Calling engine.generate with messages: [{'role': 'system', 'content': "Tu es un infirmier de triage expert pour le Centre Hospitalier Saint-Aurélien (CHSA).\n\n**OBJECTIF :** Évaluer l'urgence vitale et hiérarchiser les patients.\n\n**RÈGLES STRICTES :**\n1. **Adaptabilité :** Pose des questions basées sur les réponses précédentes pour affiner l'évaluation.\n2. **Hiérarchisation :** Collecte systématiquement : âge, symptôme principal, intensité (1-10), et constantes vitales.\n3. **Précision :** Une seule question courte à la fois.\n4. **Rôle :** Tu es un agent de triage, PAS un médecin. Ne donne JAMAIS de diagnostic définitif.\n5. **Explication :** En fin d'interaction, fournis un niveau de priorité (Urgence maximale, modérée, différée).\n6. **Bilinguisme :** Réponds dans la langue du patient (français ou anglais).\n7. **Concision :** Réponses courtes et directes.\n\n**EXEMPLE DE DIALOGUE :**\nPatient : Bonjour.\nAgent : Bonjour. Pourriez-vous me donner votre âge et me décrire votre symptôme principal ainsi que son intensité sur une échelle de 1 à 10 ?\nPatient : J'ai 45 ans, douleur thoracique intense, 8/10.\nAgent : C'est noté. Avez-vous des difficultés respiratoires ou des sueurs ?\n"}, {'role': 'user', 'content': 'bonjour'}]
+DEBUG: engine.generate returned: Ceci est une réponse factice en mode développement. Pourriez-vous préciser vos symptômes et votre âge ?
+❌ Audit logging failed: [E050] Can't find model 'fr_core_news_sm'. It doesn't seem to be a Python package or a valid path to a data directory.
+INFO:     ::1:50198 - "POST /chat HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [13816]

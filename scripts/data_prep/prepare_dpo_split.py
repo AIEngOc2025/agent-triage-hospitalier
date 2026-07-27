@@ -24,6 +24,12 @@ except Exception:
 
 
 def anonymize(text, lang):
+    """
+    @definition : Anonymise les noms des personnes dans un texte
+    en utilisant SpaCy.
+    @args/params : text (str), lang (str).
+    @return : Texte anonymisé (str).
+    """
     if not text or not isinstance(text, str):
         return ""
     nlp = nlp_fr if lang == "fr" else nlp_en
@@ -36,6 +42,12 @@ def anonymize(text, lang):
 
 
 def format_prompt_chatml(text):
+    """
+    @definition : Formate un texte au format ChatML pour
+    le modèle d'IA.
+    @args/params : text (str).
+    @return : Texte formaté (str).
+    """
     # Format ChatML requis pour éviter les "!!!!" lors du test final
     return (
         f"<|im_start|>system\nTu es l'infirmier d'accueil bienveillant du CHSA."
@@ -44,6 +56,13 @@ def format_prompt_chatml(text):
 
 
 def process_dpo_data():
+    """
+    @definition : Traite les données d'entraînement DPO,
+    anonymise les informations et sauvegarde les sets
+    d'entraînement et de test.
+    @args/params : Aucune.
+    @return : Aucun résultat retourné (fichiers sauvegardés).
+    """
     final_pool = []
 
     # 1. TRAITEMENT DES DONNÉES ANGLAISES (Format Argilla détecté)

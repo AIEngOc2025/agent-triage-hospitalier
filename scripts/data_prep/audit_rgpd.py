@@ -4,6 +4,12 @@ FILE_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
 
 
 def audit_rgpd():
+    """
+    @definition : Performs an audit of the anonymization process in the processed
+                  dataset to check for RGPD compliance markers.
+    @args/params : None
+    @return : None, prints the audit statistics to the console.
+    """
     stats = Counter()
     total_lines = 0
     anonymized_lines = 0

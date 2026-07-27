@@ -299,3 +299,6 @@ websockets==15.0.1
     # via gradio-client
 wrapt==2.2.2
     # via smart-open
+transformers>=4.40.0
+vllm>=0.4.0
+lm-format-enforcer>=0.10.0
