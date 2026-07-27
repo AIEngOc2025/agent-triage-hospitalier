@@ -18,7 +18,8 @@ COPY . .
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 RUN pip install uv
 RUN uv pip install --system --upgrade pip
-RUN uv pip install --system "torch>=2.4.0" "transformers[torch]==5.14.1"
+RUN pip install torch==2.3.0 vllm==0.4.2 transformers==4.40.0
+
 RUN uv pip install --system -r requirements-linux.txt
 
 # Installer le modèle de langue pour Spacy (utilisé par Presidio)
