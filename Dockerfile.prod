@@ -14,8 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 3. Mettre à jour pip et installer explicitement les bonnes versions
 RUN pip install --no-cache-dir --upgrade pip
 
-# Installer d'abord transformers et les outils de formatage pour éviter les conflits
-RUN pip install --no-cache-dir "transformers>=4.40.0,<5.0.0" "lm-format-enforcer"
+RUN pip install --no-cache-dir "transformers[torch]>=4.40.0" vllm lm-format-enforcer
+
 
 
 

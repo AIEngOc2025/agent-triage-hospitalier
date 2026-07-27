@@ -302,3 +302,8 @@ wrapt==2.2.2
 transformers>=4.40.0
 vllm>=0.4.0
 lm-format-enforcer>=0.10.0
+# requirements.txt
+transformers>=4.40.0
+vllm>=0.4.0
+lm-format-enforcer>=0.10.0
+
