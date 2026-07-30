@@ -45,8 +45,8 @@ class ModelEngine:
     def initialize(self):
         print(
             "🔍 Initializing engine... "
-            f"APP_ENV: {settings.APP_ENV}, "
-            f"IS_PRODUCTION: {settings.IS_PRODUCTION}"
+            f"APP_ENV (from settings): {settings.APP_ENV}, "
+            f"IS_PRODUCTION (from settings): {settings.IS_PRODUCTION}"
         )
         try:
             # En production, on utilise le vrai moteur VLLM.
@@ -72,7 +72,7 @@ class ModelEngine:
                 print(f"⚠️  Development initialization warning: {e}")
 
     def _init_vllm_mock(self):
-        print("⚠️ [vLLM] Mocked initialization for local testing.")
+        print("⚠️ [vLLM] Enhanced Mocked initialization for local testing.")
         self.engine_type = "MockEngine"
 
         # Mocking for local testing
@@ -87,7 +87,15 @@ class ModelEngine:
                         self.outputs = [MockOutput(text)]
 
                 async def gen():
-                    yield MockRequestOutput("Ceci est une réponse factice du triage.")
+                    # Simulating a dynamic triage response based on content
+                    response_text = "Ceci est une réponse factice dynamique. "
+                    if "douleur" in prompt.lower():
+                        response_text += "La douleur nécessite une évaluation prioritaire."
+                    elif "âge" in prompt.lower():
+                        response_text += "Merci pour ces informations."
+                    else:
+                        response_text += "Pourriez-vous préciser vos symptômes et votre âge ?"
+                    yield MockRequestOutput(response_text)
 
                 return gen()
 
@@ -99,41 +107,114 @@ class ModelEngine:
 
         self.tokenizer = MockTokenizer()
         self.sampling_params = None
-        print("✅ [Mock] Mock Engine operational.")
+        print("✅ [Mock] Enhanced Mock Engine operational.")
 
     def _init_vllm(self):
         # Cette méthode sera utilisée en production dans le conteneur
-        print("✅ [vLLM] Async Engine operational (Scalable GPU).")
+        try:
+            from vllm import AsyncEngineArgs, AsyncLLMEngine, SamplingParams
+            from google.cloud import storage
+        except ImportError:
+            raise ImportError("vLLM or google-cloud-storage package not installed.")
+
+        model_path = str(settings.MODEL_PATH)
+
+        # Si le modèle est sur GCS, on le télécharge
+        if model_path.startswith("gs://"):
+            print(f"📥 [GCS] Downloading model from: {model_path}")
+
+            # gs://bucket/path/to/model -> bucket, path
+            parts = model_path[5:].split("/", 1)
+            bucket_name = parts[0]
+            prefix = parts[1] if len(parts) > 1 else ""
+
+            local_model_path = "/tmp/model"
+            os.makedirs(local_model_path, exist_ok=True)
+
+            storage_client = storage.Client()
+            bucket = storage_client.bucket(bucket_name)
+            blobs = bucket.list_blobs(prefix=prefix)
+
+            for blob in blobs:
+                # Créer le chemin local
+                relative_path = os.path.relpath(blob.name, prefix)
+                local_file_path = os.path.join(local_model_path, relative_path)
+                os.makedirs(os.path.dirname(local_file_path), exist_ok=True)
+
+                print(f"📥 Downloading {blob.name} to {local_file_path}")
+                blob.download_to_filename(local_file_path)
+
+            model_path = local_model_path
+        else:
+            print(f"📥 [vLLM] Loading model from: {model_path}")
+
         self.engine_type = "vLLM"
+
+        engine_args = AsyncEngineArgs(
+            model=model_path,
+            trust_remote_code=True,
+        )
+        print("DEBUG: Instantiating AsyncLLMEngine...")
+        self.model = AsyncLLMEngine.from_engine_args(engine_args)
+
+        self.tokenizer = self.model.get_tokenizer()
+
+        self.sampling_params = SamplingParams(
+            temperature=0.2,
+            max_tokens=512,
+        )
+        print("✅ [vLLM] Async Engine operational.")
 
     async def generate_stream(
         self, messages: List[dict], request_id: str
     ) -> AsyncGenerator[str, None]:
         """
-        @definition: Generates a stream of text. Simplified for dev.
+        @definition: Generates a stream of text. Dynamic for dev.
         """
-        yield "Ceci est une réponse factice en mode développement. "
-        yield "Pourriez-vous préciser vos symptômes et votre âge ?"
+        prompt = " ".join([m.get("content", "") for m in messages])
+        
+        response_text = "Ceci est une réponse factice dynamique. "
+        if "douleur" in prompt.lower():
+            response_text += "La douleur nécessite une évaluation prioritaire."
+        elif "âge" in prompt.lower():
+            response_text += "Merci pour ces informations."
+        else:
+            response_text += "Pourriez-vous préciser vos symptômes et votre âge ?"
+
+        # Simulate streaming delay
+        for word in response_text.split():
+            yield word + " "
+            await asyncio.sleep(0.05)
 
     async def generate(self, messages: List[dict]) -> str:
         """
-        @definition: Generates a complete text response. Simplified for dev.
+        @definition: Generates a complete text response.
         @args/params: messages (List[dict])
         @return: str (The generated response)
         """
         if self.engine_type == "MockEngine":
-            mock_response = (
-                "Ceci est une réponse factice du triage. "
-                "Pourriez-vous me donner votre âge et décrire "
-                "vos symptômes principaux ?"
-            )
-            return self.clean_response(mock_response)
+            prompt = " ".join([m.get("content", "") for m in messages])
+            response_text = "Ceci est une réponse factice dynamique. "
+            if "douleur" in prompt.lower():
+                response_text += "La douleur nécessite une évaluation prioritaire."
+            elif "âge" in prompt.lower():
+                response_text += "Merci pour ces informations."
+            else:
+                response_text += "Pourriez-vous préciser vos symptômes et votre âge ?"
+            return self.clean_response(response_text)
         else:  # Production (vLLM)
             request_id = str(uuid.uuid4())
+            # For production, we must explicitly use the vLLM model engine here
+            prompt = self.tokenizer.apply_chat_template(
+                messages, tokenize=False, add_generation_prompt=True
+            )
+            
+            # This is the actual vLLM generation call
+            results = await self.model.generate(prompt, self.sampling_params, request_id)
             full_text = ""
-            # En production, la génération non-streamée est une accumulation du stream
-            async for chunk in self.generate_stream(messages, request_id):
-                full_text += chunk
+            async for request_output in results:
+                full_text = request_output.outputs[0].text
+                
             return self.clean_response(full_text)
 
     def clean_response(self, text: str) -> str:

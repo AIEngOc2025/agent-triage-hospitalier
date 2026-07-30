@@ -8,6 +8,12 @@ OUTPUT_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_Final_5k.json
 
 
 def balance_and_limit():
+    """
+    @definition : Équilibre le dataset SFT en échantillonnant un nombre égal
+                  d'exemples FR et EN.
+    @args/params : Aucun.
+    @return : None.
+    """
     if not os.path.exists(INPUT_PATH):
         print(f"❌ Erreur : Fichier source {INPUT_PATH} introuvable.")
         return

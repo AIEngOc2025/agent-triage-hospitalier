@@ -1,6 +1,6 @@
 steps:
   # 1. Construction de l'image de production
-  #    On utilise le Dockerfile.prod qui se base sur l'image vllm/vllm-openai
+  #    On utilise le Dockerfile.prod qui se base sur l'image python:3.11-slim
   - name: 'gcr.io/cloud-builders/docker'
     id: 'Build Production Image'
     args: ['build', '-f', 'Dockerfile.prod', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest', '.']
@@ -11,8 +11,6 @@ steps:
     args: ['push', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest']
 
   # 3. Déploiement sur Cloud Run
-  #    On met à jour le service en passant le chemin du modèle GCS via une variable d'environnement.
-  #    Le script start.sh dans le conteneur utilisera cette variable.
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Deploy to Cloud Run'
     entrypoint: 'gcloud'
@@ -22,7 +20,7 @@ steps:
         '--image', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest',
         '--region', 'europe-west1',
         '--allow-unauthenticated',
-        '--set-env-vars', 'MODEL_ID=gs://modeles-triage-hospitalier/merged_dpo_final_chsa',
+        '--set-env-vars', 'MODEL_PATH=gs://modeles-triage-hospitalier/merged_dpo_final_chsa,INFERENCE_SERVICE_URL=http://localhost:8000,APP_ENV=production',
         '--cpu', '4',
         '--memory', '16Gi',
         '--gpu', '1',

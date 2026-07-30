@@ -14,6 +14,13 @@ TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_SFT_052026.jsonl"
 
 
 def calculate_matrix():
+    """
+    @definition : Calculates and prints the performance metrics matrix for the
+                  model.
+    @args/params : None.
+    @return : A dictionary containing performance metrics (language precision,
+              triage precision, and safety rate).
+    """
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
     base_model = AutoModelForCausalLM.from_pretrained(

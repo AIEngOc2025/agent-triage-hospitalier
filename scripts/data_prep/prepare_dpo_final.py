@@ -13,6 +13,11 @@ except OSError:
 
 
 def anonymize(text):
+    """
+    @definition : Anonymise les noms de personnes dans un texte en anglais.
+    @args/params : text (str) le texte à anonymiser.
+    @return : str le texte anonymisé.
+    """
     doc = nlp_en(text)
     for ent in doc.ents:
         if ent.label_ in ["PERSON", "PER"]:
@@ -21,6 +26,12 @@ def anonymize(text):
 
 
 def prepare_dpo():
+    """
+    @definition : Prépare le dataset pour l'alignement DPO (Direct
+                  Preference Optimization).
+    @args/params : Aucun.
+    @return : None.
+    """
     input_path = "data/raw/dpo_mix_en_train.jsonl"
     output_path = "data/processed/Mpaga_Christophe_1_Dataset_DPO_Final_052026.jsonl"
 

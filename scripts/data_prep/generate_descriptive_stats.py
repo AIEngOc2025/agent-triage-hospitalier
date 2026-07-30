@@ -8,6 +8,12 @@ REPORT_PATH = "reports/metrics/dataset_stats_summary.json"
 
 
 def generate_stats():
+    """
+    @definition : Génère des statistiques descriptives sur le dataset SFT
+                  (longueur, bilinguisme, anonymisation).
+    @args/params : Aucun.
+    @return : None.
+    """
     if not os.path.exists(FILE_PATH):
         print(f"❌ Erreur : Fichier {FILE_PATH} introuvable.")
         return

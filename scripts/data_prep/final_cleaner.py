@@ -17,6 +17,13 @@ except OSError:
 
 
 def simple_anonymize(text, lang):
+    """
+    @definition : Anonymise les informations sensibles (noms, lieux) dans un
+                  texte.
+    @args/params : text (str) le texte à anonymiser, lang (str) la langue du
+                   texte ('fr' ou 'en').
+    @return : str le texte anonymisé.
+    """
     nlp = nlp_fr if lang == "fr" else nlp_en
     doc = nlp(text)
     for ent in doc.ents:
@@ -28,6 +35,12 @@ def simple_anonymize(text, lang):
 
 
 def fix_and_audit():
+    """
+    @definition : Nettoie et anonymise le dataset d'entraînement SFT et
+                  génère un rapport de bilinguisme.
+    @args/params : Aucun.
+    @return : None.
+    """
     input_path = "data/processed/train_sft.jsonl"
     output_path = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
 

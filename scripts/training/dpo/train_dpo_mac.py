@@ -11,7 +11,8 @@ DPO_DATA = "data/processed/Mpaga_Christophe_1_Dataset_DPO_Final_052026.jsonl"
 
 def train_dpo():
     """
-    @definition : Lance l'entraînement par DPO (Direct Preference Optimization) pour aligner le modèle SFT sur les préférences.
+    @definition : Lance l'entraînement par DPO (Direct Preference
+                  Optimization) pour aligner le modèle SFT sur les préférences.
     @args/params : Aucune.
     @return : Aucun résultat retourné (entraînement effectué par effet de bord).
     """

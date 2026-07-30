@@ -6,10 +6,20 @@ from anonymize import MedicalAnonymizer
 
 class MedicalDataFinalProcessor:
     def __init__(self):
+        """
+        @definition : Initialise le processeur de données médicales avec un anonymiseur.
+        @args/params : Aucun.
+        @return : None.
+        """
         self.anonymizer = MedicalAnonymizer()
         self.final_data = []
 
     def process_file(self, file_path):
+        """
+        @definition : Traite un fichier brut et anonymise les données.
+        @args/params : file_path (str) le chemin vers le fichier à traiter.
+        @return : None.
+        """
         filename = os.path.basename(file_path)
         print(f"🔄 Traitement de : {filename}")
         count = 0
@@ -82,6 +92,11 @@ class MedicalDataFinalProcessor:
         print(f"✅ Terminé : {count} exemples extraits.")
 
     def save(self, output_path):
+        """
+        @definition : Sauvegarde les données traitées dans un fichier JSONL.
+        @args/params : output_path (str) le chemin de sortie.
+        @return : None.
+        """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, "w", encoding="utf-8") as f:
             for entry in self.final_data:

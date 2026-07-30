@@ -1,0 +1,3178 @@
+[
+  {
+    "insertId": "6a68e0a7000469453d79aa47",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "requestSize": "1130",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001387143s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:02:31.284866Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/f14d5ab7e42f2ca7711abe7a997310ab",
+    "receiveTimestamp": "2026-07-28T17:02:31.578291300Z",
+    "spanId": "eabc5787eab3fc73",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68e0cd0007736d92307670",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/health",
+      "requestSize": "900",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001683651s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:09.485091Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/1c50b1712aeeb318b5e6121b3ace205b",
+    "receiveTimestamp": "2026-07-28T17:03:09.493513330Z",
+    "spanId": "d98c2a274780cfe5",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68e0d500082a9f4042832c",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/chat",
+      "requestSize": "1133",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001474183s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:17.532242Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/6de2b604546d82f2da0f3c72040300ad",
+    "receiveTimestamp": "2026-07-28T17:03:17.819084737Z",
+    "spanId": "3700b8eaf941eba4"
+  },
+  {
+    "insertId": "6a68e0dd000d7832ccab6da1",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/health/",
+      "requestSize": "1129",
+      "status": 307,
+      "responseSize": "151",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001415857s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:25.879856Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/702421564f825dbd5de863622d208d39",
+    "receiveTimestamp": "2026-07-28T17:03:26.144874167Z",
+    "spanId": "2715d434f2e0d7cb",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68e0dd000ddfb22ee8a241",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/health",
+      "requestSize": "1128",
+      "status": 200,
+      "responseSize": "129",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001926337s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:25.906003Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/120e662ecb03d26e5de863622d208634",
+    "receiveTimestamp": "2026-07-28T17:03:26.144874167Z",
+    "spanId": "888935baedfe41a0"
+  },
+  {
+    "insertId": "6a68e0e50005696d083cc4a0",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/",
+      "requestSize": "1122",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001486846s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "service_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:33.351414Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/f3f1caca4a35765ff4e57e49371eef5b",
+    "receiveTimestamp": "2026-07-28T17:03:33.470432211Z",
+    "spanId": "c632e8dedbb51fea"
+  },
+  {
+    "insertId": "6a68e0e8000162b85ee88e0c",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/docs",
+      "requestSize": "1160",
+      "status": 200,
+      "responseSize": "1124",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001526140s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:36.086397Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/0090c1bba71f90f8beed4fa990d7cef6",
+    "receiveTimestamp": "2026-07-28T17:03:36.133994610Z",
+    "spanId": "ef99ea7df8e1d8fe",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68e0e80002640daae773f0",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/openapi.json",
+      "requestSize": "1084",
+      "status": 200,
+      "responseSize": "2201",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "referer": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/docs",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001375795s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:36.154105Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/c90fe67100fa64fabeed4fa990d7c73f",
+    "receiveTimestamp": "2026-07-28T17:03:36.466685738Z",
+    "spanId": "0912eeaf75ea2400"
+  },
+  {
+    "insertId": "6a68e0ea000d8f6255c34f8e",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "requestSize": "1129",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4243:200::",
+      "latency": "0.001532439s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m"
+      }
+    },
+    "timestamp": "2026-07-28T17:03:38.885140Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/71c8b6bf84dff433beed4fa990d7c0de",
+    "receiveTimestamp": "2026-07-28T17:03:39.133041979Z",
+    "spanId": "723774cecf25c92d"
+  },
+  {
+    "insertId": "6a68e10a000d061e83f331f8",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "requestSize": "316",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "curl/8.7.1",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4245:200::",
+      "latency": "0.001462842s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:04:10.850505Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72930fac06d605d62b3e0ba7d4bb0de8c2b311855b0bd6320b7fc13dfe4645af1fba8f88028b85c22b35f0fa7ad32b6051c3cbf820feb90cbfe5fe6c5f0dd2e8a001b8fa942c696e9ee6bfd0bfa1708a45dc3ec41c5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/63e4d58e0dcc549e6e74b642ae5be640",
+    "receiveTimestamp": "2026-07-28T17:04:10.860328954Z",
+    "spanId": "77ca9e187efa3a3e",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68e6c8000daa8b1d6d50b7",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app/gradio/",
+      "requestSize": "295",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "curl/8.7.1",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1901:81d5:200::",
+      "latency": "242.296090658s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:24:38.519401Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72974e5f41edc157fda781f15062ad647d2c6a586fde80709d64c5514b2ec6b1dd0308e8796b6e17310be7858d9829058eb870b7d6356adf896a138c2e6a9dab92e83689800080f93fc64decb8b5cdb29f5c057bf33"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/5e9cf884c48c0b35743dc663468f0bf6",
+    "receiveTimestamp": "2026-07-28T17:28:40.904188323Z",
+    "spanId": "8ca7059fbe1b5d4b",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic.",
+    "insertId": "6a68e5d600085b2c8581b897",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:24:38.547628Z",
+    "severity": "INFO",
+    "labels": {
+      "scaling_reason": "AUTOSCALING",
+      "instanceId": "001548f72974e5f41edc157fda781f15062ad647d2c6a586fde80709d64c5514b2ec6b1dd0308e8796b6e17310be7858d9829058eb870b7d6356adf896a138c2e6a9dab92e83689800080f93fc64decb8b5cdb29f5c057bf33"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T17:24:38.552044146Z"
+  },
+  {
+    "textPayload": "STARTUP TCP probe succeeded after 1 attempt for container \"agent-triage-1\" on port 8080.",
+    "insertId": "6a68e6c8000d9ca5873e1100",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:28:40.892069Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72974e5f41edc157fda781f15062ad647d2c6a586fde80709d64c5514b2ec6b1dd0308e8796b6e17310be7858d9829058eb870b7d6356adf896a138c2e6a9dab92e83689800080f93fc64decb8b5cdb29f5c057bf33"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T17:28:40.898881662Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {},
+      "authenticationInfo": {
+        "principalEmail": "414294705487-compute@developer.gserviceaccount.com",
+        "principalSubject": "serviceAccount:414294705487-compute@developer.gserviceaccount.com",
+        "oauthInfo": {
+          "oauthClientId": "114518374076226005371"
+        }
+      },
+      "requestMetadata": {
+        "callerIp": "34.60.31.241",
+        "callerSuppliedUserAgent": "google-cloud-sdk gcloud/578.0.0 command/gcloud.run.deploy invocation-id/1c91f4cd4f4b46939091f7c310befc83 environment/GCE environment-version/None client-os/LINUX client-os-ver/5.10.0 client-pltf-arch/x86_64 interactive/False from-script/False python/3.14.6 term/  (Linux 5.10.0-32-cloud-amd64),gzip(gfe)",
+        "requestAttributes": {
+          "time": "2026-07-28T17:32:38.090067Z",
+          "auth": {}
+        },
+        "destinationAttributes": {}
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "google.cloud.run.v1.Services.ReplaceService",
+      "authorizationInfo": [
+        {
+          "resource": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+          "permission": "run.services.update",
+          "granted": true,
+          "resourceAttributes": {},
+          "permissionType": "ADMIN_WRITE"
+        },
+        {
+          "resource": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+          "permission": "run.services.update",
+          "granted": true,
+          "resourceAttributes": {
+            "service": "run.googleapis.com/",
+            "name": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+            "type": "run.googleapis.com/Service"
+          },
+          "permissionType": "ADMIN_WRITE"
+        }
+      ],
+      "resourceName": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+      "request": {
+        "service": {
+          "apiVersion": "serving.knative.dev/v1",
+          "status": {
+            "latestCreatedRevisionName": "agent-triage-hospitalier-00080-q8m",
+            "latestReadyRevisionName": "agent-triage-hospitalier-00080-q8m",
+            "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app",
+            "conditions": [
+              {
+                "type": "Ready",
+                "lastTransitionTime": "2026-07-28T16:59:58.189002Z",
+                "status": "True"
+              },
+              {
+                "lastTransitionTime": "2026-07-28T16:55:51.874026Z",
+                "status": "True",
+                "type": "ConfigurationsReady"
+              },
+              {
+                "lastTransitionTime": "2026-07-28T16:59:58.159369Z",
+                "status": "True",
+                "type": "RoutesReady"
+              }
+            ],
+            "traffic": [
+              {
+                "latestRevision": true,
+                "revisionName": "agent-triage-hospitalier-00080-q8m",
+                "percent": 100
+              }
+            ],
+            "observedGeneration": 89
+          },
+          "metadata": {
+            "creationTimestamp": "2026-07-23T22:04:43.722177Z",
+            "resourceVersion": "AAZXrsTQgco",
+            "generation": 89,
+            "annotations": {
+              "run.googleapis.com/client-name": "gcloud",
+              "run.googleapis.com/maxScale": "3",
+              "run.googleapis.com/urls": "[\"https://agent-triage-hospitalier-414294705487.europe-west1.run.app\",\"https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app\"]",
+              "serving.knative.dev/lastModifier": "christophempaga@gmail.com",
+              "run.googleapis.com/ingress": "all",
+              "run.googleapis.com/invoker-iam-disabled": "true",
+              "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+              "run.googleapis.com/operation-id": "f2c35a0c-e46a-4a0b-ba06-3183a924d992",
+              "run.googleapis.com/client-version": "578.0.0",
+              "run.googleapis.com/ingress-status": "all"
+            },
+            "uid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "name": "agent-triage-hospitalier",
+            "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/services/agent-triage-hospitalier",
+            "labels": {
+              "cloud.googleapis.com/location": "europe-west1"
+            },
+            "namespace": "414294705487"
+          },
+          "kind": "Service",
+          "spec": {
+            "template": {
+              "spec": {
+                "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+                "timeoutSeconds": 2400,
+                "containers": [
+                  {
+                    "name": "agent-triage-1",
+                    "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:latest",
+                    "resources": {
+                      "limits": {
+                        "memory": "16Gi",
+                        "nvidia.com/gpu": "1",
+                        "cpu": "4"
+                      }
+                    }
+                  }
+                ],
+                "nodeSelector": {
+                  "run.googleapis.com/accelerator": "nvidia-l4"
+                },
+                "containerConcurrency": 80
+              },
+              "metadata": {
+                "labels": {
+                  "run.googleapis.com/startupProbeType": "Custom",
+                  "client.knative.dev/nonce": "zxtfzprzcl"
+                },
+                "annotations": {
+                  "run.googleapis.com/startup-cpu-boost": "True",
+                  "run.googleapis.com/cpu-throttling": "False",
+                  "run.googleapis.com/client-version": "578.0.0",
+                  "run.googleapis.com/client-name": "gcloud",
+                  "autoscaling.knative.dev/minScale": "0",
+                  "autoscaling.knative.dev/maxScale": "3",
+                  "run.googleapis.com/gpu-zonal-redundancy-disabled": "true"
+                }
+              }
+            },
+            "traffic": [
+              {
+                "percent": 100,
+                "latestRevision": true
+              }
+            ]
+          }
+        },
+        "name": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+        "@type": "type.googleapis.com/google.cloud.run.v1.ReplaceServiceRequest"
+      },
+      "resourceLocation": {
+        "currentLocations": [
+          "europe-west1"
+        ]
+      }
+    },
+    "insertId": "l4hn3yd1ae3",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "",
+        "configuration_name": "",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:32:37.529113Z",
+    "severity": "NOTICE",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Factivity",
+    "receiveTimestamp": "2026-07-28T17:32:38.961163592Z"
+  },
+  {
+    "insertId": "6a68e7cf00037c54db5c9ffb",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app/health",
+      "requestSize": "293",
+      "status": 200,
+      "responseSize": "129",
+      "userAgent": "curl/8.7.1",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4242:200::",
+      "latency": "0.002503377s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:33:03.220846Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72974e5f41edc157fda781f15062ad647d2c6a586fde80709d64c5514b2ec6b1dd0308e8796b6e17310be7858d9829058eb870b7d6356adf896a138c2e6a9dab92e83689800080f93fc64decb8b5cdb29f5c057bf33"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/0abf37ee8e0f182780513dd1235742cc",
+    "receiveTimestamp": "2026-07-28T17:33:03.233895237Z",
+    "spanId": "2ba28d669a3cebb8",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68e834000892ebb58e97b9",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app/gradio/api/config",
+      "requestSize": "305",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "curl/8.7.1",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4242:200::",
+      "latency": "0.001765741s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:34:44.558791Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f72974e5f41edc157fda781f15062ad647d2c6a586fde80709d64c5514b2ec6b1dd0308e8796b6e17310be7858d9829058eb870b7d6356adf896a138c2e6a9dab92e83689800080f93fc64decb8b5cdb29f5c057bf33"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/2728cbb14f62086345bfdd8386ef8ac0",
+    "receiveTimestamp": "2026-07-28T17:34:44.567707758Z",
+    "spanId": "f0df268a3e548405",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68e84e0004f847fd54ff34",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app/openapi.json",
+      "requestSize": "301",
+      "status": 200,
+      "responseSize": "2201",
+      "userAgent": "curl/8.7.1",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4242:200::",
+      "latency": "0.013165265s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m"
+      }
+    },
+    "timestamp": "2026-07-28T17:35:10.311207Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72974e5f41edc157fda781f15062ad647d2c6a586fde80709d64c5514b2ec6b1dd0308e8796b6e17310be7858d9829058eb870b7d6356adf896a138c2e6a9dab92e83689800080f93fc64decb8b5cdb29f5c057bf33"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/529b586da7411dc4c5bfd79cdd9b86d5",
+    "receiveTimestamp": "2026-07-28T17:35:10.330011665Z",
+    "spanId": "4b615ca081cd06bf",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.",
+    "insertId": "6a68e90c000d99734a23fc42",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00081-vjf",
+        "service_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:38:20.891251Z",
+    "severity": "INFO",
+    "labels": {
+      "scaling_reason": "DEPLOYMENT_ROLLOUT",
+      "instanceId": "001548f7299d6c035890f7a087cd09afe08232c6762c879e9ccad6f1c56122f37697f656ad62158b7045dc3e42b00f2d6949526de800bb25ec32cb5bcbf0325e7c5f0240ef092262a232fde71332825af594b217b59d9697e5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T17:38:20.904007226Z"
+  },
+  {
+    "textPayload": "STARTUP TCP probe succeeded after 1 attempt for container \"agent-triage-1\" on port 8080.",
+    "insertId": "6a68e9ff000194617038b2a9",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "revision_name": "agent-triage-hospitalier-00081-vjf",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:42:23.103521Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f7299d6c035890f7a087cd09afe08232c6762c879e9ccad6f1c56122f37697f656ad62158b7045dc3e42b00f2d6949526de800bb25ec32cb5bcbf0325e7c5f0240ef092262a232fde71332825af594b217b59d9697e5"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T17:42:23.108454255Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Revision agent-triage-hospitalier-00081-vjf with message: Deploying revision succeeded in 9m46.13s."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/revisions/agent-triage-hospitalier-00081-vjf",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier-00081-vjf",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/revisions/agent-triage-hospitalier-00081-vjf",
+          "uid": "d4061d18-94f7-44f9-b43b-f0db5b502440",
+          "resourceVersion": "AAZXr1ySl3Q",
+          "generation": 1,
+          "creationTimestamp": "2026-07-28T17:32:38.136373Z",
+          "labels": {
+            "client.knative.dev/nonce": "zxtfzprzcl",
+            "serving.knative.dev/configuration": "agent-triage-hospitalier",
+            "serving.knative.dev/configurationGeneration": "81",
+            "serving.knative.dev/service": "agent-triage-hospitalier",
+            "serving.knative.dev/serviceUid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "serving.knative.dev/route": "agent-triage-hospitalier",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Custom"
+          },
+          "annotations": {
+            "autoscaling.knative.dev/maxScale": "3",
+            "autoscaling.knative.dev/minScale": "0",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "578.0.0",
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "2753d968-02e6-46f0-ab07-cc2bc9920fc1",
+            "run.googleapis.com/cpu-throttling": "false",
+            "run.googleapis.com/startup-cpu-boost": "true",
+            "run.googleapis.com/gpu-zonal-redundancy-disabled": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "agent-triage-hospitalier",
+              "uid": "12c8e407-67dc-4cea-9703-8878e7c984be",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 2400,
+          "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "agent-triage-1",
+              "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "MODEL_ID",
+                  "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                },
+                {
+                  "name": "INFERENCE_SERVICE_URL",
+                  "value": "http://localhost:8000"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "4",
+                  "nvidia.com/gpu": "1",
+                  "memory": "16Gi"
+                }
+              },
+              "startupProbe": {
+                "initialDelaySeconds": 240,
+                "timeoutSeconds": 10,
+                "periodSeconds": 30,
+                "failureThreshold": 3,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "nodeSelector": {
+            "run.googleapis.com/accelerator": "nvidia-l4"
+          }
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "message": "Deploying revision succeeded in 9m46.13s.",
+              "lastTransitionTime": "2026-07-28T17:42:24.268148Z"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "True",
+              "message": "Containers became healthy in 4m2.16s.",
+              "lastTransitionTime": "2026-07-28T17:42:23.108210Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed in 5m39.3s.",
+              "lastTransitionTime": "2026-07-28T17:38:18.069325Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 3.4s. Checking container health. This will wait for up to 5m30s for the configured startup probe, including an initial delay of 4m.",
+              "lastTransitionTime": "2026-07-28T17:38:21.473817Z"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=agent-hospitalier&resource=cloud_run_revision/service_name/agent-triage-hospitalier/revision_name/agent-triage-hospitalier-00081-vjf&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22agent-triage-hospitalier%22%0Aresource.labels.revision_name%3D%22agent-triage-hospitalier-00081-vjf%22",
+          "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+          "containerStatuses": [
+            {
+              "name": "agent-triage-1",
+              "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "-gv0ttnd70ri",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00081-vjf",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:42:24.280692Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T17:42:25.113520395Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Service agent-triage-hospitalier."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/services/agent-triage-hospitalier",
+          "uid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+          "resourceVersion": "AAZXr1y3k+g",
+          "generation": 90,
+          "creationTimestamp": "2026-07-23T22:04:43.722177Z",
+          "labels": {
+            "cloud.googleapis.com/location": "europe-west1"
+          },
+          "annotations": {
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "serving.knative.dev/lastModifier": "414294705487-compute@developer.gserviceaccount.com",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "578.0.0",
+            "run.googleapis.com/operation-id": "2753d968-02e6-46f0-ab07-cc2bc9920fc1",
+            "run.googleapis.com/ingress": "all",
+            "run.googleapis.com/ingress-status": "all",
+            "run.googleapis.com/invoker-iam-disabled": "true",
+            "run.googleapis.com/maxScale": "3",
+            "run.googleapis.com/urls": "[\"https://agent-triage-hospitalier-414294705487.europe-west1.run.app\",\"https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app\"]"
+          }
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Service",
+        "spec": {
+          "template": {
+            "metadata": {
+              "labels": {
+                "client.knative.dev/nonce": "zxtfzprzcl",
+                "run.googleapis.com/startupProbeType": "Custom"
+              },
+              "annotations": {
+                "autoscaling.knative.dev/maxScale": "3",
+                "autoscaling.knative.dev/minScale": "0",
+                "run.googleapis.com/client-name": "gcloud",
+                "run.googleapis.com/client-version": "578.0.0",
+                "run.googleapis.com/gpu-zonal-redundancy-disabled": "true",
+                "run.googleapis.com/cpu-throttling": "false",
+                "run.googleapis.com/startup-cpu-boost": "true"
+              }
+            },
+            "spec": {
+              "containerConcurrency": 80,
+              "timeoutSeconds": 2400,
+              "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+              "containers": [
+                {
+                  "name": "agent-triage-1",
+                  "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:latest",
+                  "ports": [
+                    {
+                      "name": "http1",
+                      "containerPort": 8080
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "MODEL_ID",
+                      "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                    },
+                    {
+                      "name": "INFERENCE_SERVICE_URL",
+                      "value": "http://localhost:8000"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "cpu": "4",
+                      "nvidia.com/gpu": "1",
+                      "memory": "16Gi"
+                    }
+                  },
+                  "startupProbe": {
+                    "initialDelaySeconds": 240,
+                    "timeoutSeconds": 10,
+                    "periodSeconds": 30,
+                    "failureThreshold": 3,
+                    "tcpSocket": {
+                      "port": 8080
+                    }
+                  }
+                }
+              ],
+              "nodeSelector": {
+                "run.googleapis.com/accelerator": "nvidia-l4"
+              }
+            }
+          },
+          "traffic": [
+            {
+              "percent": 100,
+              "latestRevision": true
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 90,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:42:26.692072Z"
+            },
+            {
+              "type": "ConfigurationsReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:42:24.301701Z"
+            },
+            {
+              "type": "RoutesReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:42:26.660686Z"
+            }
+          ],
+          "latestReadyRevisionName": "agent-triage-hospitalier-00081-vjf",
+          "latestCreatedRevisionName": "agent-triage-hospitalier-00081-vjf",
+          "traffic": [
+            {
+              "revisionName": "agent-triage-hospitalier-00081-vjf",
+              "percent": 100,
+              "latestRevision": true
+            }
+          ],
+          "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app",
+          "address": {
+            "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app"
+          }
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Service"
+      }
+    },
+    "insertId": "tq5adcd6z02",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "",
+        "revision_name": "",
+        "service_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:42:26.707869Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T17:42:27.016335289Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Revision agent-triage-hospitalier-00081-vjf with message: Deploying revision succeeded in 9m48.59s."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/revisions/agent-triage-hospitalier-00081-vjf",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier-00081-vjf",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/revisions/agent-triage-hospitalier-00081-vjf",
+          "uid": "d4061d18-94f7-44f9-b43b-f0db5b502440",
+          "resourceVersion": "AAZXr1y4La4",
+          "generation": 1,
+          "creationTimestamp": "2026-07-28T17:32:38.136373Z",
+          "labels": {
+            "client.knative.dev/nonce": "zxtfzprzcl",
+            "serving.knative.dev/configuration": "agent-triage-hospitalier",
+            "serving.knative.dev/configurationGeneration": "81",
+            "serving.knative.dev/service": "agent-triage-hospitalier",
+            "serving.knative.dev/serviceUid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "serving.knative.dev/route": "agent-triage-hospitalier",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Custom"
+          },
+          "annotations": {
+            "autoscaling.knative.dev/maxScale": "3",
+            "autoscaling.knative.dev/minScale": "0",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "578.0.0",
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "2753d968-02e6-46f0-ab07-cc2bc9920fc1",
+            "run.googleapis.com/cpu-throttling": "false",
+            "run.googleapis.com/startup-cpu-boost": "true",
+            "run.googleapis.com/gpu-zonal-redundancy-disabled": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "agent-triage-hospitalier",
+              "uid": "12c8e407-67dc-4cea-9703-8878e7c984be",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 2400,
+          "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "agent-triage-1",
+              "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "MODEL_ID",
+                  "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                },
+                {
+                  "name": "INFERENCE_SERVICE_URL",
+                  "value": "http://localhost:8000"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "4",
+                  "nvidia.com/gpu": "1",
+                  "memory": "16Gi"
+                }
+              },
+              "startupProbe": {
+                "initialDelaySeconds": 240,
+                "timeoutSeconds": 10,
+                "periodSeconds": 30,
+                "failureThreshold": 3,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "nodeSelector": {
+            "run.googleapis.com/accelerator": "nvidia-l4"
+          }
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "message": "Deploying revision succeeded in 9m48.59s.",
+              "lastTransitionTime": "2026-07-28T17:42:26.731438Z"
+            },
+            {
+              "type": "Active",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:42:24.333042Z",
+              "severity": "Info"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "True",
+              "message": "Containers became healthy in 4m2.16s.",
+              "lastTransitionTime": "2026-07-28T17:42:23.108210Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed in 5m39.3s.",
+              "lastTransitionTime": "2026-07-28T17:38:18.069325Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 3.4s. Checking container health. This will wait for up to 5m30s for the configured startup probe, including an initial delay of 4m.",
+              "lastTransitionTime": "2026-07-28T17:38:21.473817Z"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=agent-hospitalier&resource=cloud_run_revision/service_name/agent-triage-hospitalier/revision_name/agent-triage-hospitalier-00081-vjf&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22agent-triage-hospitalier%22%0Aresource.labels.revision_name%3D%22agent-triage-hospitalier-00081-vjf%22",
+          "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+          "containerStatuses": [
+            {
+              "name": "agent-triage-1",
+              "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "-wfa7phd6ehc",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00081-vjf",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:42:26.744939Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T17:42:28.064739411Z"
+  },
+  {
+    "textPayload": "Shutting down user disabled instance",
+    "insertId": "6a68ea030004b8cabea224c4",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00080-q8m",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:42:27.309450Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f72974e5f41edc157fda781f15062ad647d2c6a586fde80709d64c5514b2ec6b1dd0308e8796b6e17310be7858d9829058eb870b7d6356adf896a138c2e6a9dab92e83689800080f93fc64decb8b5cdb29f5c057bf33"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T17:42:27.316866104Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {},
+      "authenticationInfo": {
+        "principalEmail": "christophempaga@gmail.com",
+        "principalSubject": "user:christophempaga@gmail.com",
+        "oauthInfo": {
+          "oauthClientId": "32555940559.apps.googleusercontent.com"
+        }
+      },
+      "requestMetadata": {
+        "callerIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+        "callerSuppliedUserAgent": "google-cloud-sdk gcloud/577.0.0 agent-name/gemini_cli command/gcloud.run.services.update invocation-id/081661134d4b4170a854e84275ab1464 environment/None environment-version/None client-os/MACOSX client-os-ver/25.5.0 client-pltf-arch/x86_64 interactive/True from-script/False python/3.14.5 term/xterm-256color  (Macintosh; Intel Mac OS X 25.5.0),gzip(gfe)",
+        "requestAttributes": {
+          "time": "2026-07-28T17:50:56.176575Z",
+          "auth": {}
+        },
+        "destinationAttributes": {}
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "google.cloud.run.v1.Services.ReplaceService",
+      "authorizationInfo": [
+        {
+          "resource": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+          "permission": "run.services.update",
+          "granted": true,
+          "resourceAttributes": {},
+          "permissionType": "ADMIN_WRITE"
+        },
+        {
+          "resource": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+          "permission": "run.services.update",
+          "granted": true,
+          "resourceAttributes": {
+            "service": "run.googleapis.com/",
+            "name": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+            "type": "run.googleapis.com/Service"
+          },
+          "permissionType": "ADMIN_WRITE"
+        }
+      ],
+      "resourceName": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+      "request": {
+        "@type": "type.googleapis.com/google.cloud.run.v1.ReplaceServiceRequest",
+        "name": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+        "service": {
+          "metadata": {
+            "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/services/agent-triage-hospitalier",
+            "creationTimestamp": "2026-07-23T22:04:43.722177Z",
+            "resourceVersion": "AAZXr1y3k+g",
+            "annotations": {
+              "run.googleapis.com/urls": "[\"https://agent-triage-hospitalier-414294705487.europe-west1.run.app\",\"https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app\"]",
+              "run.googleapis.com/operation-id": "2753d968-02e6-46f0-ab07-cc2bc9920fc1",
+              "run.googleapis.com/client-version": "577.0.0",
+              "run.googleapis.com/ingress": "all",
+              "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+              "serving.knative.dev/lastModifier": "414294705487-compute@developer.gserviceaccount.com",
+              "run.googleapis.com/client-name": "gcloud",
+              "run.googleapis.com/invoker-iam-disabled": "true",
+              "run.googleapis.com/ingress-status": "all",
+              "run.googleapis.com/maxScale": "3"
+            },
+            "uid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "labels": {
+              "cloud.googleapis.com/location": "europe-west1"
+            },
+            "generation": 90,
+            "name": "agent-triage-hospitalier",
+            "namespace": "414294705487"
+          },
+          "kind": "Service",
+          "apiVersion": "serving.knative.dev/v1",
+          "status": {
+            "latestReadyRevisionName": "agent-triage-hospitalier-00081-vjf",
+            "traffic": [
+              {
+                "revisionName": "agent-triage-hospitalier-00081-vjf",
+                "latestRevision": true,
+                "percent": 100
+              }
+            ],
+            "conditions": [
+              {
+                "lastTransitionTime": "2026-07-28T17:42:26.692072Z",
+                "status": "True",
+                "type": "Ready"
+              },
+              {
+                "lastTransitionTime": "2026-07-28T17:42:24.301701Z",
+                "status": "True",
+                "type": "ConfigurationsReady"
+              },
+              {
+                "status": "True",
+                "type": "RoutesReady",
+                "lastTransitionTime": "2026-07-28T17:42:26.660686Z"
+              }
+            ],
+            "observedGeneration": 90,
+            "latestCreatedRevisionName": "agent-triage-hospitalier-00081-vjf",
+            "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app"
+          },
+          "spec": {
+            "template": {
+              "spec": {
+                "containers": [
+                  {
+                    "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:latest",
+                    "name": "agent-triage-1",
+                    "resources": {
+                      "limits": {
+                        "cpu": "4",
+                        "nvidia.com/gpu": "1",
+                        "memory": "16Gi"
+                      }
+                    }
+                  }
+                ],
+                "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+                "containerConcurrency": 80,
+                "timeoutSeconds": 2400,
+                "nodeSelector": {
+                  "run.googleapis.com/accelerator": "nvidia-l4"
+                }
+              },
+              "metadata": {
+                "annotations": {
+                  "autoscaling.knative.dev/minScale": "0",
+                  "run.googleapis.com/startup-cpu-boost": "true",
+                  "run.googleapis.com/client-name": "gcloud",
+                  "run.googleapis.com/gpu-zonal-redundancy-disabled": "true",
+                  "run.googleapis.com/cpu-throttling": "false",
+                  "run.googleapis.com/client-version": "577.0.0",
+                  "autoscaling.knative.dev/maxScale": "3"
+                },
+                "labels": {
+                  "client.knative.dev/nonce": "oznjdxxiol",
+                  "run.googleapis.com/startupProbeType": "Custom"
+                }
+              }
+            },
+            "traffic": [
+              {
+                "latestRevision": true,
+                "percent": 100
+              }
+            ]
+          }
+        }
+      },
+      "resourceLocation": {
+        "currentLocations": [
+          "europe-west1"
+        ]
+      }
+    },
+    "insertId": "hhtz6ge183fk",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "configuration_name": "",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:50:55.672982Z",
+    "severity": "NOTICE",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Factivity",
+    "receiveTimestamp": "2026-07-28T17:50:56.324824901Z"
+  },
+  {
+    "textPayload": "Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.",
+    "insertId": "6a68ec020009797ff68280f2",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:50:58.620927Z",
+    "severity": "INFO",
+    "labels": {
+      "scaling_reason": "DEPLOYMENT_ROLLOUT",
+      "instanceId": "001548f729d1e942a4fc1b30c267374bd9208c7d5e827289ae5b8befeb63c37c4c17f835bd4408e2ca8fb51804ec780e61de96b510a8bf682d4df7dbd6b4ca36bbe86c97f344661e31451f9a28ed7d4f0417e69ccb90f525"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T17:50:58.629436403Z"
+  },
+  {
+    "textPayload": "STARTUP TCP probe succeeded after 1 attempt for container \"agent-triage-1\" on port 8080.",
+    "insertId": "6a68ecf400006b1378bb884c",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:55:00.027411Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f729d1e942a4fc1b30c267374bd9208c7d5e827289ae5b8befeb63c37c4c17f835bd4408e2ca8fb51804ec780e61de96b510a8bf682d4df7dbd6b4ca36bbe86c97f344661e31451f9a28ed7d4f0417e69ccb90f525"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T17:55:00.033693754Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Revision agent-triage-hospitalier-00082-5wt with message: Deploying revision succeeded in 4m5.06s."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/revisions/agent-triage-hospitalier-00082-5wt",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier-00082-5wt",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/revisions/agent-triage-hospitalier-00082-5wt",
+          "uid": "403a01e0-92a3-46b5-a24c-c71399fd2998",
+          "resourceVersion": "AAZXr4mxn2Q",
+          "generation": 1,
+          "creationTimestamp": "2026-07-28T17:50:56.220845Z",
+          "labels": {
+            "client.knative.dev/nonce": "oznjdxxiol",
+            "serving.knative.dev/configuration": "agent-triage-hospitalier",
+            "serving.knative.dev/configurationGeneration": "82",
+            "serving.knative.dev/service": "agent-triage-hospitalier",
+            "serving.knative.dev/serviceUid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "serving.knative.dev/route": "agent-triage-hospitalier",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Custom"
+          },
+          "annotations": {
+            "autoscaling.knative.dev/maxScale": "3",
+            "autoscaling.knative.dev/minScale": "0",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "577.0.0",
+            "serving.knative.dev/creator": "christophempaga@gmail.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "2c0fb994-7ac3-48d0-a119-060f94474f2e",
+            "run.googleapis.com/cpu-throttling": "false",
+            "run.googleapis.com/startup-cpu-boost": "true",
+            "run.googleapis.com/gpu-zonal-redundancy-disabled": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "agent-triage-hospitalier",
+              "uid": "12c8e407-67dc-4cea-9703-8878e7c984be",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 2400,
+          "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "agent-triage-1",
+              "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "MODEL_ID",
+                  "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                },
+                {
+                  "name": "INFERENCE_SERVICE_URL",
+                  "value": "http://localhost:8000"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "4",
+                  "nvidia.com/gpu": "1",
+                  "memory": "16Gi"
+                }
+              },
+              "startupProbe": {
+                "initialDelaySeconds": 240,
+                "timeoutSeconds": 10,
+                "periodSeconds": 30,
+                "failureThreshold": 3,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "nodeSelector": {
+            "run.googleapis.com/accelerator": "nvidia-l4"
+          }
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "message": "Deploying revision succeeded in 4m5.06s.",
+              "lastTransitionTime": "2026-07-28T17:55:01.276516Z"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "True",
+              "message": "Containers became healthy in 3m59.97s.",
+              "lastTransitionTime": "2026-07-28T17:55:00.031605Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed.",
+              "lastTransitionTime": "2026-07-28T17:50:56.926929Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 2.23s. Checking container health. This will wait for up to 5m30s for the configured startup probe, including an initial delay of 4m.",
+              "lastTransitionTime": "2026-07-28T17:50:59.156466Z"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=agent-hospitalier&resource=cloud_run_revision/service_name/agent-triage-hospitalier/revision_name/agent-triage-hospitalier-00082-5wt&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22agent-triage-hospitalier%22%0Aresource.labels.revision_name%3D%22agent-triage-hospitalier-00082-5wt%22",
+          "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+          "containerStatuses": [
+            {
+              "name": "agent-triage-1",
+              "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "-7xjced59cs",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:55:01.289370Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T17:55:01.399428671Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Service agent-triage-hospitalier."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/services/agent-triage-hospitalier",
+          "uid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+          "resourceVersion": "AAZXr4nRTf0",
+          "generation": 91,
+          "creationTimestamp": "2026-07-23T22:04:43.722177Z",
+          "labels": {
+            "cloud.googleapis.com/location": "europe-west1"
+          },
+          "annotations": {
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "serving.knative.dev/lastModifier": "christophempaga@gmail.com",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "577.0.0",
+            "run.googleapis.com/operation-id": "2c0fb994-7ac3-48d0-a119-060f94474f2e",
+            "run.googleapis.com/ingress": "all",
+            "run.googleapis.com/ingress-status": "all",
+            "run.googleapis.com/invoker-iam-disabled": "true",
+            "run.googleapis.com/maxScale": "3",
+            "run.googleapis.com/urls": "[\"https://agent-triage-hospitalier-414294705487.europe-west1.run.app\",\"https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app\"]"
+          }
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Service",
+        "spec": {
+          "template": {
+            "metadata": {
+              "labels": {
+                "client.knative.dev/nonce": "oznjdxxiol",
+                "run.googleapis.com/startupProbeType": "Custom"
+              },
+              "annotations": {
+                "autoscaling.knative.dev/maxScale": "3",
+                "autoscaling.knative.dev/minScale": "0",
+                "run.googleapis.com/client-name": "gcloud",
+                "run.googleapis.com/client-version": "577.0.0",
+                "run.googleapis.com/gpu-zonal-redundancy-disabled": "true",
+                "run.googleapis.com/cpu-throttling": "false",
+                "run.googleapis.com/startup-cpu-boost": "true"
+              }
+            },
+            "spec": {
+              "containerConcurrency": 80,
+              "timeoutSeconds": 2400,
+              "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+              "containers": [
+                {
+                  "name": "agent-triage-1",
+                  "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:latest",
+                  "ports": [
+                    {
+                      "name": "http1",
+                      "containerPort": 8080
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "MODEL_ID",
+                      "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                    },
+                    {
+                      "name": "INFERENCE_SERVICE_URL",
+                      "value": "http://localhost:8000"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "cpu": "4",
+                      "nvidia.com/gpu": "1",
+                      "memory": "16Gi"
+                    }
+                  },
+                  "startupProbe": {
+                    "initialDelaySeconds": 240,
+                    "timeoutSeconds": 10,
+                    "periodSeconds": 30,
+                    "failureThreshold": 3,
+                    "tcpSocket": {
+                      "port": 8080
+                    }
+                  }
+                }
+              ],
+              "nodeSelector": {
+                "run.googleapis.com/accelerator": "nvidia-l4"
+              }
+            }
+          },
+          "traffic": [
+            {
+              "percent": 100,
+              "latestRevision": true
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 91,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:55:03.352829Z"
+            },
+            {
+              "type": "ConfigurationsReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:55:01.310674Z"
+            },
+            {
+              "type": "RoutesReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:55:03.319959Z"
+            }
+          ],
+          "latestReadyRevisionName": "agent-triage-hospitalier-00082-5wt",
+          "latestCreatedRevisionName": "agent-triage-hospitalier-00082-5wt",
+          "traffic": [
+            {
+              "revisionName": "agent-triage-hospitalier-00082-5wt",
+              "percent": 100,
+              "latestRevision": true
+            }
+          ],
+          "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app",
+          "address": {
+            "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app"
+          }
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Service"
+      }
+    },
+    "insertId": "i1t5ybe1y90q",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "",
+        "configuration_name": "",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T17:55:03.361508Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T17:55:03.943378037Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Revision agent-triage-hospitalier-00082-5wt with message: Deploying revision succeeded in 4m7.21s."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/revisions/agent-triage-hospitalier-00082-5wt",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier-00082-5wt",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/revisions/agent-triage-hospitalier-00082-5wt",
+          "uid": "403a01e0-92a3-46b5-a24c-c71399fd2998",
+          "resourceVersion": "AAZXr4nSfqs",
+          "generation": 1,
+          "creationTimestamp": "2026-07-28T17:50:56.220845Z",
+          "labels": {
+            "client.knative.dev/nonce": "oznjdxxiol",
+            "serving.knative.dev/configuration": "agent-triage-hospitalier",
+            "serving.knative.dev/configurationGeneration": "82",
+            "serving.knative.dev/service": "agent-triage-hospitalier",
+            "serving.knative.dev/serviceUid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "serving.knative.dev/route": "agent-triage-hospitalier",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Custom"
+          },
+          "annotations": {
+            "autoscaling.knative.dev/maxScale": "3",
+            "autoscaling.knative.dev/minScale": "0",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "577.0.0",
+            "serving.knative.dev/creator": "christophempaga@gmail.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "2c0fb994-7ac3-48d0-a119-060f94474f2e",
+            "run.googleapis.com/cpu-throttling": "false",
+            "run.googleapis.com/startup-cpu-boost": "true",
+            "run.googleapis.com/gpu-zonal-redundancy-disabled": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "agent-triage-hospitalier",
+              "uid": "12c8e407-67dc-4cea-9703-8878e7c984be",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 2400,
+          "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "agent-triage-1",
+              "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "MODEL_ID",
+                  "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                },
+                {
+                  "name": "INFERENCE_SERVICE_URL",
+                  "value": "http://localhost:8000"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "4",
+                  "nvidia.com/gpu": "1",
+                  "memory": "16Gi"
+                }
+              },
+              "startupProbe": {
+                "initialDelaySeconds": 240,
+                "timeoutSeconds": 10,
+                "periodSeconds": 30,
+                "failureThreshold": 3,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "nodeSelector": {
+            "run.googleapis.com/accelerator": "nvidia-l4"
+          }
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "message": "Deploying revision succeeded in 4m7.21s.",
+              "lastTransitionTime": "2026-07-28T17:55:03.430827Z"
+            },
+            {
+              "type": "Active",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:55:01.340667Z",
+              "severity": "Info"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "True",
+              "message": "Containers became healthy in 3m59.97s.",
+              "lastTransitionTime": "2026-07-28T17:55:00.031605Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed.",
+              "lastTransitionTime": "2026-07-28T17:50:56.926929Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 2.23s. Checking container health. This will wait for up to 5m30s for the configured startup probe, including an initial delay of 4m.",
+              "lastTransitionTime": "2026-07-28T17:50:59.156466Z"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=agent-hospitalier&resource=cloud_run_revision/service_name/agent-triage-hospitalier/revision_name/agent-triage-hospitalier-00082-5wt&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22agent-triage-hospitalier%22%0Aresource.labels.revision_name%3D%22agent-triage-hospitalier-00082-5wt%22",
+          "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f",
+          "containerStatuses": [
+            {
+              "name": "agent-triage-1",
+              "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:f1db556108935eaf072bc8b997493fadcccd30c2223cd08d49aef9fcd329070f"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "1zwdhwd6sty",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T17:55:03.444201Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T17:55:04.739359408Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Service agent-triage-hospitalier."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/services/agent-triage-hospitalier",
+          "uid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+          "resourceVersion": "AAZXr4nd/us",
+          "generation": 91,
+          "creationTimestamp": "2026-07-23T22:04:43.722177Z",
+          "labels": {
+            "cloud.googleapis.com/location": "europe-west1"
+          },
+          "annotations": {
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "serving.knative.dev/lastModifier": "christophempaga@gmail.com",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "577.0.0",
+            "run.googleapis.com/operation-id": "2c0fb994-7ac3-48d0-a119-060f94474f2e",
+            "run.googleapis.com/ingress": "all",
+            "run.googleapis.com/ingress-status": "all",
+            "run.googleapis.com/invoker-iam-disabled": "true",
+            "run.googleapis.com/maxScale": "3",
+            "run.googleapis.com/urls": "[\"https://agent-triage-hospitalier-414294705487.europe-west1.run.app\",\"https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app\"]"
+          }
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Service",
+        "spec": {
+          "template": {
+            "metadata": {
+              "labels": {
+                "client.knative.dev/nonce": "oznjdxxiol",
+                "run.googleapis.com/startupProbeType": "Custom"
+              },
+              "annotations": {
+                "autoscaling.knative.dev/maxScale": "3",
+                "autoscaling.knative.dev/minScale": "0",
+                "run.googleapis.com/client-name": "gcloud",
+                "run.googleapis.com/client-version": "577.0.0",
+                "run.googleapis.com/gpu-zonal-redundancy-disabled": "true",
+                "run.googleapis.com/cpu-throttling": "false",
+                "run.googleapis.com/startup-cpu-boost": "true"
+              }
+            },
+            "spec": {
+              "containerConcurrency": 80,
+              "timeoutSeconds": 2400,
+              "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+              "containers": [
+                {
+                  "name": "agent-triage-1",
+                  "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:latest",
+                  "ports": [
+                    {
+                      "name": "http1",
+                      "containerPort": 8080
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "MODEL_ID",
+                      "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                    },
+                    {
+                      "name": "INFERENCE_SERVICE_URL",
+                      "value": "http://localhost:8000"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "cpu": "4",
+                      "nvidia.com/gpu": "1",
+                      "memory": "16Gi"
+                    }
+                  },
+                  "startupProbe": {
+                    "initialDelaySeconds": 240,
+                    "timeoutSeconds": 10,
+                    "periodSeconds": 30,
+                    "failureThreshold": 3,
+                    "tcpSocket": {
+                      "port": 8080
+                    }
+                  }
+                }
+              ],
+              "nodeSelector": {
+                "run.googleapis.com/accelerator": "nvidia-l4"
+              }
+            }
+          },
+          "traffic": [
+            {
+              "percent": 100,
+              "latestRevision": true
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 91,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:55:04.184555Z"
+            },
+            {
+              "type": "ConfigurationsReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:55:01.310674Z"
+            },
+            {
+              "type": "RoutesReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T17:55:04.143636Z"
+            }
+          ],
+          "latestReadyRevisionName": "agent-triage-hospitalier-00082-5wt",
+          "latestCreatedRevisionName": "agent-triage-hospitalier-00082-5wt",
+          "traffic": [
+            {
+              "revisionName": "agent-triage-hospitalier-00082-5wt",
+              "percent": 100,
+              "latestRevision": true
+            }
+          ],
+          "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app",
+          "address": {
+            "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app"
+          }
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Service"
+      }
+    },
+    "insertId": "-rgodu5d1riy",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "",
+        "configuration_name": ""
+      }
+    },
+    "timestamp": "2026-07-28T17:55:04.197598Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T17:55:04.824000296Z"
+  },
+  {
+    "insertId": "6a68ef18000c064e6c1c5c42",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "requestSize": "1129",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4244:200::",
+      "latency": "242.202736275s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "service_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:00:06.529243Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f729e8b2c98ca3ea55d7a3b1931f2a339a57b8c97dd334487e9fc10ce444c1c82800b5e307d8686bc6df7293f7e26379cf01aeda743a05dc2a3f5d0cae9a862c9eb6788a4ea290a7f9fe8adc5b40b4c1192fca303d"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/d7b999a5e5af28cac6a6be90235b043c",
+    "receiveTimestamp": "2026-07-28T18:04:08.796203071Z",
+    "spanId": "b3bc05340f05ba13",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic.",
+    "insertId": "6a68ee26000823d27e72467f",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:00:06.533458Z",
+    "severity": "INFO",
+    "labels": {
+      "scaling_reason": "AUTOSCALING",
+      "instanceId": "001548f729e8b2c98ca3ea55d7a3b1931f2a339a57b8c97dd334487e9fc10ce444c1c82800b5e307d8686bc6df7293f7e26379cf01aeda743a05dc2a3f5d0cae9a862c9eb6788a4ea290a7f9fe8adc5b40b4c1192fca303d"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:00:06.539823188Z"
+  },
+  {
+    "textPayload": "STARTUP TCP probe succeeded after 1 attempt for container \"agent-triage-1\" on port 8080.",
+    "insertId": "6a68ef18000bf8ea0f812b76",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T18:04:08.784618Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f729e8b2c98ca3ea55d7a3b1931f2a339a57b8c97dd334487e9fc10ce444c1c82800b5e307d8686bc6df7293f7e26379cf01aeda743a05dc2a3f5d0cae9a862c9eb6788a4ea290a7f9fe8adc5b40b4c1192fca303d"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:04:08.791388532Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {},
+      "authenticationInfo": {
+        "principalEmail": "414294705487-compute@developer.gserviceaccount.com",
+        "principalSubject": "serviceAccount:414294705487-compute@developer.gserviceaccount.com",
+        "oauthInfo": {
+          "oauthClientId": "114518374076226005371"
+        }
+      },
+      "requestMetadata": {
+        "callerIp": "34.83.140.44",
+        "callerSuppliedUserAgent": "google-cloud-sdk gcloud/578.0.0 command/gcloud.run.deploy invocation-id/53697f6c064e4bcda0253363c9998871 environment/GCE environment-version/None client-os/LINUX client-os-ver/5.10.0 client-pltf-arch/x86_64 interactive/False from-script/False python/3.14.6 term/  (Linux 5.10.0-32-cloud-amd64),gzip(gfe)",
+        "requestAttributes": {
+          "time": "2026-07-28T18:08:46.689885Z",
+          "auth": {}
+        },
+        "destinationAttributes": {}
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "google.cloud.run.v1.Services.ReplaceService",
+      "authorizationInfo": [
+        {
+          "resource": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+          "permission": "run.services.update",
+          "granted": true,
+          "resourceAttributes": {},
+          "permissionType": "ADMIN_WRITE"
+        },
+        {
+          "resource": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+          "permission": "run.services.update",
+          "granted": true,
+          "resourceAttributes": {
+            "service": "run.googleapis.com/",
+            "name": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+            "type": "run.googleapis.com/Service"
+          },
+          "permissionType": "ADMIN_WRITE"
+        }
+      ],
+      "resourceName": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+      "request": {
+        "name": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+        "service": {
+          "spec": {
+            "traffic": [
+              {
+                "latestRevision": true,
+                "percent": 100
+              }
+            ],
+            "template": {
+              "spec": {
+                "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+                "containerConcurrency": 80,
+                "containers": [
+                  {
+                    "resources": {
+                      "limits": {
+                        "nvidia.com/gpu": "1",
+                        "cpu": "4",
+                        "memory": "16Gi"
+                      }
+                    },
+                    "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:latest",
+                    "name": "agent-triage-1"
+                  }
+                ],
+                "nodeSelector": {
+                  "run.googleapis.com/accelerator": "nvidia-l4"
+                },
+                "timeoutSeconds": 2400
+              },
+              "metadata": {
+                "labels": {
+                  "client.knative.dev/nonce": "hdkegvyfrh",
+                  "run.googleapis.com/startupProbeType": "Custom"
+                },
+                "annotations": {
+                  "run.googleapis.com/gpu-zonal-redundancy-disabled": "true",
+                  "autoscaling.knative.dev/maxScale": "3",
+                  "autoscaling.knative.dev/minScale": "0",
+                  "run.googleapis.com/client-version": "578.0.0",
+                  "run.googleapis.com/cpu-throttling": "False",
+                  "run.googleapis.com/startup-cpu-boost": "True",
+                  "run.googleapis.com/client-name": "gcloud"
+                }
+              }
+            }
+          },
+          "apiVersion": "serving.knative.dev/v1",
+          "metadata": {
+            "resourceVersion": "AAZXr4nd/us",
+            "uid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "labels": {
+              "cloud.googleapis.com/location": "europe-west1"
+            },
+            "namespace": "414294705487",
+            "creationTimestamp": "2026-07-23T22:04:43.722177Z",
+            "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/services/agent-triage-hospitalier",
+            "annotations": {
+              "run.googleapis.com/urls": "[\"https://agent-triage-hospitalier-414294705487.europe-west1.run.app\",\"https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app\"]",
+              "run.googleapis.com/invoker-iam-disabled": "true",
+              "run.googleapis.com/client-name": "gcloud",
+              "run.googleapis.com/ingress": "all",
+              "run.googleapis.com/client-version": "578.0.0",
+              "serving.knative.dev/lastModifier": "christophempaga@gmail.com",
+              "run.googleapis.com/ingress-status": "all",
+              "run.googleapis.com/operation-id": "2c0fb994-7ac3-48d0-a119-060f94474f2e",
+              "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+              "run.googleapis.com/maxScale": "3"
+            },
+            "generation": 91,
+            "name": "agent-triage-hospitalier"
+          },
+          "status": {
+            "traffic": [
+              {
+                "percent": 100,
+                "revisionName": "agent-triage-hospitalier-00082-5wt",
+                "latestRevision": true
+              }
+            ],
+            "latestCreatedRevisionName": "agent-triage-hospitalier-00082-5wt",
+            "latestReadyRevisionName": "agent-triage-hospitalier-00082-5wt",
+            "conditions": [
+              {
+                "status": "True",
+                "lastTransitionTime": "2026-07-28T17:55:04.184555Z",
+                "type": "Ready"
+              },
+              {
+                "lastTransitionTime": "2026-07-28T17:55:01.310674Z",
+                "type": "ConfigurationsReady",
+                "status": "True"
+              },
+              {
+                "lastTransitionTime": "2026-07-28T17:55:04.143636Z",
+                "type": "RoutesReady",
+                "status": "True"
+              }
+            ],
+            "observedGeneration": 91,
+            "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app"
+          },
+          "kind": "Service"
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.ReplaceServiceRequest"
+      },
+      "resourceLocation": {
+        "currentLocations": [
+          "europe-west1"
+        ]
+      }
+    },
+    "insertId": "k9yipld1kl1",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "configuration_name": "",
+        "revision_name": "",
+        "service_name": "agent-triage-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:08:46.174285Z",
+    "severity": "NOTICE",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Factivity",
+    "receiveTimestamp": "2026-07-28T18:08:46.765429483Z"
+  },
+  {
+    "insertId": "6a68f1a900081eba4356c03d",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "requestSize": "610",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5.2 Safari/605.1.15",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4242:200::",
+      "latency": "242.313989237s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "configuration_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:11:03.159696Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f729157608f712b2ae3fb8909c8dadd8e1b9e706e453cc28de9ad72211452d1cbe8c243ae333a596070628235f5788a4c524b04fd14281f85cd66db3b0565183d3f45d9f2591271b229f20247f21d8a85bedb996c42c"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/bf07fb6eb52de31caae0490922bf9bac",
+    "receiveTimestamp": "2026-07-28T18:15:05.539588487Z",
+    "spanId": "ba9b6fbb9924857d",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic.",
+    "insertId": "6a68f0b70002c3f48ae2bf1b",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:11:03.181236Z",
+    "severity": "INFO",
+    "labels": {
+      "scaling_reason": "AUTOSCALING",
+      "instanceId": "001548f729157608f712b2ae3fb8909c8dadd8e1b9e706e453cc28de9ad72211452d1cbe8c243ae333a596070628235f5788a4c524b04fd14281f85cd66db3b0565183d3f45d9f2591271b229f20247f21d8a85bedb996c42c"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:11:03.187446756Z"
+  },
+  {
+    "insertId": "6a68f1a9000823e320cdc47b",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "requestSize": "1129",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1900:4242:200::",
+      "latency": "0.001244440s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "service_name": "agent-triage-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:11:23.297681Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f729157608f712b2ae3fb8909c8dadd8e1b9e706e453cc28de9ad72211452d1cbe8c243ae333a596070628235f5788a4c524b04fd14281f85cd66db3b0565183d3f45d9f2591271b229f20247f21d8a85bedb996c42c"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/83e599b31ebd20dec9e85d1994ad2f0a",
+    "receiveTimestamp": "2026-07-28T18:15:05.871095522Z",
+    "spanId": "c126ea4de5262403",
+    "traceSampled": true
+  },
+  {
+    "textPayload": "Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.",
+    "insertId": "6a68f0ee0006f4167d3bdf68",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:11:58.455702Z",
+    "severity": "INFO",
+    "labels": {
+      "scaling_reason": "DEPLOYMENT_ROLLOUT",
+      "instanceId": "001548f729481ab3517868fe487dd02b25ce534a171ba1c1b17bd5935ea00524bd78bda2d535934aa93484e834f450550e61259d6aec6873582b8b34e249db509e7148139bc717f71b5de1aabf198d18af85bb21a2c482e137a0"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:11:58.460679079Z"
+  },
+  {
+    "textPayload": "STARTUP TCP probe succeeded after 1 attempt for container \"agent-triage-1\" on port 8080.",
+    "insertId": "6a68f1a900080e47d8417c6f",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:15:05.527943Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f729157608f712b2ae3fb8909c8dadd8e1b9e706e453cc28de9ad72211452d1cbe8c243ae333a596070628235f5788a4c524b04fd14281f85cd66db3b0565183d3f45d9f2591271b229f20247f21d8a85bedb996c42c"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:15:06.239309608Z"
+  },
+  {
+    "textPayload": "STARTUP TCP probe succeeded after 1 attempt for container \"agent-triage-1\" on port 8080.",
+    "insertId": "6a68f1e0000b5467bc512890",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:16:00.742503Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f729481ab3517868fe487dd02b25ce534a171ba1c1b17bd5935ea00524bd78bda2d535934aa93484e834f450550e61259d6aec6873582b8b34e249db509e7148139bc717f71b5de1aabf198d18af85bb21a2c482e137a0"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:16:00.749288996Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Revision agent-triage-hospitalier-00083-q4b with message: Deploying revision succeeded in 7m15.23s."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/revisions/agent-triage-hospitalier-00083-q4b",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier-00083-q4b",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/revisions/agent-triage-hospitalier-00083-q4b",
+          "uid": "9cbc617b-047a-489c-a2e1-3fc7270d38f7",
+          "resourceVersion": "AAZXr9TWdTQ",
+          "generation": 1,
+          "creationTimestamp": "2026-07-28T18:08:46.745083Z",
+          "labels": {
+            "client.knative.dev/nonce": "hdkegvyfrh",
+            "serving.knative.dev/configuration": "agent-triage-hospitalier",
+            "serving.knative.dev/configurationGeneration": "83",
+            "serving.knative.dev/service": "agent-triage-hospitalier",
+            "serving.knative.dev/serviceUid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "serving.knative.dev/route": "agent-triage-hospitalier",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Custom"
+          },
+          "annotations": {
+            "autoscaling.knative.dev/maxScale": "3",
+            "autoscaling.knative.dev/minScale": "0",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "578.0.0",
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "a9763d09-0ef5-4d80-87f0-658a2952372f",
+            "run.googleapis.com/cpu-throttling": "false",
+            "run.googleapis.com/startup-cpu-boost": "true",
+            "run.googleapis.com/gpu-zonal-redundancy-disabled": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "agent-triage-hospitalier",
+              "uid": "12c8e407-67dc-4cea-9703-8878e7c984be",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 2400,
+          "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "agent-triage-1",
+              "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:27ad2302f108d95b608d2fa4e023f002eea724046989bdd62ab1ce274eeb9f2c",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "MODEL_ID",
+                  "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                },
+                {
+                  "name": "INFERENCE_SERVICE_URL",
+                  "value": "http://localhost:8000"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "4",
+                  "nvidia.com/gpu": "1",
+                  "memory": "16Gi"
+                }
+              },
+              "startupProbe": {
+                "initialDelaySeconds": 240,
+                "timeoutSeconds": 10,
+                "periodSeconds": 30,
+                "failureThreshold": 3,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "nodeSelector": {
+            "run.googleapis.com/accelerator": "nvidia-l4"
+          }
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "message": "Deploying revision succeeded in 7m15.23s.",
+              "lastTransitionTime": "2026-07-28T18:16:01.981748Z"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "True",
+              "message": "Containers became healthy in 4m2.23s.",
+              "lastTransitionTime": "2026-07-28T18:16:00.747508Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed in 3m10.64s.",
+              "lastTransitionTime": "2026-07-28T18:11:57.994874Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 1.45s. Checking container health. This will wait for up to 5m30s for the configured startup probe, including an initial delay of 4m.",
+              "lastTransitionTime": "2026-07-28T18:11:59.444904Z"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=agent-hospitalier&resource=cloud_run_revision/service_name/agent-triage-hospitalier/revision_name/agent-triage-hospitalier-00083-q4b&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22agent-triage-hospitalier%22%0Aresource.labels.revision_name%3D%22agent-triage-hospitalier-00083-q4b%22",
+          "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:27ad2302f108d95b608d2fa4e023f002eea724046989bdd62ab1ce274eeb9f2c",
+          "containerStatuses": [
+            {
+              "name": "agent-triage-1",
+              "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:27ad2302f108d95b608d2fa4e023f002eea724046989bdd62ab1ce274eeb9f2c"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "gy0cchd1svc",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:16:01.993980Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T18:16:03.313996753Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Service agent-triage-hospitalier."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/services/agent-triage-hospitalier",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/services/agent-triage-hospitalier",
+          "uid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+          "resourceVersion": "AAZXr9TqixU",
+          "generation": 92,
+          "creationTimestamp": "2026-07-23T22:04:43.722177Z",
+          "labels": {
+            "cloud.googleapis.com/location": "europe-west1"
+          },
+          "annotations": {
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "serving.knative.dev/lastModifier": "414294705487-compute@developer.gserviceaccount.com",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "578.0.0",
+            "run.googleapis.com/operation-id": "a9763d09-0ef5-4d80-87f0-658a2952372f",
+            "run.googleapis.com/ingress": "all",
+            "run.googleapis.com/ingress-status": "all",
+            "run.googleapis.com/invoker-iam-disabled": "true",
+            "run.googleapis.com/maxScale": "3",
+            "run.googleapis.com/urls": "[\"https://agent-triage-hospitalier-414294705487.europe-west1.run.app\",\"https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app\"]"
+          }
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Service",
+        "spec": {
+          "template": {
+            "metadata": {
+              "labels": {
+                "client.knative.dev/nonce": "hdkegvyfrh",
+                "run.googleapis.com/startupProbeType": "Custom"
+              },
+              "annotations": {
+                "autoscaling.knative.dev/maxScale": "3",
+                "autoscaling.knative.dev/minScale": "0",
+                "run.googleapis.com/client-name": "gcloud",
+                "run.googleapis.com/client-version": "578.0.0",
+                "run.googleapis.com/gpu-zonal-redundancy-disabled": "true",
+                "run.googleapis.com/cpu-throttling": "false",
+                "run.googleapis.com/startup-cpu-boost": "true"
+              }
+            },
+            "spec": {
+              "containerConcurrency": 80,
+              "timeoutSeconds": 2400,
+              "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+              "containers": [
+                {
+                  "name": "agent-triage-1",
+                  "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage:latest",
+                  "ports": [
+                    {
+                      "name": "http1",
+                      "containerPort": 8080
+                    }
+                  ],
+                  "env": [
+                    {
+                      "name": "MODEL_ID",
+                      "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                    },
+                    {
+                      "name": "INFERENCE_SERVICE_URL",
+                      "value": "http://localhost:8000"
+                    }
+                  ],
+                  "resources": {
+                    "limits": {
+                      "cpu": "4",
+                      "nvidia.com/gpu": "1",
+                      "memory": "16Gi"
+                    }
+                  },
+                  "startupProbe": {
+                    "initialDelaySeconds": 240,
+                    "timeoutSeconds": 10,
+                    "periodSeconds": 30,
+                    "failureThreshold": 3,
+                    "tcpSocket": {
+                      "port": 8080
+                    }
+                  }
+                }
+              ],
+              "nodeSelector": {
+                "run.googleapis.com/accelerator": "nvidia-l4"
+              }
+            }
+          },
+          "traffic": [
+            {
+              "percent": 100,
+              "latestRevision": true
+            }
+          ]
+        },
+        "status": {
+          "observedGeneration": 92,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T18:16:03.298069Z"
+            },
+            {
+              "type": "ConfigurationsReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T18:11:58.089260Z"
+            },
+            {
+              "type": "RoutesReady",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T18:16:03.258791Z"
+            }
+          ],
+          "latestReadyRevisionName": "agent-triage-hospitalier-00083-q4b",
+          "latestCreatedRevisionName": "agent-triage-hospitalier-00083-q4b",
+          "traffic": [
+            {
+              "revisionName": "agent-triage-hospitalier-00083-q4b",
+              "percent": 100,
+              "latestRevision": true
+            }
+          ],
+          "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app",
+          "address": {
+            "url": "https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app"
+          }
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Service"
+      }
+    },
+    "insertId": "-3up55qd755g",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "",
+        "configuration_name": "",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:16:03.311007Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T18:16:03.355765303Z"
+  },
+  {
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "status": {
+        "message": "Ready condition status changed to True for Revision agent-triage-hospitalier-00083-q4b with message: Deploying revision succeeded in 7m16.59s."
+      },
+      "serviceName": "run.googleapis.com",
+      "methodName": "/Services.ReplaceService",
+      "resourceName": "namespaces/agent-hospitalier/revisions/agent-triage-hospitalier-00083-q4b",
+      "response": {
+        "metadata": {
+          "name": "agent-triage-hospitalier-00083-q4b",
+          "namespace": "414294705487",
+          "selfLink": "/apis/serving.knative.dev/v1/namespaces/414294705487/revisions/agent-triage-hospitalier-00083-q4b",
+          "uid": "9cbc617b-047a-489c-a2e1-3fc7270d38f7",
+          "resourceVersion": "AAZXr9TrI2M",
+          "generation": 1,
+          "creationTimestamp": "2026-07-28T18:08:46.745083Z",
+          "labels": {
+            "client.knative.dev/nonce": "hdkegvyfrh",
+            "serving.knative.dev/configuration": "agent-triage-hospitalier",
+            "serving.knative.dev/configurationGeneration": "83",
+            "serving.knative.dev/service": "agent-triage-hospitalier",
+            "serving.knative.dev/serviceUid": "d3188ad1-bc11-4a30-b9e3-9194e25703d4",
+            "serving.knative.dev/route": "agent-triage-hospitalier",
+            "cloud.googleapis.com/location": "europe-west1",
+            "run.googleapis.com/startupProbeType": "Custom"
+          },
+          "annotations": {
+            "autoscaling.knative.dev/maxScale": "3",
+            "autoscaling.knative.dev/minScale": "0",
+            "run.googleapis.com/client-name": "gcloud",
+            "run.googleapis.com/client-version": "578.0.0",
+            "serving.knative.dev/creator": "414294705487-compute@developer.gserviceaccount.com",
+            "run.googleapis.com/execution-environment": "gen2",
+            "run.googleapis.com/operation-id": "a9763d09-0ef5-4d80-87f0-658a2952372f",
+            "run.googleapis.com/cpu-throttling": "false",
+            "run.googleapis.com/startup-cpu-boost": "true",
+            "run.googleapis.com/gpu-zonal-redundancy-disabled": "true"
+          },
+          "ownerReferences": [
+            {
+              "kind": "Configuration",
+              "name": "agent-triage-hospitalier",
+              "uid": "12c8e407-67dc-4cea-9703-8878e7c984be",
+              "apiVersion": "serving.knative.dev/v1",
+              "controller": true,
+              "blockOwnerDeletion": true
+            }
+          ]
+        },
+        "apiVersion": "serving.knative.dev/v1",
+        "kind": "Revision",
+        "spec": {
+          "containerConcurrency": 80,
+          "timeoutSeconds": 2400,
+          "serviceAccountName": "414294705487-compute@developer.gserviceaccount.com",
+          "containers": [
+            {
+              "name": "agent-triage-1",
+              "image": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:27ad2302f108d95b608d2fa4e023f002eea724046989bdd62ab1ce274eeb9f2c",
+              "ports": [
+                {
+                  "name": "http1",
+                  "containerPort": 8080
+                }
+              ],
+              "env": [
+                {
+                  "name": "MODEL_ID",
+                  "value": "gs://modeles-triage-hospitalier/merged_dpo_final_chsa"
+                },
+                {
+                  "name": "INFERENCE_SERVICE_URL",
+                  "value": "http://localhost:8000"
+                }
+              ],
+              "resources": {
+                "limits": {
+                  "cpu": "4",
+                  "nvidia.com/gpu": "1",
+                  "memory": "16Gi"
+                }
+              },
+              "startupProbe": {
+                "initialDelaySeconds": 240,
+                "timeoutSeconds": 10,
+                "periodSeconds": 30,
+                "failureThreshold": 3,
+                "tcpSocket": {
+                  "port": 8080
+                }
+              }
+            }
+          ],
+          "nodeSelector": {
+            "run.googleapis.com/accelerator": "nvidia-l4"
+          }
+        },
+        "status": {
+          "observedGeneration": 1,
+          "conditions": [
+            {
+              "type": "Ready",
+              "status": "True",
+              "message": "Deploying revision succeeded in 7m16.59s.",
+              "lastTransitionTime": "2026-07-28T18:16:03.337059Z"
+            },
+            {
+              "type": "Active",
+              "status": "True",
+              "lastTransitionTime": "2026-07-28T18:16:02.041106Z",
+              "severity": "Info"
+            },
+            {
+              "type": "ContainerHealthy",
+              "status": "True",
+              "message": "Containers became healthy in 4m2.23s.",
+              "lastTransitionTime": "2026-07-28T18:16:00.747508Z"
+            },
+            {
+              "type": "ContainerReady",
+              "status": "True",
+              "message": "Container image import completed in 3m10.64s.",
+              "lastTransitionTime": "2026-07-28T18:11:57.994874Z"
+            },
+            {
+              "type": "ResourcesAvailable",
+              "status": "True",
+              "message": "Provisioning imported containers completed in 1.45s. Checking container health. This will wait for up to 5m30s for the configured startup probe, including an initial delay of 4m.",
+              "lastTransitionTime": "2026-07-28T18:11:59.444904Z"
+            }
+          ],
+          "logUrl": "https://console.cloud.google.com/logs/viewer?project=agent-hospitalier&resource=cloud_run_revision/service_name/agent-triage-hospitalier/revision_name/agent-triage-hospitalier-00083-q4b&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22agent-triage-hospitalier%22%0Aresource.labels.revision_name%3D%22agent-triage-hospitalier-00083-q4b%22",
+          "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:27ad2302f108d95b608d2fa4e023f002eea724046989bdd62ab1ce274eeb9f2c",
+          "containerStatuses": [
+            {
+              "name": "agent-triage-1",
+              "imageDigest": "europe-west1-docker.pkg.dev/agent-hospitalier/cloud-run-source-deploy/agent-triage@sha256:27ad2302f108d95b608d2fa4e023f002eea724046989bdd62ab1ce274eeb9f2c"
+            }
+          ]
+        },
+        "@type": "type.googleapis.com/google.cloud.run.v1.Revision"
+      }
+    },
+    "insertId": "-3bpc87dcg0a",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:16:03.359342Z",
+    "severity": "INFO",
+    "logName": "projects/agent-hospitalier/logs/cloudaudit.googleapis.com%2Fsystem_event",
+    "receiveTimestamp": "2026-07-28T18:16:03.979311153Z"
+  },
+  {
+    "textPayload": "Shutting down user disabled instance",
+    "insertId": "6a68f1e4000cf0193e0bc266",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00082-5wt",
+        "configuration_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:16:04.847897Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f729157608f712b2ae3fb8909c8dadd8e1b9e706e453cc28de9ad72211452d1cbe8c243ae333a596070628235f5788a4c524b04fd14281f85cd66db3b0565183d3f45d9f2591271b229f20247f21d8a85bedb996c42c"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:16:04.852774022Z"
+  },
+  {
+    "textPayload": "Starting new instance. Reason: AUTOSCALING - Instance started due to configured scaling factors (e.g. CPU utilization, request throughput, etc.) or no existing capacity for current traffic.",
+    "insertId": "6a68f33c0005176176b5bece",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "location": "europe-west1",
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "configuration_name": "agent-triage-hospitalier",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:21:48.333665Z",
+    "severity": "INFO",
+    "labels": {
+      "scaling_reason": "AUTOSCALING",
+      "instanceId": "001548f7295621497ea1eafea1225ab67e9d3b9f53d2e21035c00084d2fbc16c9686fdcab1a8373f6d83239b4a8bc5d6d8548e1e84c2bdbfc7392db35be44cc5dbc89080cdea2ba23d2d90f60c5266a41490ee730705e0c5623e"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:21:48.340363796Z"
+  },
+  {
+    "textPayload": "STARTUP TCP probe succeeded after 1 attempt for container \"agent-triage-1\" on port 8080.",
+    "insertId": "6a68f42d000b50291908808b",
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T18:25:49.741417Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f7295621497ea1eafea1225ab67e9d3b9f53d2e21035c00084d2fbc16c9686fdcab1a8373f6d83239b4a8bc5d6d8548e1e84c2bdbfc7392db35be44cc5dbc89080cdea2ba23d2d90f60c5266a41490ee730705e0c5623e"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Fvarlog%2Fsystem",
+    "receiveTimestamp": "2026-07-28T18:25:49.748435703Z"
+  },
+  {
+    "insertId": "6a68f4cc000c5fa3fbc1b568",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "requestSize": "1130",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1901:81d5:200::",
+      "latency": "0.001976385s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "service_name": "agent-triage-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T18:28:28.804898Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f7295621497ea1eafea1225ab67e9d3b9f53d2e21035c00084d2fbc16c9686fdcab1a8373f6d83239b4a8bc5d6d8548e1e84c2bdbfc7392db35be44cc5dbc89080cdea2ba23d2d90f60c5266a41490ee730705e0c5623e"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/f537e2428629e8fd87261510849ba4ab",
+    "receiveTimestamp": "2026-07-28T18:28:28.815583103Z",
+    "spanId": "1944e3d786262806",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68f4cc000d2baf509ee409",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/favicon.ico",
+      "requestSize": "1101",
+      "status": 404,
+      "responseSize": "122",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "referer": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/gradio/",
+      "serverIp": "2600:1901:81d5:200::",
+      "latency": "0.001119262s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "configuration_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "service_name": "agent-triage-hospitalier",
+        "location": "europe-west1"
+      }
+    },
+    "timestamp": "2026-07-28T18:28:28.859031Z",
+    "severity": "WARNING",
+    "labels": {
+      "instanceId": "001548f7295621497ea1eafea1225ab67e9d3b9f53d2e21035c00084d2fbc16c9686fdcab1a8373f6d83239b4a8bc5d6d8548e1e84c2bdbfc7392db35be44cc5dbc89080cdea2ba23d2d90f60c5266a41490ee730705e0c5623e"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/9aab2a5c8f1e2be387261510849ba3de",
+    "receiveTimestamp": "2026-07-28T18:28:29.149497035Z",
+    "spanId": "c56194dffb2247a2"
+  },
+  {
+    "insertId": "6a68f4da00067b3c85656885",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/health/",
+      "requestSize": "1130",
+      "status": 307,
+      "responseSize": "151",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1901:81d5:200::",
+      "latency": "0.001386019s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "project_id": "agent-hospitalier",
+        "location": "europe-west1",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "configuration_name": "agent-triage-hospitalier",
+        "service_name": "agent-triage-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:28:42.421724Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f7295621497ea1eafea1225ab67e9d3b9f53d2e21035c00084d2fbc16c9686fdcab1a8373f6d83239b4a8bc5d6d8548e1e84c2bdbfc7392db35be44cc5dbc89080cdea2ba23d2d90f60c5266a41490ee730705e0c5623e"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/c82d35bae2ceefc6c5b0e7d2f3f3c754",
+    "receiveTimestamp": "2026-07-28T18:28:42.470047203Z",
+    "spanId": "512992651c437f67",
+    "traceSampled": true
+  },
+  {
+    "insertId": "6a68f4da0006dedb9a099c27",
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://agent-triage-hospitalier-414294705487.europe-west1.run.app/health",
+      "requestSize": "1128",
+      "status": 200,
+      "responseSize": "129",
+      "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "remoteIp": "2a01:e0a:957:51c0:30de:7371:282a:289b",
+      "serverIp": "2600:1901:81d5:200::",
+      "latency": "0.001824933s",
+      "protocol": "HTTP/1.1"
+    },
+    "resource": {
+      "type": "cloud_run_revision",
+      "labels": {
+        "service_name": "agent-triage-hospitalier",
+        "revision_name": "agent-triage-hospitalier-00083-q4b",
+        "configuration_name": "agent-triage-hospitalier",
+        "location": "europe-west1",
+        "project_id": "agent-hospitalier"
+      }
+    },
+    "timestamp": "2026-07-28T18:28:42.445415Z",
+    "severity": "INFO",
+    "labels": {
+      "instanceId": "001548f7295621497ea1eafea1225ab67e9d3b9f53d2e21035c00084d2fbc16c9686fdcab1a8373f6d83239b4a8bc5d6d8548e1e84c2bdbfc7392db35be44cc5dbc89080cdea2ba23d2d90f60c5266a41490ee730705e0c5623e"
+    },
+    "logName": "projects/agent-hospitalier/logs/run.googleapis.com%2Frequests",
+    "trace": "projects/agent-hospitalier/traces/63e71a5c66b233a6c5b0e7d2f3f3c817",
+    "receiveTimestamp": "2026-07-28T18:28:42.470047203Z",
+    "spanId": "a2ee82517a383c65"
+  }
+]

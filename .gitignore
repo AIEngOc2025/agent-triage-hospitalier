@@ -7,7 +7,6 @@ __pycache__/
 .venv/
 
 # Lock file
-uv.lock
 requirements.lockbuild/
 .env
 
@@ -16,3 +15,7 @@ data/
 
 # modèles
 models/
+
+# Streamlit agent skills (environment-specific symlinks)
+.agents/skills/developing-with-streamlit
+.claude/skills/developing-with-streamlit

@@ -6,10 +6,22 @@ from anonymize import MedicalAnonymizer
 
 class UniversalMedicalProcessor:
     def __init__(self):
+        """
+        @definition : Initialise le processeur de données médicales avec un
+                      anonymiseur et une liste de données.
+        @args/params : Aucun.
+        @return : Aucun.
+        """
         self.anonymizer = MedicalAnonymizer()
         self.final_data = []
 
     def process_file(self, file_path):
+        """
+        @definition : Traite un fichier de données (JSONL), extrait les
+                      instructions et les réponses, et anonymise le contenu.
+        @args/params : file_path (str): Chemin vers le fichier à traiter.
+        @return : Aucun.
+        """
         filename = os.path.basename(file_path)
         print(f"--- 📂 Lecture de : {filename} ---")
 
@@ -81,6 +93,11 @@ class UniversalMedicalProcessor:
         print(f"✅ Terminé : {count} exemples extraits.")
 
     def save(self, output_path):
+        """
+        @definition : Sauvegarde les données traitées dans un fichier JSONL.
+        @args/params : output_path (str): Chemin vers le fichier de sortie.
+        @return : Aucun.
+        """
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
         with open(output_path, "w", encoding="utf-8") as f:
             for entry in self.final_data:

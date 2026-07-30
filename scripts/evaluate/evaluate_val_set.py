@@ -12,6 +12,12 @@ VAL_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Val_SFT_052026.jsonl"
 
 
 def evaluate_validation_light():
+    """
+    @definition : Evaluates the validation loss of the fine-tuned model on
+                  the validation dataset.
+    @args/params : None.
+    @return : The evaluation loss as a float.
+    """
     # Nettoyage initial
     gc.collect()
     torch.mps.empty_cache()

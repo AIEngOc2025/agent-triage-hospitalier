@@ -8,6 +8,11 @@ OUTPUT_DIR = "data/processed/"
 
 
 def split_dataset():
+    """
+    @definition : Divise le dataset SFT équilibré en jeux de Train, Val et Test.
+    @args/params : Aucun.
+    @return : None.
+    """
     if not os.path.exists(INPUT_PATH):
         print(f"❌ Erreur : Fichier {INPUT_PATH} introuvable.")
         return

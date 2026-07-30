@@ -15,6 +15,11 @@ TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_DPO_052026.jsonl"
 
 
 def evaluate_dpo_safe():
+    """
+    @definition : Évalue le modèle aligné DPO en calculant la perte sur un jeu de test.
+    @args/params : Aucun.
+    @return : None.
+    """
     print("🧹 Nettoyage de la mémoire...")
     gc.collect()
     if torch.backends.mps.is_available():

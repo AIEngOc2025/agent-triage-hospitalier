@@ -1,0 +1,12 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install only the necessary lightweight dependencies for the frontend
+RUN pip install --no-cache-dir streamlit httpx
+
+# Copy the Streamlit app script
+COPY ui_streamlit.py .
+
+# Cloud Run injects the PORT environment variable. We run Streamlit on that dynamic port.
+ENTRYPOINT ["sh", "-c", "streamlit run ui_streamlit.py --server.port=${PORT:-8080} --server.address=0.0.0.0"]

@@ -8,16 +8,36 @@ from anonymize import MedicalAnonymizer
 
 class LocalDataProcessor:
     def __init__(self):
+        """
+        @definition : Initialise le processeur de données locales
+                      avec un anonymiseur et une liste de données.
+        @args/params : Aucun.
+        @return : Aucun.
+        """
         self.anonymizer = MedicalAnonymizer()
         self.final_data = []
 
     def process_csv(self, file_path, col_question, col_reponse):
+        """
+        @definition : Traite un fichier CSV, extrait les
+                      questions/réponses et les ajoute à la liste finale.
+        @args/params : file_path (str), col_question (str),
+                       col_reponse (str).
+        @return : Aucun.
+        """
         print(f"Traitement du CSV : {file_path}")
         df = pd.read_csv(file_path)
         for _, row in df.iterrows():
             self.add_to_final(row[col_question], row[col_reponse])
 
     def process_json(self, file_path, key_question, key_reponse):
+        """
+        @definition : Traite un fichier JSON, extrait les
+                      questions/réponses et les ajoute à la liste finale.
+        @args/params : file_path (str), key_question (str),
+                       key_reponse (str).
+        @return : Aucun.
+        """
         print(f"Traitement du JSON : {file_path}")
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -25,6 +45,12 @@ class LocalDataProcessor:
                 self.add_to_final(item[key_question], item[key_reponse])
 
     def add_to_final(self, instruction, response):
+        """
+        @definition : Ajoute une instruction et une réponse
+                      anonymisées à la liste finale.
+        @args/params : instruction (str), response (str).
+        @return : Aucun.
+        """
         # On s'assure que ce sont des strings
         instruction = str(instruction)
         response = str(response)
@@ -36,6 +62,11 @@ class LocalDataProcessor:
         self.final_data.append({"instruction": clean_inst, "response": clean_resp})
 
     def save(self, output_path):
+        """
+        @definition : Sauvegarde les données traitées dans un fichier JSONL.
+        @args/params : output_path (str).
+        @return : Aucun.
+        """
         with open(output_path, "w", encoding="utf-8") as f:
             for entry in self.final_data:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")

@@ -5,11 +5,22 @@ from presidio_anonymizer.entities import OperatorConfig
 
 class MedicalAnonymizer:
     def __init__(self):
+        """
+        @definition : Initialise l'anonymiseur médical avec Presidio pour le français.
+        @args/params : Aucun.
+        @return : Aucun.
+        """
         # Configuration pour le français
         self.analyzer = AnalyzerEngine(default_score_threshold=0.4)
         self.anonymizer = AnonymizerEngine()
 
     def anonymize_text(self, text):
+        """
+        @definition : Anonymise les informations sensibles (noms, lieux,
+        téléphones) dans un texte.
+        @args/params : text (str): Le texte à anonymiser.
+        @return : Le texte anonymisé (str).
+        """
         if not isinstance(text, str):
             return text
 
