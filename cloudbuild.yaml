@@ -1,37 +1,95 @@
 steps:
-  # 1. Construction de l'image de production
-  #    On utilise le Dockerfile.prod qui se base sur l'image python:3.11-slim
+  # 1. Construire l'image du service d'inférence
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'Build Production Image'
-    args: ['build', '-f', 'Dockerfile.prod', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest', '.']
+    id: 'Build Inference Image'
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-inference-service', '.', '-f', 'inference-service/Dockerfile']
 
-  # 2. Push de l'image vers Google Artifact Registry
+  # 2. Pousser l'image vers Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    id: 'Push Docker Image'
-    args: ['push', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest']
+    id: 'Push Inference Image'
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-inference-service']
 
-  # 3. Déploiement sur Cloud Run
+  # 3. Déployer le service d'inférence en mode INTERNE et avec GPU
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    id: 'Deploy to Cloud Run'
-    entrypoint: 'gcloud'
+    id: 'Deploy Inference Service'
+    entrypoint: gcloud
     args:
-      [
-        'run', 'deploy', 'agent-triage-hospitalier',
-        '--image', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest',
-        '--region', 'europe-west1',
-        '--allow-unauthenticated',
-        '--set-env-vars', 'MODEL_PATH=gs://modeles-triage-hospitalier/merged_dpo_final_chsa,INFERENCE_SERVICE_URL=http://localhost:8000,APP_ENV=production',
-        '--cpu', '4',
-        '--memory', '16Gi',
-        '--gpu', '1',
-        '--gpu-type', 'nvidia-l4',
-        '--timeout', '2400s',
-        '--cpu-boost',
-        '--no-cpu-throttling'
-      ]
+      - 'run'
+      - 'deploy'
+      - 'agent-inference-service' # Nom du service
+      - '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-inference-service'
+      - '--region=europe-west1' # Votre région
+      - '--allow-unauthenticated' # Nécessaire pour l'ingress interne
+      - '--ingress=internal' # <-- LA CLÉ : accessible uniquement en interne
+      - '--platform=managed'
+      - '--cpu=4'
+      - '--memory=16Gi'
+      - '--set-env-vars=MODEL_ID=modeles-triage-hospitalier/merged_dpo_final_chsa'
+      - '--timeout=2400s'
+      - '--gpu=1'
+      - '--gpu-type=nvidia-l4'
 
-images:
-  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-triage:latest'
+  # 4. Construire l'image de l'API Gateway
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build API Image'
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-api-gateway', '.', '-f', 'Dockerfile.api']
 
-options:
-  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
+  # 5. Pousser l'image de l'API
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push API Image'
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-api-gateway']
+
+  # 6. Déployer l'API Gateway en mode PUBLIC et la connecter à l'inférence
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy API Service'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'agent-api-gateway' # Nom du service
+      - '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-api-gateway'
+      - '--region=europe-west1'
+      - '--ingress=all' # <-- LA CLÉ : accessible publiquement
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--service-account=414294705487-compute@developer.gserviceaccount.com'
+      - '--set-env-vars=INFERENCE_SERVICE_URL=https://agent-inference-service-rlgcjqsysq-ew.a.run.app,MODEL_PATH=/app/models/merged_dpo_final_chsa' # <-- Remplacez XYZ par le hash de votre service
+
+  # 7. Donner la permission à l'API d'appeler le service d'inférence
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Set IAM Permissions'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'services'
+      - 'add-iam-policy-binding'
+      - 'agent-inference-service'
+      - '--member=serviceAccount:414294705487-compute@developer.gserviceaccount.com' # <-- Remplacez par votre service account par défaut
+      - '--role=roles/run.invoker'
+      - '--region=europe-west1'
+
+  # 8. Construire l'image de l'interface utilisateur (Streamlit)
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build UI Image'
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-ui', '.', '-f', 'Dockerfile.streamlit']
+
+  # 9. Pousser l'image de l'UI
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push UI Image'
+    args: ['push', 'europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-ui']
+
+  # 10. Déployer l'UI sur Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy UI Service'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'agent-ui' # Nom du service UI
+      - '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-ui'
+      - '--region=europe-west1'
+      - '--ingress=all'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      # Variable d'environnement qui pointe vers l'API Gateway.
+      - '--set-env-vars=API_BASE_URL=https://agent-triage-hospitalier-414294705487.europe-west1.run.app' # <-- Remplacez XYZ par le hash de votre service API

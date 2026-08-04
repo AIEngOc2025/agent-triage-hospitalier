@@ -1,0 +1,27 @@
+# Utilisation de l'image officielle vLLM optimisée pour l'API compatible OpenAI
+FROM vllm/vllm-openai:v0.5.4
+
+WORKDIR /app
+COPY . /app
+
+
+# Définition du port par défaut pour Cloud Run (8080)
+ENV PORT=8080
+ENV HOST=0.0.0.0
+
+# Copie éventuelle de scripts personnalisés ou de configurations si nécessaire
+# (Par exemple, si vous avez un script d'initialisation ou des fichiers locaux)
+# --- AJOUT : Installation du compilateur C pour Triton/vLLM au runtime ---
+#RUN apt-get update && apt-get install -y --no-install-recommends \
+#   gcc \
+#   g++ \
+#   && rm -rf /var/lib/apt/lists/*
+# -------------------------------------------------------------------------
+
+
+# Cloud Run injecte la variable d'environnement $PORT. 
+# On configure le point d'entrée pour lancer le serveur OpenAI de vLLM sur le port dynamique.
+ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+
+# Les arguments par défaut. Ils seront complétés ou écrasés par vos variables d'environnement.
+CMD ["--host", "0.0.0.0", "--port", "8080"]

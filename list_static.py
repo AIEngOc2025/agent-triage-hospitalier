@@ -1,1 +1,3 @@
-import os; print(os.listdir("/app/static"))
+import os
+
+print(os.listdir("/app/static"))

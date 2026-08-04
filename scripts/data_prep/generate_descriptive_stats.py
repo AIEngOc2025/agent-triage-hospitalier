@@ -1,11 +1,22 @@
 import json
-import os
 from collections import Counter
+from pathlib import Path
 
 # Configuration du chemin (Nom officiel de ton dataset)
-FILE_PATH = "data/processed/Mpaga_Christophe_1_Dataset_Train_SFT_052026.jsonl"
-REPORT_PATH = "reports/metrics/dataset_stats_summary.json"
+BASE_PATH = Path("data/processed")
+FILE_PATH = BASE_PATH / "train_sft_triage_only.jsonl"
+REPORT_PATH = Path("reports/metrics/dataset_stats_summary.json")
+ANONYMIZATION_TAGS = ["<PATIENT>", "<LIEU>", "<DATE>", "<TEL>", "<EMAIL>"]
 
+def detect_lang(text):
+    """
+    @definition : Détecte la langue (fr/en) basée sur des mots outils.
+    @args/params : text (str)
+    @return : str ('fr' ou 'en')
+    """
+    fr_words = {" le ", " la ", " les ", " est ", " vous ", " dans ", " pour "}
+    text_lower = " " + text.lower() + " "
+    return "fr" if any(word in text_lower for word in fr_words) else "en"
 
 def generate_stats():
     """
@@ -14,7 +25,7 @@ def generate_stats():
     @args/params : Aucun.
     @return : None.
     """
-    if not os.path.exists(FILE_PATH):
+    if not FILE_PATH.exists():
         print(f"❌ Erreur : Fichier {FILE_PATH} introuvable.")
         return
 
@@ -28,7 +39,7 @@ def generate_stats():
     print(f"📊 Analyse du dataset : {FILE_PATH}...")
 
     with open(FILE_PATH, "r", encoding="utf-8") as f:
-        for line in f:
+        for i, line in enumerate(f, 1):
             try:
                 data = json.loads(line)
                 total_rows += 1
@@ -39,18 +50,19 @@ def generate_stats():
                 char_counts_instr.append(len(instr))
                 char_counts_resp.append(len(resp))
 
-                # 2. Bilinguisme (Via les métadonnées créées précédemment)
-                lang = data.get("clinical_metadata", {}).get("language", "inconnu")
+                # 2. Bilinguisme (Re-détection robuste)
+                lang = detect_lang(instr)
                 lang_counter[lang] += 1
 
                 # 3. Anonymisation (Détection des tags RGPD)
-                for tag in ["<PATIENT>", "<LIEU>", "<DATE>", "<TEL>", "<EMAIL>"]:
+                for tag in ANONYMIZATION_TAGS:
                     if tag in instr or tag in resp:
                         # On compte le nombre total d'occurrences
                         count = instr.count(tag) + resp.count(tag)
                         anonymization_stats[tag] += count
 
-            except Exception:
+            except (json.JSONDecodeError, KeyError) as e:
+                print(f"⚠️ Ligne {i} ignorée en raison d'une erreur: {e}")
                 continue
 
     # Calcul des moyennes de longueur
@@ -82,9 +94,9 @@ def generate_stats():
     print("\n" + "═" * 60)
 
     # Sauvegarde du rapport en JSON pour l'intégrer au rapport technique
-    os.makedirs(os.path.dirname(REPORT_PATH), exist_ok=True)
+    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     report_data = {
-        "dataset_name": os.path.basename(FILE_PATH),
+        "dataset_name": FILE_PATH.name,
         "total_rows": total_rows,
         "language_distribution": dict(lang_counter),
         "anonymization_metrics": dict(anonymization_stats),

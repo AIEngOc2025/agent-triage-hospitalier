@@ -1,7 +1,8 @@
 import json
 import os
 
-from anonymize import MedicalAnonymizer
+from datasets import load_dataset
+from app.api_utils import MedicalAnonymizer
 
 
 class UniversalMedicalProcessor:
@@ -14,6 +15,35 @@ class UniversalMedicalProcessor:
         """
         self.anonymizer = MedicalAnonymizer()
         self.final_data = []
+
+    def download_and_save_dataset(self, dataset_id, local_path, split="train"):
+        """
+        @definition : Télécharge un dataset depuis Hugging Face et le sauvegarde localement en JSONL.
+        @args/params :
+            - dataset_id (str): L'identifiant du dataset sur Hugging Face.
+            - local_path (str): Le chemin où sauvegarder le fichier JSONL.
+            - split (str): La partition du dataset à télécharger (ex: 'train').
+        @return : Aucun.
+        """
+        print(f"⬇️ {dataset_id} non trouvé localement. Téléchargement...")
+        try:
+            # Certains datasets nécessitent de faire confiance au code distant
+            dataset = load_dataset(dataset_id, split=split, trust_remote_code=True)
+            
+            # S'assurer que le dossier de destination existe
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
+
+            # Sauvegarder au format JSONL
+            dataset.to_json(local_path, orient="records", lines=True)
+            
+            print(f"✅ Dataset sauvegardé dans {local_path}")
+
+        except Exception as e:
+            print(f"❌ Erreur lors du téléchargement de {dataset_id}: {e}")
+            # Créer un fichier vide pour ne pas retenter le téléchargement à chaque fois
+            with open(local_path, "w") as f:
+                pass # Fichier vide
+
 
     def process_file(self, file_path):
         """
@@ -110,24 +140,31 @@ class UniversalMedicalProcessor:
 if __name__ == "__main__":
     processor = UniversalMedicalProcessor()
 
-    # Liste exacte de tes fichiers
-    fichiers = [
-        "dpo_mix_en_train.jsonl",
-        "medical_qa_en_train.jsonl",
-        "medical_qa_shared_task_en_train.jsonl",
-        "medmcqa_en_train.jsonl",
-        "frenchmedmcqa_fr_train.jsonl",
-        "medquad_en_train.jsonl",
-        "medical_mqca_fr_train.jsonl",
-    ]
+    # Mapping entre les noms de fichiers locaux et les identifiants Hugging Face
+    # Cela permet de télécharger les datasets s'ils sont manquants.
+    DATASET_MAP = {
+        "dpo_mix_en_train.jsonl": ("intel/orca_dpo_pairs", "train"),
+        "medical_qa_en_train.jsonl": ("pubmed_qa", "train"),
+        "medical_qa_shared_task_en_train.jsonl": ("bioasq", "train"),
+        "medmcqa_en_train.jsonl": ("medmcqa", "train"),
+        "frenchmedmcqa_fr_train.jsonl": ("Dr-BERT/FrenchMedMCQA", "train"),
+        "medquad_en_train.jsonl": ("kevinma/medquad", "train"),
+        "medical_mqca_fr_train.jsonl": ("fids-lab/medical_mqca_fr", "train"),
+    }
 
-    base_path = "data/raw/"  # Vérifie que tes fichiers sont bien là
+    base_path = "data/raw/"
+    os.makedirs(base_path, exist_ok=True)
 
-    for f in fichiers:
-        full_path = os.path.join(base_path, f)
-        if os.path.exists(full_path):
+    for local_filename, (hf_id, split) in DATASET_MAP.items():
+        full_path = os.path.join(base_path, local_filename)
+        
+        # Si le fichier n'existe pas ou est vide, on le télécharge
+        if not os.path.exists(full_path) or os.path.getsize(full_path) == 0:
+            processor.download_and_save_dataset(hf_id, full_path, split)
+        
+        # On traite le fichier (qu'il ait été téléchargé ou qu'il existait déjà)
+        if os.path.exists(full_path) and os.path.getsize(full_path) > 0:
             processor.process_file(full_path)
-        else:
-            print(f"⚠️ Fichier introuvable : {full_path}")
 
+    # Sauvegarde du résultat final combiné
     processor.save("data/processed/train_sft.jsonl")

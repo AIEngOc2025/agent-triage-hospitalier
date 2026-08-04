@@ -21,11 +21,11 @@ async def test_log_audit_writes_file():
 
     m = mock_open()
 
-    # Patch app.main.open to mock the file and patch anonymize_text
+    # Patch app.api_utils.open to mock the file and patch anonymize_text
     # to avoid spaCy loading
     with (
-        patch("app.main.open", m) as mocked_file,
-        patch("app.main.anonymize_text", side_effect=lambda x: x),
+        patch("builtins.open", m) as mocked_file,
+        patch("app.api_utils.anonymize_text", side_effect=lambda x: x),
     ):
         await log_audit(entry)
 
@@ -59,6 +59,7 @@ async def test_api_chat_logs_audit(mock_generate, client):
         mock_log.assert_called_once()
         log_entry = mock_log.call_args[0][0]
         assert log_entry["patient_id"] == "PAT-TEST-LOG"
+        assert log_entry["input"] == "Hello"
         assert log_entry["decision"] == "Test response"
         assert log_entry["stream"] is False
 
@@ -97,5 +98,6 @@ async def test_api_chat_streaming_logs_audit(mock_generate_stream, client):
         mock_log.assert_called_once()
         log_entry = mock_log.call_args[0][0]
         assert log_entry["patient_id"] == "PAT-TEST-STREAM"
+        assert log_entry["input"] == "Hello"
         assert "Hello World" in log_entry["decision"]
         assert log_entry["stream"] is True

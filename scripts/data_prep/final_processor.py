@@ -1,7 +1,7 @@
 import json
 import os
 
-from anonymize import MedicalAnonymizer
+from app.api_utils import MedicalAnonymizer
 
 
 class MedicalDataFinalProcessor:

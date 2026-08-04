@@ -1,30 +1,25 @@
-# Use a clean python base image
-FROM python:3.12-slim
+# Utilisation de l'image officielle vLLM optimisée pour l'API compatible OpenAI
+FROM vllm/vllm-openai:latest
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+# Passage en utilisateur root pour installer les paquets système requis
+USER root
+
+# Installation de curl et du toolkit CUDA
+RUN apt-get update && apt-get install -y \
     curl \
-    git \
-    build-essential \
+    nvidia-cuda-toolkit \
     && rm -rf /var/lib/apt/lists/*
 
-# Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+WORKDIR /app
+COPY . /app
 
-# Set up environment
-ENV VIRTUAL_ENV=/opt/venv
-RUN python3 -m venv $VIRTUAL_ENV
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+# Installation des dépendances pour le téléchargement GCS
+RUN pip install -r inference-service/requirements.txt
+RUN chmod +x /app/inference-service/start_and_download.sh
 
-# Install dependencies
-COPY requirements.txt .
-RUN uv pip install --no-cache-dir -r requirements.txt --torch-backend=auto
+# Définition du port par défaut pour Cloud Run (8080)
+ENV PORT=8080
+ENV HOST=0.0.0.0
 
-EXPOSE 8000
-
-# Start vLLM
-CMD ["python3", "-m", "vllm.entrypoints.openai.api_server", \
-     "--model", "Qwen/Qwen3-1.7B-Base", \
-     "--host", "0.0.0.0", \
-     "--port", "8000", \
-     "--gpu-memory-utilization", "0.5"]
+# On utilise le script de téléchargement comme entrypoint
+ENTRYPOINT ["/bin/bash", "/app/inference-service/start_and_download.sh"]

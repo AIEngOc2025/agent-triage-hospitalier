@@ -1,0 +1,43 @@
+steps:
+  # 1. Construction de l'image Streamlit UI
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Streamlit Image'
+    args: ['build', '-f', 'Dockerfile.streamlit', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-ui:latest', '.']
+
+  # 2. Push de l'image UI
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Streamlit Image'
+    args: ['push', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-ui:latest']
+
+  # 3. Déploiement UI sur Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy UI to Cloud Run'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'agent-ui'
+      - '--image=europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-ui:latest'
+      - '--region=europe-west1'
+      - '--ingress=all'
+      - '--platform=managed'
+      - '--set-env-vars=API_BASE_URL=${_API_URL}'
+
+  # 4. Autoriser l'accès public (IAM)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Set IAM Policy'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'services'
+      - 'add-iam-policy-binding'
+      - 'agent-ui'
+      - '--region=europe-west1'
+      - '--member=allUsers'
+      - '--role=roles/run.invoker'
+
+images:
+  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-ui:latest'
+
+options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET

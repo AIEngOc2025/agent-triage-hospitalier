@@ -1,0 +1,36 @@
+steps:
+  # 1. Build Inference Image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Build Inference Image'
+    args: ['build', '-f', 'inference-service/Dockerfile', '-t', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-inference-service:latest', '.']
+
+  # 2. Push Inference Image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'Push Inference Image'
+    args: ['push', 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-inference-service:latest']
+
+  # 3. Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    id: 'Deploy Inference to Cloud Run'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'agent-inference-service'
+      - '--image=europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-inference-service:latest'
+      - '--region=europe-west1'
+      - '--allow-unauthenticated' # Nécessaire pour un service avec ingress=internal
+      - '--ingress=internal' # Le service ne doit être accessible qu'en interne (par l'API Gateway)
+      - '--platform=managed'
+      - '--cpu=6' # Augmentation du CPU pour gérer le modèle
+      - '--memory=24Gi' # Augmentation de la mémoire pour le chargement du modèle
+      - '--set-env-vars=MODEL_ID=modeles-triage-hospitalier/merged_dpo_final_chsa'
+      - '--timeout=2400s'
+      - '--gpu=1'
+      - '--gpu-type=nvidia-l4'
+
+images:
+  - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-inference-service:latest'
+
+options:
+  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET

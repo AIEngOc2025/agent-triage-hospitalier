@@ -1,18 +1,33 @@
+import os
 import uuid
 
 import httpx
 import streamlit as st
+from google.auth.transport.requests import Request
+from google.oauth2 import id_token
 
 # Configuration de la page
 st.set_page_config(
     page_title="CHSA - Triage Hospitalier IA", page_icon="🩺", layout="centered"
 )
 
-# Configuration de l'URL de l'API dans la barre latérale
-API_BASE_URL = st.sidebar.text_input(
-    "URL de l'API Gateway",
-    value="https://agent-triage-hospitalier-rlgcjqsysq-ew.a.run.app",
-)
+# Récupération de l'URL de l'API depuis les variables d'environnement.
+API_BASE_URL = os.getenv("API_BASE_URL", "http://api:8000")
+st.sidebar.info(f"🤖 L'interface est connectée à l'API suivante : `{API_BASE_URL}`")
+
+
+def get_id_token(url):
+    """
+    @definition : Récupère un token d'identité OIDC pour authentifier
+    les requêtes vers l'API.
+    @args/params : url (str): L'URL cible pour laquelle générer le token.
+    @return : str : Le jeton d'identité (ID Token) valide.
+    """
+    auth_req = Request()
+    # Récupère automatiquement le token OIDC pour Cloud Run
+    token = id_token.fetch_id_token(auth_req, url)
+    return token
+
 
 # Initialisation de l'état de la session
 if "session_id" not in st.session_state:
@@ -53,29 +68,40 @@ if user_input := st.chat_input("Répondez à l'assistant ou décrivez votre situ
 
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # Appel API FastAPI pour générer la réponse
+    # Appel API FastAPI pour générer la réponse en streaming
     with st.chat_message("assistant"):
         with st.spinner("Analyse clinique en cours..."):
             try:
-                response = httpx.post(
-                    f"{API_BASE_URL}/chat",
-                    json={
-                        "history": st.session_state.messages,
-                        "patient_id": "conv-user",  # ID anonyme pour chat direct
-                        "stream": False
-                    },
-                    timeout=300.0
+                # Obtenir le token d'authentification
+                headers = {}
+                if not API_BASE_URL.startswith(
+                    "http://localhost"
+                ) and not API_BASE_URL.startswith("http://api"):
+                    token = get_id_token(API_BASE_URL)
+                    headers["Authorization"] = f"Bearer {token}"
+
+                # Fonction génératrice pour le streaming
+                def response_generator():
+                    with httpx.stream(
+                        "POST",
+                        f"{API_BASE_URL}/chat",
+                        headers=headers,
+                        json={
+                            "history": st.session_state.messages,
+                            "patient_id": "conv-user",
+                            "stream": True,
+                        },
+                        timeout=300.0,
+                    ) as response:
+                        for line in response.iter_lines():
+                            if line.startswith("data: "):
+                                yield line[len("data: ") :]
+
+                # Utilisation de write_stream pour afficher au fur et à mesure
+                assistant_response = st.write_stream(response_generator())
+                st.session_state.messages.append(
+                    {"role": "assistant", "content": assistant_response}
                 )
-
-
-                if response.status_code == 200:
-                    assistant_response = response.json()["response"]
-                    st.write(assistant_response)
-                    st.session_state.messages.append(
-                        {"role": "assistant", "content": assistant_response}
-                    )
-                else:
-                    st.error("Erreur de connexion au serveur de triage.")
             except Exception as e:
                 st.error(f"Erreur de communication : {e}")
 

@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Literal
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,15 +12,17 @@ class Settings(BaseSettings):
     @args/params: None
     @return: Settings object containing application configuration.
     """
-    
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
 
     # --- Environment Configuration ---
     # APP_ENV can be 'development' or 'production'
     APP_ENV: Literal["development", "production"] = "development"
 
     # --- Model & Log Paths ---
-    MODEL_PATH: str = "models/merged_dpo_final_chsa"
+    MODEL_PATH: str = Field(default="models/merged_dpo_final_chsa", env="MODEL_PATH")
     LOG_FILE: Path = Path("logs/triage.log")
 
     # --- Computed Properties ---
@@ -40,4 +43,4 @@ for key, value in os.environ.items():
         print(f"DEBUG: {key}={value}")
 
 settings = Settings()
-print(f"DEBUG: Settings loaded. MODEL_PATH: {settings.MODEL_PATH}, APP_ENV: {settings.APP_ENV}")
+print(f"DEBUG: Settings loaded. MODEL: {settings.MODEL_PATH}, ENV: {settings.APP_ENV}")

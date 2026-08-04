@@ -2,3 +2,4 @@ vllm
 transformers[torch]==5.14.1
 lm-format-enforcer
 pydantic
+google-cloud-storage

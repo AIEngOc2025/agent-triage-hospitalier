@@ -1,37 +1,14 @@
 import json
+import sys
+import os
 from collections import Counter
 
-import spacy
+# Ajout pour permettre l'import de app.api_utils
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+from app.api_utils import MedicalAnonymizer
 
-# 1. Chargement de l'anonymiseur léger pour Mac
-try:
-    nlp_fr = spacy.load("fr_core_news_lg")
-    nlp_en = spacy.load("en_core_web_lg")
-    print("✅ Modèles SpaCy chargés.")
-except OSError:
-    print(
-        "❌ Erreur : Modèles SpaCy manquants. "
-        "Lance : python -m spacy download fr_core_news_lg"
-    )
-    raise
-
-
-def simple_anonymize(text, lang):
-    """
-    @definition : Anonymise les informations sensibles (noms, lieux) dans un
-                  texte.
-    @args/params : text (str) le texte à anonymiser, lang (str) la langue du
-                   texte ('fr' ou 'en').
-    @return : str le texte anonymisé.
-    """
-    nlp = nlp_fr if lang == "fr" else nlp_en
-    doc = nlp(text)
-    for ent in doc.ents:
-        if ent.label_ in ["PER", "PERSON"]:
-            text = text.replace(ent.text, "<PATIENT>")
-        elif ent.label_ in ["LOC", "GPE"]:
-            text = text.replace(ent.text, "<LIEU>")
-    return text
+print("✅ Initialisation de l'anonymiseur médical...")
+anonymizer = MedicalAnonymizer()
 
 
 def fix_and_audit():
@@ -64,8 +41,8 @@ def fix_and_audit():
                 lang = "en"
 
             # Anonymisation (Correction de ton problème précédent)
-            clean_inst = simple_anonymize(data["instruction"], lang)
-            clean_resp = simple_anonymize(data["response"], lang)
+            clean_inst = anonymizer.anonymize_text(data["instruction"], lang)
+            clean_resp = anonymizer.anonymize_text(data["response"], lang)
 
             # Formatage final conforme au POC
             final_data.append(

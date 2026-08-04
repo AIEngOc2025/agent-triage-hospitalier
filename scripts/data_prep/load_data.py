@@ -3,7 +3,8 @@ import json
 import os
 
 import pandas as pd
-from anonymize import MedicalAnonymizer
+
+from app.api_utils import MedicalAnonymizer
 
 
 class LocalDataProcessor:

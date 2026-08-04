@@ -1,3 +1,54 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:0a77421c005996226fb92efa6836fe6c37b97484c8f348fce35e93740b65b341
-size 207
+version: '3.8'
+
+services:
+  # 1. Service d'inférence (le modèle LLM qui tourne sur GPU)
+  inference:
+    build:
+      context: .
+      dockerfile: inference-service/Dockerfile
+    image: agent-inference-local
+    environment:
+      # Le modèle qui sera chargé par le service d'inférence
+      - MODEL_ID=modeles-triage-hospitalier/merged_dpo_final_chsa
+    # Déploiement avec accès au GPU pour l'accélération
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+    ports:
+      # Le port interne du conteneur est 8080, on ne l'expose pas à l'hôte
+      # car seul l'API Gateway a besoin d'y accéder.
+      - "8080"
+
+  # 2. Service API Gateway (le backend FastAPI)
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: agent-api-local
+    depends_on:
+      - inference # S'assure que le service d'inférence démarre avant l'API
+    ports:
+      # Expose le port 8000 de l'API sur le port 8000 de votre machine
+      - "8000:8000"
+    environment:
+      # L'API peut maintenant appeler le service d'inférence via son nom `inference`
+      - INFERENCE_SERVICE_URL=http://inference:8080
+
+  # 3. Interface utilisateur (Streamlit)
+  ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    image: agent-ui-local
+    depends_on:
+      - api # S'assure que l'API est prête avant de lancer l'interface
+    ports:
+      # Expose le port 8501 de Streamlit sur le port 8501 de votre machine
+      - "8501:8501"
+    environment:
+      # L'URL que l'UI utilisera pour contacter l'API
+      - API_BASE_URL=http://api:8000

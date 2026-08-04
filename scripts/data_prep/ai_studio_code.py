@@ -1,8 +1,9 @@
 import argparse
 import json
 
-from anonymize import MedicalAnonymizer  # On importe ton script précédent
 from datasets import load_dataset
+
+from app.api_utils import MedicalAnonymizer
 
 
 class MedicalDataProcessor:
