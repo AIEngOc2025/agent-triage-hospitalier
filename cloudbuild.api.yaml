@@ -19,25 +19,27 @@ steps:
       - 'agent-api-gateway' # Nom du service
       - '--image=europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-api-gateway:latest'
       - '--region=europe-west1'
-      - '--cpu=1'
-      - '--memory=4Gi' 
+      - '--cpu=2'
+      - '--memory=8Gi' 
       - '--ingress=all' # Accessible publiquement
       - '--platform=managed'
       - '--service-account=414294705487-compute@developer.gserviceaccount.com'
       - '--set-env-vars=INFERENCE_SERVICE_URL=https://agent-inference-service-rlgcjqsysq-ew.a.run.app,MODEL_PATH=/app/models/merged_dpo_final_chsa,APP_ENV=production'
 
   # 4. Autoriser l'accès public (IAM)
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    id: 'Set IAM Policy'
-    entrypoint: 'gcloud'
-    args:
-      - 'run'
-      - 'services'
-      - 'add-iam-policy-binding'
-      - 'agent-api-gateway'
-      - '--region=europe-west1'
-      - '--member=allUsers'
-      - '--role=roles/run.invoker'
+  #- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+   # id: 'Set IAM Policy'
+    #entrypoint: 'gcloud'
+    #args:
+     # - 'run'
+      #- 'services'
+     # - 'add-iam-policy-binding'
+      #- 'agent-api-gateway'
+      #- '--region=europe-west1'
+      #- --allow-unauthenticated
+      #- '--member=allUsers'
+      #- '--role=roles/run.invoker'
+
 
 images:
   - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-api-gateway:latest'

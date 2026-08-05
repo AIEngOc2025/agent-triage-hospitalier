@@ -27,7 +27,7 @@ def merge_and_save_model():
             "📦 [STEP 2/4] Chargement du modèle de base (float32 pour stabilité CPU)..."
         )
         base_model = AutoModelForCausalLM.from_pretrained(
-            base_model_id, torch_dtype=torch.float32, device_map="auto"
+            base_model_id, torch_dtype=torch.float32
         )
 
         print("📦 [STEP 3/4] Chargement des adapters et fusion...")

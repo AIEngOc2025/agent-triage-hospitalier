@@ -1,8 +1,17 @@
 import json
+import logging
 import os
-from typing import AsyncGenerator, List
+from typing import AsyncGenerator, List, Optional
 
 import httpx
+
+# Configure logging for this module
+logger = logging.getLogger(__name__)
+# Basic configuration for demonstration. In a real application, this would be
+# configured centrally, e.g., in app/main.py or a dedicated logging setup.
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 
 
 class RemoteInferenceClient:
@@ -10,43 +19,65 @@ class RemoteInferenceClient:
     Client for interacting with a remote inference service.
     """
 
-    def __init__(self):
+    def __init__(
+        self,
+        inference_url: Optional[str] = None,
+        model_name: Optional[str] = None,
+        temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+        repetition_penalty: Optional[float] = None,
+        timeout: float = 300.0,
+    ):
         """
-        @definition : Initialise le client d'inférence distante avec
-        ses configurations et le client HTTP.
-        @args/params : Aucun
-        @return : Aucun
+        Initializes the remote inference client with its configurations
+        and the HTTP client.
         """
-        self.inference_url = os.getenv(
+
+        self.inference_url = inference_url or os.getenv(
             "INFERENCE_SERVICE_URL",
             "https://agent-inference-service-rlgcjqsysq-ew.a.run.app",
         )
-        self.model_name = os.getenv("MODEL_PATH", "/app/models/merged_dpo_final_chsa")
-        self.client = httpx.AsyncClient(timeout=300.0)
-        print(
-            f"✅ [REMOTE] Remote Inference Client initialized at "
-            f"{self.inference_url} with model {self.model_name}"
+        self.model_name = model_name or os.getenv(
+            "MODEL_PATH", "/app/models/merged_dpo_final_chsa"
         )
+        self.temperature = float(temperature or os.getenv("TEMPERATURE", 0.1))
+        self.max_tokens = int(max_tokens or os.getenv("MAX_TOKENS", 50))
+        self.repetition_penalty = float(
+            repetition_penalty or os.getenv("REPETITION_PENALTY", 1.5)
+        )
+        self.client = httpx.AsyncClient(timeout=timeout)
+        logger.info(
+            f"✅ [REMOTE] Remote Inference Client initialized at "
+            f"{self.inference_url} with model {self.model_name}. "
+            f"Params: temp={self.temperature}, "
+            f"max_tokens={self.max_tokens}, "
+            f"penalty={self.repetition_penalty}"
+        )
+
+    def _prepare_payload(self, messages: List[dict], stream: bool) -> dict:
+        """Prepares the common payload for inference requests."""
+        return {
+            "model": self.model_name,
+            "messages": messages,
+            "stream": stream,
+            "temperature": self.temperature,
+            "max_tokens": self.max_tokens,
+            "repetition_penalty": self.repetition_penalty,
+        }
 
     async def generate(self, messages: List[dict]) -> str:
         """
-        @definition : Génère une réponse complète (non-streaming)
-        depuis le service d'inférence.
-        @args/params : messages (List[dict]): L'historique des
-        messages de la conversation.
-        @return : str : Le contenu textuel de la réponse générée.
+        Generates a complete (non-streaming) response from the
+        inference service.
+
+        @args/params:
+            - messages (List[dict]): The conversation history.
+        @return: The textual content of the generated response (str).
         """
-        payload = {
-            "model": self.model_name,
-            "messages": messages,
-            "stream": False,
-            "temperature": 0.05,
-            "max_tokens": 150,
-            "repetition_penalty": 1.5,
-        }
-        print(
-            f"DEBUG: Calling {self.inference_url}/v1/chat/completions "
-            f"with payload: {json.dumps(payload)}"
+        payload = self._prepare_payload(messages, stream=False)
+        logger.debug(
+            f"Calling {self.inference_url}/v1/chat/completions with "
+            f"payload: {json.dumps(payload)}"
         )
 
         try:
@@ -55,33 +86,26 @@ class RemoteInferenceClient:
                 json=payload,
             )
             if response.status_code != 200:
-                print(f"DEBUG: Error response body: {response.text}")
+                logger.error(f"Error response body: {response.text}")
             response.raise_for_status()
             return response.json()["choices"][0]["message"]["content"]
         except httpx.HTTPError as e:
-            print(f"❌ HTTP Error during generation: {e}")
+            logger.error(f"❌ HTTP Error during generation: {e}")
             raise e
 
     async def generate_stream(self, messages: List[dict]) -> AsyncGenerator[str, None]:
         """
-        @definition : Génère une réponse en streaming depuis
-        le service d'inférence.
-        @args/params : messages (List[dict]): L'historique de la
-        conversation.
-        @return : AsyncGenerator[str, None] : Un générateur asynchrone
-        qui produit les tokens de la réponse.
+        Generates a streaming response from the inference service.
+
+        @args/params:
+            - messages (List[dict]): The conversation history.
+        @return: An asynchronous generator that yields the response tokens
+            (AsyncGenerator[str, None]).
         """
-        payload = {
-            "model": self.model_name,
-            "messages": messages,
-            "stream": True,
-            "temperature": 0.05,
-            "max_tokens": 150,
-            "repetition_penalty": 1.5,
-        }
-        print(
-            f"DEBUG: Calling {self.inference_url}/v1/chat/completions "
-            f"with streaming payload: {json.dumps(payload)}"
+        payload = self._prepare_payload(messages, stream=True)
+        logger.debug(
+            f"Calling {self.inference_url}/v1/chat/completions with "
+            f"streaming payload: {json.dumps(payload)}"
         )
 
         try:
@@ -93,19 +117,24 @@ class RemoteInferenceClient:
                     if line.startswith("data:"):
                         content = line[len("data:") :].strip()
                         if content != "[DONE]":
-                            chunk = json.loads(content)
-                            if "content" in chunk["choices"][0]["delta"]:
-                                yield chunk["choices"][0]["delta"]["content"]
+                            try:
+                                chunk = json.loads(content)
+                                if "content" in chunk["choices"][0]["delta"]:
+                                    yield chunk["choices"][0]["delta"]["content"]
+                            except json.JSONDecodeError:
+                                logger.warning(
+                                    f"Could not decode JSON from stream line: {content}"
+                                )
         except httpx.HTTPError as e:
-            print(f"❌ HTTP Error during streaming generation: {e}")
+            logger.error(f"❌ HTTP Error during streaming generation: {e}")
             raise e
 
     async def close(self) -> None:
         """
-        @definition : Ferme proprement le client HTTP asynchrone
-        pour libérer les ressources.
-        @args/params : Aucun
-        @return : Aucun
+        Closes the asynchronous HTTP client cleanly to release resources.
+
+        @args/params: None
+        @return: None
         """
         await self.client.aclose()
-        print("🔌 [REMOTE] Remote Inference Client closed successfully.")
+        logger.info("🔌 [REMOTE] Remote Inference Client closed successfully.")

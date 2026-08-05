@@ -75,8 +75,13 @@ async def api_chat(request: ChatRequest):
                     full_response.append(chunk)
                     yield f"data: {chunk}\n\n"
                 latency = perf_counter() - start_time
+                user_input = messages[-1]["content"] if messages else ""
                 log_entry = create_log_entry(
-                    request.patient_id, "".join(full_response), latency, True
+                    request.patient_id,
+                    user_input,
+                    "".join(full_response),
+                    latency,
+                    True,
                 )
                 await log_audit(log_entry)
             except Exception as e:
@@ -87,7 +92,10 @@ async def api_chat(request: ChatRequest):
     try:
         response = await engine.generate(messages)
         latency = perf_counter() - start_time
-        log_entry = create_log_entry(request.patient_id, response, latency, False)
+        user_input = messages[-1]["content"] if messages else ""
+        log_entry = create_log_entry(
+            request.patient_id, user_input, response, latency, False
+        )
         await log_audit(log_entry)
         return {"response": response, "audit_ref": log_entry["audit_id"]}
     except Exception as e:

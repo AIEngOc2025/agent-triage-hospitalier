@@ -18,7 +18,8 @@ from app.core.settings import settings
 class MedicalAnonymizer:
     def __init__(self):
         """
-        @definition : Initialise l'anonymiseur médical avec Presidio pour le français et l'anglais.
+        @definition : Initialise l'anonymiseur médical avec Presidio
+        pour le français et l'anglais.
         @args/params : Aucun.
         @return : Aucun.
         """
@@ -31,15 +32,14 @@ class MedicalAnonymizer:
                 {"lang_code": "en", "model_name": "en_core_web_lg"},
             ],
         }
-        
+
         # Explicitly configure NLP provider with language information
         provider = NlpEngineProvider(nlp_configuration=provider_config)
         nlp_engine = provider.create_engine()
 
         # Instantiate AnalyzerEngine with explicit nlp_engine
         self.analyzer = AnalyzerEngine(
-            nlp_engine=nlp_engine, 
-            default_score_threshold=0.4
+            nlp_engine=nlp_engine, default_score_threshold=0.4
         )
         self.anonymizer = AnonymizerEngine()
 
@@ -58,7 +58,7 @@ class MedicalAnonymizer:
         # 1. Analyse du texte
         results = self.analyzer.analyze(
             text=text,
-            entities=["PERSON", "LOCATION", "PHONE_NUMBER"],
+            entities=["PERSON", "LOCATION", "PHONE_NUMBER", "US_POSTAL_CODE"],
             language=lang,
         )
 
@@ -66,10 +66,8 @@ class MedicalAnonymizer:
         operators = {
             "PERSON": OperatorConfig("replace", {"new_value": "<PATIENT>"}),
             "LOCATION": OperatorConfig("replace", {"new_value": "<ADRESSE>"}),
-            "PHONE_NUMBER": OperatorConfig(
-                "mask",
-                {"masking_char": "*", "chars_to_mask": 10, "from_end": True},
-            ),
+            "PHONE_NUMBER": OperatorConfig("replace", {"new_value": "<TELEPHONE>"}),
+            "US_POSTAL_CODE": OperatorConfig("replace", {"new_value": "<CODE POSTAL>"}),
         }
 
         anonymized = self.anonymizer.anonymize(

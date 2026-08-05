@@ -1,4 +1,5 @@
 import os
+
 from datasets import load_dataset
 
 # Répertoire de destination
@@ -9,7 +10,7 @@ os.makedirs("data/raw", exist_ok=True)
 sources = {
     "MediQA": "bigbio/mediqa",
     "MedQuAD": "lavita/medquad",
-    "FrenchMedMCQA": "neuropark/french_medmcqa"
+    "FrenchMedMCQA": "neuropark/french_medmcqa",
 }
 
 for name, path in sources.items():

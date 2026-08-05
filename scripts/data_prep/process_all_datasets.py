@@ -2,6 +2,7 @@ import json
 import os
 
 from datasets import load_dataset
+
 from app.api_utils import MedicalAnonymizer
 
 
@@ -29,21 +30,20 @@ class UniversalMedicalProcessor:
         try:
             # Certains datasets nécessitent de faire confiance au code distant
             dataset = load_dataset(dataset_id, split=split, trust_remote_code=True)
-            
+
             # S'assurer que le dossier de destination existe
             os.makedirs(os.path.dirname(local_path), exist_ok=True)
 
             # Sauvegarder au format JSONL
             dataset.to_json(local_path, orient="records", lines=True)
-            
+
             print(f"✅ Dataset sauvegardé dans {local_path}")
 
         except Exception as e:
             print(f"❌ Erreur lors du téléchargement de {dataset_id}: {e}")
             # Créer un fichier vide pour ne pas retenter le téléchargement à chaque fois
             with open(local_path, "w") as f:
-                pass # Fichier vide
-
+                pass  # Fichier vide
 
     def process_file(self, file_path):
         """
@@ -143,7 +143,6 @@ if __name__ == "__main__":
     # Mapping entre les noms de fichiers locaux et les identifiants Hugging Face
     # Cela permet de télécharger les datasets s'ils sont manquants.
     DATASET_MAP = {
-        "dpo_mix_en_train.jsonl": ("intel/orca_dpo_pairs", "train"),
         "medical_qa_en_train.jsonl": ("pubmed_qa", "train"),
         "medical_qa_shared_task_en_train.jsonl": ("bioasq", "train"),
         "medmcqa_en_train.jsonl": ("medmcqa", "train"),
@@ -157,11 +156,11 @@ if __name__ == "__main__":
 
     for local_filename, (hf_id, split) in DATASET_MAP.items():
         full_path = os.path.join(base_path, local_filename)
-        
+
         # Si le fichier n'existe pas ou est vide, on le télécharge
         if not os.path.exists(full_path) or os.path.getsize(full_path) == 0:
             processor.download_and_save_dataset(hf_id, full_path, split)
-        
+
         # On traite le fichier (qu'il ait été téléchargé ou qu'il existait déjà)
         if os.path.exists(full_path) and os.path.getsize(full_path) > 0:
             processor.process_file(full_path)

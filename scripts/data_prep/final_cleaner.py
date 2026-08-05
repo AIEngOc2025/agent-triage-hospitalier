@@ -1,10 +1,10 @@
 import json
-import sys
 import os
+import sys
 from collections import Counter
 
 # Ajout pour permettre l'import de app.api_utils
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from app.api_utils import MedicalAnonymizer
 
 print("✅ Initialisation de l'anonymiseur médical...")

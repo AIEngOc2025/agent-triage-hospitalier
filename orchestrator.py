@@ -1,15 +1,31 @@
 import argparse
 import json
+import logging
 import subprocess
 from pathlib import Path
 
+# Configure logging for the orchestrator
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
 
 class ProjectOrchestrator:
+    """
+    @definition : Orchestrates project operations such as deployment, status checks,
+                  and technical documentation generation.
+    @args/params : None
+    @return : None
+    """
+
     SERVICES = {
         "api": "cloudbuild.api.yaml",
         "inference": "cloudbuild.inference.yaml",
         "ui": "cloudbuild.ui.yaml",
     }
+    AUDIT_LOG_FILE = Path("logs/audit_medical.jsonl")
+    TECHNICAL_OVERVIEW_FILE = "TECHNICAL_OVERVIEW.md"
 
     def calculate_metrics(self):
         log_file = Path("logs/audit_medical.jsonl")
@@ -17,20 +33,44 @@ class ProjectOrchestrator:
             return 0.0, 0
 
         total_latency = 0.0
+        latencies = []
         count = 0
-        with open(log_file, "r") as f:
-            for line in f:
-                try:
-                    entry = json.loads(line)
-                    total_latency += entry.get("latency_sec", 0.0)
-                    count += 1
-                except json.JSONDecodeError:
-                    continue
+        try:
+            with open(self.AUDIT_LOG_FILE, "r") as f:
+                for line in f:
+                    try:
+                        entry = json.loads(line)
+                        latency = entry.get("latency_sec")
+                        if isinstance(latency, (int, float)):
+                            total_latency += latency
+                            latencies.append(latency)
+                            count += 1
+                        else:
+                            logger.warning(
+                                f"Skipping log entry with invalid latency: {line.strip()}"
+                            )
+                    except json.JSONDecodeError:
+                        logger.warning(f"Skipping malformed log entry: {line.strip()}")
+                        continue
+        except FileNotFoundError:
+            logger.warning(
+                f"Audit log file not found at {self.AUDIT_LOG_FILE}. Returning default metrics."
+            )
+            return 0.0, 0
+        except Exception as e:
+            logger.error(f"Error reading audit log file {self.AUDIT_LOG_FILE}: {e}")
+            return 0.0, 0
 
         avg_latency = total_latency / count if count > 0 else 0.0
-        return round(avg_latency * 1000, 2), count  # Conversion en ms
+        # For a more robust system, consider calculating p95/p99 latencies here.
+        return round(avg_latency * 1000, 2), count  # Convert to ms
 
     def generate_technical_overview(self):
+        """
+        @definition : Generates the TECHNICAL_OVERVIEW.md file with project metrics and roadmap.
+        @args/params : None
+        @return : None
+        """
         avg_latency_ms, count = self.calculate_metrics()
 
         content = f"""# Technical Overview : Agent de Triage Hospitalier
@@ -48,8 +88,8 @@ Inference Engine (vLLM), et Frontend UI (Streamlit).
 
 | Métrique | Cible / Objectif | Valeur Actuelle | Méthode de vérification |
 | :--- | :--- | :--- | :--- |
-| **Latence API Gateway** | < 200ms (p95) | {avg_latency_ms} ms | Logs d'audit |
-| **Précision du Triage** | > 90% | À auditer | Évaluation test |
+| **Latence API Gateway** | < 200ms (p95) | {avg_latency_ms if count > 0 else "N/A"} ms | Logs d'audit (Moyenne) |
+| **Précision du Triage** | > 90% | À auditer | Évaluation dataset test |
 | **Anonymisation PII** | > 99% | À valider | Tests `test_audit.py` |
 | **Disponibilité** | > 99.9% | - | Monitoring `/health` |
 
@@ -57,34 +97,72 @@ Inference Engine (vLLM), et Frontend UI (Streamlit).
 - Court terme : Validation clinique sur site.
 - Long terme : Passage à l'échelle (32B+ paramètres).
 """
-        with open("TECHNICAL_OVERVIEW.md", "w") as f:
+        with open(self.TECHNICAL_OVERVIEW_FILE, "w") as f:
             f.write(content)
-        print(
-            f"✅ TECHNICAL_OVERVIEW.md généré (Latence moyenne: {avg_latency_ms} ms)."
+        logger.info(
+            f"✅ {self.TECHNICAL_OVERVIEW_FILE} généré (Latence moyenne: {avg_latency_ms} ms sur {count} échantillons)."
         )
 
     def deploy(self, service):
+        """
+        @definition : Deploys a specified service to Google Cloud Run via Cloud Build.
+        @args/params :
+            - service (str): The name of the service to deploy ('api', 'inference', 'ui').
+        @return : None
+        """
         if service not in self.SERVICES:
-            print(f"❌ Service inconnu. Choix: {list(self.SERVICES.keys())}")
+            logger.error(f"❌ Service inconnu. Choix: {list(self.SERVICES.keys())}")
             return
         config = self.SERVICES[service]
-        print(f"🚀 Déploiement du service '{service}' avec {config}...")
-        subprocess.run(
-            ["gcloud", "builds", "submit", "--config", config, "."], check=True
-        )
+        logger.info(f"🚀 Déploiement du service '{service}' avec {config}...")
+        try:
+            subprocess.run(
+                ["gcloud", "builds", "submit", "--config", config, "."],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            logger.info(f"✅ Déploiement du service '{service}' terminé avec succès.")
+        except subprocess.CalledProcessError as e:
+            logger.error(f"❌ Erreur lors du déploiement du service '{service}':")
+            logger.error(f"  Commande: {e.cmd}")
+            logger.error(f"  Code de retour: {e.returncode}")
+            logger.error(f"  Sortie standard: {e.stdout}")
+            logger.error(f"  Erreur standard: {e.stderr}")
+        except FileNotFoundError:
+            logger.error(
+                "❌ 'gcloud' command not found. Please ensure Google Cloud SDK is installed and configured."
+            )
+        except Exception as e:
+            logger.error(
+                f"❌ Une erreur inattendue est survenue lors du déploiement: {e}"
+            )
 
     def check_status(self):
-        print("📊 Statut des 5 derniers builds :")
-        subprocess.run(
-            [
-                "gcloud",
-                "builds",
-                "list",
-                "--limit",
-                "5",
-                "--format=table(id, status, startTime)",
-            ]
-        )
+        """
+        @definition : Displays the status of the last 5 Google Cloud Builds.
+        @args/params : None
+        @return : None
+        """
+        logger.info("📊 Statut des 5 derniers builds :")
+        try:
+            subprocess.run(
+                [
+                    "gcloud",
+                    "builds",
+                    "list",
+                    "--limit",
+                    "5",
+                    "--format=table(id, status, startTime)",
+                ],
+                check=True,
+            )
+        except subprocess.CalledProcessError as e:
+            logger.error(f"❌ Erreur lors de la récupération du statut des builds: {e}")
+        except FileNotFoundError:
+            logger.error(
+                "❌ 'gcloud' command not found. Please ensure Google Cloud SDK is installed and configured."
+            )
 
 
 def main():

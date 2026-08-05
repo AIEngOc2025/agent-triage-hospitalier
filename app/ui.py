@@ -1,78 +1,62 @@
 import os
 import sys
 
-import gradio as gr
 import requests
+import streamlit as st
 
-# --- Path Correction ---
-# This adds the project's root directory to the Python path.
-# It allows the script to be run directly while resolving imports from the
-# 'app' package.
+# Path Correction
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-import argparse
-
-# L'URL de base de l'API VLLM est fournie par le script de démarrage via une
-# variable d'environnement.
-# En local, elle pointera vers notre API FastAPI mockée. En prod, vers le vrai
-# serveur VLLM.
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
+st.set_page_config(page_title="CHSA - Triage Hospitalier", page_icon="🩺")
 
-def chat_function(message, history):
-    """
-    @definition : Fonction appelée par Gradio pour gérer la conversation
-    avec l'API VLLM.
-    @args/params : message (str), history (list)
-    @return : str (la réponse de l'assistant)
-    """
+st.title("🩺 Assistant de Triage - CHSA")
 
-    # Préparation du format historique pour notre API FastAPI (/chat)
-    api_history = []
-    for human, assistant in history:
-        api_history.append({"role": "user", "content": human})
-        api_history.append({"role": "assistant", "content": assistant})
-    api_history.append({"role": "user", "content": message})
+# État de la session pour gérer les étapes
+if "step" not in st.session_state:
+    st.session_state.step = 0
+    st.session_state.data = {}
 
-    # Le payload pour notre endpoint /chat
+
+def next_step():
+    st.session_state.step += 1
+
+
+if st.session_state.step == 0:
+    st.session_state.data["name"] = st.text_input("Prénom :")
+    st.session_state.data["age"] = st.number_input("Âge :", min_value=0, max_value=120)
+    if st.button("Suivant"):
+        next_step()
+        st.rerun()
+
+elif st.session_state.step == 1:
+    st.session_state.data["symptoms"] = st.text_area("Décrivez vos symptômes :")
+    if st.button("Analyser"):
+        next_step()
+        st.rerun()
+
+elif st.session_state.step == 2:
+    st.write("Analyse en cours...")
     payload = {
-        "history": api_history,
-        "patient_id": "local-dev-patient",
+        "history": [
+            {
+                "role": "user",
+                "content": f"Patient: {st.session_state.data['name']}, {st.session_state.data['age']} ans. "
+                f"Symptômes: {st.session_state.data['symptoms']}",
+            }
+        ],
+        "patient_id": "demo-triage",
         "stream": False,
     }
 
     try:
-        # On appelle l'endpoint /chat de notre API FastAPI
-        # En local, VLLM_API_BASE n'est pas défini, on utilise le défaut.
-        chat_url = f"{API_BASE_URL}/chat"
-        print(f"DEBUG: Calling mock API at {chat_url}")
-        response = requests.post(chat_url, json=payload)
-
+        response = requests.post(f"{API_BASE_URL}/chat", json=payload)
         response.raise_for_status()
-        data = response.json()
-        return data["response"]
+        st.write(response.json()["response"])
     except Exception as e:
-        return f"Erreur de connexion à l'API : {str(e)}"
+        st.error(f"Erreur : {e}")
 
-
-# Interface Gradio
-demo = gr.ChatInterface(
-    fn=chat_function,
-    title="Agent de Triage CHSA",
-    description="Assistant infirmier de triage médical. "
-    "Veuillez décrire vos symptômes.",
-)
-
-if __name__ == "__main__":
-    # --- Argument Parsing ---
-    # Permet de passer le port et l'hôte depuis la ligne de commande,
-    # ce qui est essentiel pour Cloud Run.
-    parser = argparse.ArgumentParser(description="Lancement de l'interface Gradio")
-    parser.add_argument(
-        "--server-name", type=str, default="0.0.0.0", help="Adresse du serveur"
-    )
-    parser.add_argument("--server-port", type=int, default=7860, help="Port du serveur")
-    args = parser.parse_args()
-
-    # Lancement de l'interface avec les arguments fournis
-    demo.launch(server_name=args.server_name, server_port=args.server_port)
+    if st.button("Nouveau Triage"):
+        st.session_state.step = 0
+        st.rerun()

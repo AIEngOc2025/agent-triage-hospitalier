@@ -65,32 +65,7 @@ def process_dpo_data():
     """
     final_pool = []
 
-    # 1. TRAITEMENT DES DONNÉES ANGLAISES (Format Argilla détecté)
-    path_en = os.path.join(RAW_DIR, "dpo_mix_en_train.jsonl")
-    if os.path.exists(path_en):
-        print("🇬🇧 Traitement des données EN (Format Argilla)...")
-        with open(path_en, "r", encoding="utf-8") as f:
-            for i, line in enumerate(f):
-                if i >= 1500:
-                    break  # Échantillon solide
-                try:
-                    data = json.loads(line)
-                    # Extraction basée sur ton extrait JSON
-                    prompt_raw = data["chosen"][0]["content"]
-                    chosen_raw = data["chosen"][1]["content"]
-                    rejected_raw = data["rejected"][1]["content"]
-
-                    final_pool.append(
-                        {
-                            "prompt": format_prompt_chatml(anonymize(prompt_raw, "en")),
-                            "chosen": anonymize(chosen_raw, "en"),
-                            "rejected": anonymize(rejected_raw, "en"),
-                        }
-                    )
-                except (KeyError, IndexError):
-                    continue
-
-    # 2. TRAITEMENT DES DONNÉES FRANÇAISES (Sécurisé contre les KeyError)
+    # 1. TRAITEMENT DES DONNÉES FRANÇAISES (Sécurisé contre les KeyError)
     path_fr = os.path.join(RAW_DIR, "frenchmedmcqa_fr_train.jsonl")
     if os.path.exists(path_fr):
         print("🇫🇷 Traitement des données FR (Validation médicale)...")
@@ -102,55 +77,31 @@ def process_dpo_data():
                     data = json.loads(line)
 
                     # Détection robuste de la réponse correcte
-                    correct_ans = data.get("correct_answers") or data.get("cop")
-                    if correct_ans is None:
+                    correct_ans = data.get("correct_answers")
+                    if correct_ans is None or not isinstance(correct_ans, list):
                         continue
 
-                    # Normalisation de l'index (si c'est une liste ["a"] ou un int 0)
-                    ans_idx = (
-                        correct_ans[0] if isinstance(correct_ans, list) else correct_ans
-                    )
-                    ans_char = str(ans_idx).lower()
+                    # Normalisation de l'index
+                    ans_idx = correct_ans[0]
 
-                    # Mapping des clés possibles
+                    # Mapping des clés
                     key_map = {
-                        "a": "answer_a",
-                        "b": "answer_b",
-                        "c": "answer_c",
-                        "d": "answer_d",
-                        "e": "answer_e",
-                        "0": "opa",
-                        "1": "opb",
-                        "2": "opc",
-                        "3": "opd",
+                        0: "answer_a",
+                        1: "answer_b",
+                        2: "answer_c",
+                        3: "answer_d",
+                        4: "answer_e",
                     }
 
-                    chosen_key = key_map.get(ans_char, f"answer_{ans_char}")
-                    chosen = data.get(chosen_key) or data.get(f"op{ans_char}")
+                    chosen_key = key_map.get(ans_idx)
+                    chosen = data.get(chosen_key)
 
                     # Choix d'une mauvaise réponse
-                    all_options = [
-                        data.get(k)
-                        for k in [
-                            "answer_a",
-                            "answer_b",
-                            "answer_c",
-                            "answer_d",
-                            "opa",
-                            "opb",
-                            "opc",
-                            "opd",
-                        ]
-                        if data.get(k)
-                    ]
+                    all_options = [data.get(k) for k in key_map.values() if data.get(k)]
                     wrong_options = [opt for opt in all_options if opt != chosen]
 
                     if chosen and wrong_options:
                         rejected = random.choice(wrong_options)
-                        # S'assurer que la réponse rejetée n'est pas
-                        # accidentellement la même que la bonne
-                        while chosen == rejected and len(wrong_options) > 1:
-                            rejected = random.choice(wrong_options)
                         final_pool.append(
                             {
                                 "prompt": format_prompt_chatml(

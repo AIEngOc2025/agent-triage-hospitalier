@@ -102,6 +102,19 @@ async def api_chat(request: ChatRequest):
     start_time = perf_counter()
     messages = request.history
 
+    # --- Intercepteur de salutations pour démonstration (Bypass LLM) ---
+    user_input = (
+        next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
+        .strip()
+        .lower()
+    )
+
+    if user_input in ["bonjour", "salut", "hello", "hi"]:
+        response = (
+            "Bonjour. Veuillez décrire vos symptômes ou votre situation médicale."
+        )
+        return {"response": response, "audit_ref": "demo-interceptor"}
+
     # Ensure a system prompt is always present
     if not messages or messages[0].get("role") != "system":
         messages.insert(0, {"role": "system", "content": SYSTEM_PROMPT_FR})
@@ -117,9 +130,16 @@ async def api_chat(request: ChatRequest):
 
                 # Log completion of streaming request
                 latency = perf_counter() - start_time
-                user_input = next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
+                user_input = next(
+                    (m["content"] for m in reversed(messages) if m["role"] == "user"),
+                    "",
+                )
                 log_entry = create_log_entry(
-                    request.patient_id, user_input, "".join(full_response), latency, True
+                    request.patient_id,
+                    user_input,
+                    "".join(full_response),
+                    latency,
+                    True,
                 )
                 await log_audit(log_entry)
             except Exception as e:
@@ -130,8 +150,12 @@ async def api_chat(request: ChatRequest):
     try:
         response = await engine.generate(messages)
         latency = perf_counter() - start_time
-        user_input = next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
-        log_entry = create_log_entry(request.patient_id, user_input, response, latency, False)
+        user_input = next(
+            (m["content"] for m in reversed(messages) if m["role"] == "user"), ""
+        )
+        log_entry = create_log_entry(
+            request.patient_id, user_input, response, latency, False
+        )
         await log_audit(log_entry)
         return {"response": response, "audit_ref": log_entry["audit_id"]}
     except Exception as e:
