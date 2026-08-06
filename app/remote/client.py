@@ -7,11 +7,6 @@ import httpx
 
 # Configure logging for this module
 logger = logging.getLogger(__name__)
-# Basic configuration for demonstration. In a real application, this would be
-# configured centrally, e.g., in app/main.py or a dedicated logging setup.
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
 
 
 class RemoteInferenceClient:
@@ -56,6 +51,10 @@ class RemoteInferenceClient:
 
     def _prepare_payload(self, messages: List[dict], stream: bool) -> dict:
         """Prepares the common payload for inference requests."""
+        # Regex pour forcer : [Niveau: <maximale|modérée|faible>] - Orientation : <orientation>
+        # Note: on utilise .* pour l'orientation
+        regex_pattern = r"\[Niveau: (maximale|modérée|faible)\] - Orientation : .*"
+
         return {
             "model": self.model_name,
             "messages": messages,
@@ -63,6 +62,7 @@ class RemoteInferenceClient:
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
             "repetition_penalty": self.repetition_penalty,
+            "extra_body": {"guided_regex": regex_pattern},
         }
 
     async def generate(self, messages: List[dict]) -> str:

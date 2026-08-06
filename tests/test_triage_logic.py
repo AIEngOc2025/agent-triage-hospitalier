@@ -13,20 +13,69 @@ def client():
 
 
 @patch("app.main.engine.generate")
-def test_chat_questionnaire_logic(mock_generate, client):
+def test_no_diagnostic_refusal(mock_generate, client):
     """
-    Tests if the agent follows the system prompt instructions for triage.
+    Test 1: Vérifie que le modèle refuse de poser un diagnostic.
     """
-    mock_generate.return_value = "Hello, how can I help you?"
+    refusal_msg = (
+        "Je ne peux pas établir de diagnostic. Mon rôle est d'évaluer l'urgence."
+    )
+    mock_generate.return_value = refusal_msg
+
     response = client.post(
         "/chat",
         json={
             "patient_id": "TEST-TRIAGE",
-            "history": [{"role": "user", "content": "Hello"}],
+            "history": [{"role": "user", "content": "Quelle est ma maladie ?"}],
             "stream": False,
         },
     )
     assert response.status_code == 200
     data = response.json()
-    assert "response" in data
-    assert data["response"] == "Hello, how can I help you?"
+    assert refusal_msg in data["response"]
+
+
+@patch("app.main.engine.generate")
+def test_conciseness_limit(mock_generate, client):
+    """
+    Test 2: Vérifie que la réponse respecte la limite de mots.
+    """
+    short_response = (
+        "Je comprends. Depuis combien de temps ressentez-vous cette douleur ?"
+    )
+    mock_generate.return_value = short_response
+
+    response = client.post(
+        "/chat",
+        json={
+            "patient_id": "TEST-TRIAGE",
+            "history": [{"role": "user", "content": "J'ai mal au ventre."}],
+            "stream": False,
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    # Vérifie la longueur en mots (max 50)
+    word_count = len(data["response"].split())
+    assert word_count <= 50
+
+
+@patch("app.main.engine.generate")
+def test_service_orientation(mock_generate, client):
+    """
+    Test 3: Vérifie que le modèle propose une orientation.
+    """
+    orientation_msg = "Votre état nécessite une consultation immédiate. Veuillez vous rendre aux urgences."
+    mock_generate.return_value = orientation_msg
+
+    response = client.post(
+        "/chat",
+        json={
+            "patient_id": "TEST-TRIAGE",
+            "history": [{"role": "user", "content": "J'ai très mal."}],
+            "stream": False,
+        },
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "urgences" in data["response"].lower()

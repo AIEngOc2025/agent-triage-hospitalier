@@ -9,7 +9,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # --- CONFIGURATION ---
 MODEL_ID = "Qwen/Qwen3-1.7B-Base"
-ADAPTERS = "models/sft_final_chsa"
+ADAPTERS = "models/dpo_final_chsa"
 TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_SFT_052026.jsonl"
 
 
@@ -21,7 +21,7 @@ def calculate_matrix():
     @return : A dictionary containing performance metrics (language precision,
               triage precision, and safety rate).
     """
-    device = "mps" if torch.backends.mps.is_available() else "cpu"
+    device = "cpu"
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
     base_model = AutoModelForCausalLM.from_pretrained(
         MODEL_ID, torch_dtype=torch.float32, device_map={"": device}
@@ -39,8 +39,11 @@ def calculate_matrix():
     print(f"📊 Génération de la matrice quantitative sur {len(test_samples)} cas...")
 
     for item in tqdm(test_samples):
+        # Prompt renforcé pour la concision et la prise de décision
         prompt = (
-            f"<|im_start|>system\nTu es l'infirmier du CHSA.<|im_end|>\n"
+            f"<|im_start|>system\nTu es l'infirmier du CHSA. "
+            f"Répondez avec concision (max 50 tokens). "
+            f"Format strict : [Niveau: <maximale|modérée|faible>] - Orientation : <orientation>.\n"
             f"<|im_start|>user\n{item['instruction']}<|im_end|>\n"
             f"<|im_start|>assistant\n"
         )
@@ -48,14 +51,22 @@ def calculate_matrix():
 
         with torch.no_grad():
             outputs = model.generate(
-                **inputs, max_new_tokens=100, do_sample=False, repetition_penalty=1.2
+                **inputs,
+                max_new_tokens=50,
+                temperature=0.1,
+                do_sample=True,
+                repetition_penalty=1.2,
             )
 
-        output_text = (
-            tokenizer.decode(outputs[0], skip_special_tokens=True)
-            .split("assistant")[-1]
-            .lower()
-        )
+        output_text = tokenizer.decode(outputs[0], skip_special_tokens=True).lower()
+        # Sécurisation de l'extraction du tag
+        if "[niveau:" in output_text and "]" in output_text.split("[niveau:")[1]:
+            prediction_tag = (
+                output_text.split("[niveau:")[1].split("]")[0].strip().lower()
+            )
+        else:
+            prediction_tag = None
+
         ground_truth = item["response"].lower()
         lang = item["clinical_metadata"]["language"]
 
@@ -65,32 +76,23 @@ def calculate_matrix():
             detected_lang = detect(output_text)
             lang_ok = 1 if detected_lang == lang else 0
         except LangDetectException:
-            lang_ok = 0  # Mark as incorrect if detection fails (e.g., text too short)
+            lang_ok = 0
 
         # 2. Vérification de l'urgence (Priorité)
-        # On cherche si les mots clés d'urgence (maximale/modérée) correspondent
-        # On vérifie si le niveau d'urgence spécifique est correctement prédit.
         urgence_levels = {
             "maximale": ["maximale", "emergency", "immediate"],
             "modérée": ["modérée", "urgency"],
             "différée": ["différée", "deferred"],
         }
-
-        # On détermine d'abord le niveau d'urgence attendu de la vérité terrain
         expected_level = None
-        for level, keywords in urgence_levels.items():
-            if any(kw in ground_truth for kw in keywords):
+        for level in urgence_levels.keys():
+            if level in ground_truth:
                 expected_level = level
                 break
 
-        # Ensuite, on vérifie si la prédiction correspond à ce niveau attendu
-        urgence_match = 0
-        if expected_level and any(
-            kw in output_text for kw in urgence_levels[expected_level]
-        ):
-            urgence_match = 1
+        urgence_match = 1 if expected_level and prediction_tag == expected_level else 0
 
-        # 3. Détection d'hallucination technique (Code Swift/Points d'exclamation)
+        # 3. Détection d'hallucination technique
         hallucination = (
             1
             if ("ui" in output_text or "!!!" in output_text or "self." in output_text)
@@ -104,6 +106,13 @@ def calculate_matrix():
                 "hallucination": hallucination,
             }
         )
+
+        # DEBUG: Afficher quelques sorties
+        if len(results) <= 3:
+            print(f"\n--- DEBUG SAMPLE {len(results)} ---")
+            print(f"PROMPT: {item['instruction'][:100]}...")
+            print(f"TRUTH: {ground_truth[:100]}...")
+            print(f"PRED: {output_text[:100]}...")
 
     # --- CALCUL DES SCORES FINAUX ---
     df = pd.DataFrame(results)
