@@ -30,7 +30,7 @@ class RemoteInferenceClient:
 
         self.inference_url = inference_url or os.getenv(
             "INFERENCE_SERVICE_URL",
-            "https://agent-inference-service-rlgcjqsysq-ew.a.run.app",
+            "https://agent-inference-service-414294705487.europe-west1.run.app",
         )
         self.model_name = model_name or os.getenv(
             "MODEL_PATH", "/app/models/merged_dpo_final_chsa"
@@ -51,9 +51,9 @@ class RemoteInferenceClient:
 
     def _prepare_payload(self, messages: List[dict], stream: bool) -> dict:
         """Prepares the common payload for inference requests."""
-        # Regex pour forcer : [Niveau: <maximale|modérée|faible>] - Orientation : <orientation>
+        # Regex pour forcer : [Niveau: <maximale|modérée|différée>] - Orientation : <orientation>
         # Note: on utilise .* pour l'orientation
-        regex_pattern = r"\[Niveau: (maximale|modérée|faible)\] - Orientation : .*"
+        regex_pattern = r"\[Niveau: (maximale|modérée|différée)\] - Orientation : .*"
 
         return {
             "model": self.model_name,
