@@ -1,0 +1,10 @@
+{"category": "salutation", "latency_ms": 861.87, "component_latencies": {}, "status_code": 200, "response_length": 225, "success": true, "timestamp": "2026-08-07 22:05:31"}
+{"category": "sympt\u00f4me", "latency_ms": 857.36, "component_latencies": {}, "status_code": 200, "response_length": 220, "success": true, "timestamp": "2026-08-07 22:05:32"}
+{"category": "salutation", "latency_ms": 859.73, "component_latencies": {}, "status_code": 200, "response_length": 205, "success": true, "timestamp": "2026-08-07 22:05:32"}
+{"category": "sympt\u00f4me", "latency_ms": 984.97, "component_latencies": {}, "status_code": 200, "response_length": 212, "success": true, "timestamp": "2026-08-07 22:05:33"}
+{"category": "salutation", "latency_ms": 981.52, "component_latencies": {}, "status_code": 200, "response_length": 220, "success": true, "timestamp": "2026-08-07 22:05:34"}
+{"category": "sympt\u00f4me", "latency_ms": 865.32, "component_latencies": {}, "status_code": 200, "response_length": 216, "success": true, "timestamp": "2026-08-07 22:05:35"}
+{"category": "salutation", "latency_ms": 854.4, "component_latencies": {}, "status_code": 200, "response_length": 226, "success": true, "timestamp": "2026-08-07 22:05:36"}
+{"category": "sympt\u00f4me", "latency_ms": 982.33, "component_latencies": {}, "status_code": 200, "response_length": 195, "success": true, "timestamp": "2026-08-07 22:05:37"}
+{"category": "salutation", "latency_ms": 983.82, "component_latencies": {}, "status_code": 200, "response_length": 194, "success": true, "timestamp": "2026-08-07 22:05:38"}
+{"category": "sympt\u00f4me", "latency_ms": 862.5, "component_latencies": {}, "status_code": 200, "response_length": 241, "success": true, "timestamp": "2026-08-07 22:05:39"}
