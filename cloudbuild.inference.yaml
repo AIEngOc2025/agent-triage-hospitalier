@@ -22,8 +22,8 @@ steps:
       - '--allow-unauthenticated' # Nécessaire pour un service avec ingress=internal
       - '--ingress=internal' # Le service ne doit être accessible qu'en interne (par l'API Gateway)
       - '--platform=managed'
-      - '--cpu=6' # Augmentation du CPU pour gérer le modèle
-      - '--memory=24Gi' # Augmentation de la mémoire pour le chargement du modèle
+      - '--cpu=8' # Augmentation du CPU pour gérer le modèle
+      - '--memory=32Gi' # Augmentation de la mémoire pour le chargement du modèle
       - '--set-env-vars=MODEL_ID=modeles-triage-hospitalier/merged_dpo_final_chsa'
       - '--timeout=2400s'
       - '--gpu=1'

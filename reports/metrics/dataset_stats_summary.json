@@ -1,15 +1,16 @@
 {
-    "dataset_name": "train_sft_triage_only.jsonl",
-    "total_rows": 1842,
+    "dataset_name": "train_sft_balanced_50_50.jsonl",
+    "total_rows": 1790,
     "language_distribution": {
-        "fr": 1584,
-        "en": 258
+        "en": 895,
+        "fr": 895
     },
     "anonymization_metrics": {
-        "<PATIENT>": 423
+        "<PATIENT>": 1124,
+        "<ADRESSE>": 782
     },
     "average_lengths": {
-        "instruction": 818.3,
-        "response": 560.49
+        "instruction": 884.81,
+        "response": 568.67
     }
 }

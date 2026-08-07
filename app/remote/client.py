@@ -1,17 +1,37 @@
+"""Client d'inférence distant — supporte deux modes :
+
+- **structured** : utilise `instructor.from_openai` pour obtenir une
+  réponse Pydantic typée (`TriageResponse`). Validation stricte + retry
+  automatique sur erreur de validation.
+- **conversationnel** : utilise `httpx` brut pour générer du texte
+  libre (chat conversationnel sans classification).
+
+L'architecture conversationnelle privilégie le mode conversationnel avec
+`guided_regex` vLLM comme garde-fou. Le mode structuré est utilisé en
+complément pour les routes `/triage` (Prio 3 du plan d'intégration).
+"""
+
 import json
 import logging
 import os
-from typing import AsyncGenerator, List, Optional
+from typing import AsyncGenerator, List, Literal, Optional
 
 import httpx
+from openai import AsyncOpenAI
 
-# Configure logging for this module
+import instructor
+
+from app.schemas import TriageResponse
+from app.timing import time_execution
+
 logger = logging.getLogger(__name__)
+
+InferenceMode = Literal["conversationnel", "structured"]
 
 
 class RemoteInferenceClient:
-    """
-    Client for interacting with a remote inference service.
+    """Client polymorphe pour interagir avec un service d'inference
+    compatible OpenAI (vLLM).
     """
 
     def __init__(
@@ -22,12 +42,8 @@ class RemoteInferenceClient:
         max_tokens: Optional[int] = None,
         repetition_penalty: Optional[float] = None,
         timeout: float = 300.0,
+        mode: InferenceMode = "conversationnel",
     ):
-        """
-        Initializes the remote inference client with its configurations
-        and the HTTP client.
-        """
-
         self.inference_url = inference_url or os.getenv(
             "INFERENCE_SERVICE_URL",
             "https://agent-inference-service-414294705487.europe-west1.run.app",
@@ -40,21 +56,44 @@ class RemoteInferenceClient:
         self.repetition_penalty = float(
             repetition_penalty or os.getenv("REPETITION_PENALTY", 1.5)
         )
-        self.client = httpx.AsyncClient(timeout=timeout)
+        self.timeout = timeout
+        self.mode = mode
+
+        # Client HTTP brut (mode conversationnel)
+        self.raw_client = httpx.AsyncClient(timeout=timeout)
+
+        # Client OpenAI + instructor (mode structured)
+        # vLLM accepte n'importe quelle clé API key, on force "EMPTY".
+        self.openai = AsyncOpenAI(
+            base_url=f"{self.inference_url}/v1",
+            api_key="EMPTY",
+            timeout=timeout,
+            max_retries=2,
+        )
+        self.structured_client = instructor.from_openai(
+            self.openai, mode=instructor.Mode.MD_JSON
+        )
+
         logger.info(
-            f"✅ [REMOTE] Remote Inference Client initialized at "
-            f"{self.inference_url} with model {self.model_name}. "
+            f"✅ [REMOTE] Client initialized at {self.inference_url} "
+            f"with model {self.model_name}. Mode={self.mode}. "
             f"Params: temp={self.temperature}, "
             f"max_tokens={self.max_tokens}, "
             f"penalty={self.repetition_penalty}"
         )
 
     def _prepare_payload(self, messages: List[dict], stream: bool) -> dict:
-        """Prepares the common payload for inference requests."""
-        # Regex pour forcer : [Niveau: <maximale|modérée|différée>] - Orientation : <orientation>
-        # Note: on utilise .* pour l'orientation
-        regex_pattern = r"\[Niveau: (maximale|modérée|différée)\] - Orientation : .*"
+        """Prépare le payload pour un appel conversationnel (mode legacy).
 
+        Le `guided_regex` force le format `\[Niveau: ...\] - Orientation : ...`
+        pour permettre la rétrocompatibilité avec les versions sans
+        `instructor`. En mode `structured`, le rendu structuré
+        (`TriageResponse`) prime et le format est validé côté client.
+        """
+        # NOTE: le format "triage_result" est désormais utilisé en sortie
+        # structurée (cf. `system_prompts.py`). Le guided_regex est conservé
+        # comme garde-fou de compatibilité.
+        regex_pattern = r"\{.*\"triage_result\".*\}"
         return {
             "model": self.model_name,
             "messages": messages,
@@ -65,23 +104,21 @@ class RemoteInferenceClient:
             "extra_body": {"guided_regex": regex_pattern},
         }
 
+    @time_execution("network_inference")
     async def generate(self, messages: List[dict]) -> str:
-        """
-        Generates a complete (non-streaming) response from the
-        inference service.
+        """Génère une réponse conversationnelle (texte brut).
 
-        @args/params:
-            - messages (List[dict]): The conversation history.
-        @return: The textual content of the generated response (str).
+        Utilise le mode `conversationnel` via httpx. Le `guided_regex`
+        force le format côté vLLM. La réponse est nettoyée en amont par
+        `clean_response` côté API Gateway (`app/main.py`).
         """
         payload = self._prepare_payload(messages, stream=False)
         logger.debug(
             f"Calling {self.inference_url}/v1/chat/completions with "
             f"payload: {json.dumps(payload)}"
         )
-
         try:
-            response = await self.client.post(
+            response = await self.raw_client.post(
                 f"{self.inference_url}/v1/chat/completions",
                 json=payload,
             )
@@ -91,26 +128,52 @@ class RemoteInferenceClient:
             return response.json()["choices"][0]["message"]["content"]
         except httpx.HTTPError as e:
             logger.error(f"❌ HTTP Error during generation: {e}")
-            raise e
+            raise
 
-    async def generate_stream(self, messages: List[dict]) -> AsyncGenerator[str, None]:
-        """
-        Generates a streaming response from the inference service.
+    @time_execution("network_inference_structured")
+    async def generate_structured(
+        self, messages: List[dict]
+    ) -> TriageResponse:
+        """Génère une réponse structurée typée `TriageResponse` via
+        `instructor`.
 
-        @args/params:
-            - messages (List[dict]): The conversation history.
-        @return: An asynchronous generator that yields the response tokens
-            (AsyncGenerator[str, None]).
+        Avantages :
+        - Validation Pydantic stricte côté client
+        - Retry automatique (max_retries=2) sur erreur de validation
+        - Mode MD_JSON : sérialisation via Markdown JSON, robuste
+
+        Returns:
+            TriageResponse validé.
         """
+        try:
+            response = await self.structured_client.chat.completions.create(
+                model=self.model_name,
+                messages=messages,
+                response_model=TriageResponse,
+                temperature=self.temperature,
+                max_tokens=self.max_tokens,
+                max_retries=2,
+            )
+            return response
+        except Exception as e:
+            logger.error(f"❌ Structured inference failed: {e}")
+            raise
+
+    @time_execution("network_inference_stream")
+    async def generate_stream(
+        self, messages: List[dict]
+    ) -> AsyncGenerator[str, None]:
+        """Génère une réponse en streaming (texte brut, mode conversationnel)."""
         payload = self._prepare_payload(messages, stream=True)
         logger.debug(
             f"Calling {self.inference_url}/v1/chat/completions with "
             f"streaming payload: {json.dumps(payload)}"
         )
-
         try:
-            async with self.client.stream(
-                "POST", f"{self.inference_url}/v1/chat/completions", json=payload
+            async with self.raw_client.stream(
+                "POST",
+                f"{self.inference_url}/v1/chat/completions",
+                json=payload,
             ) as response:
                 response.raise_for_status()
                 async for line in response.aiter_lines():
@@ -127,14 +190,10 @@ class RemoteInferenceClient:
                                 )
         except httpx.HTTPError as e:
             logger.error(f"❌ HTTP Error during streaming generation: {e}")
-            raise e
+            raise
 
     async def close(self) -> None:
-        """
-        Closes the asynchronous HTTP client cleanly to release resources.
-
-        @args/params: None
-        @return: None
-        """
-        await self.client.aclose()
-        logger.info("🔌 [REMOTE] Remote Inference Client closed successfully.")
+        """Ferme les deux clients HTTP proprement."""
+        await self.raw_client.aclose()
+        await self.openai.close()
+        logger.info("🔌 [REMOTE] Both clients closed successfully.")

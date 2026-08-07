@@ -10,14 +10,14 @@ services:
     environment:
       # Le modèle qui sera chargé par le service d'inférence
       - MODEL_ID=modeles-triage-hospitalier/merged_dpo_final_chsa
-    # Déploiement avec accès au GPU pour l'accélération
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [ gpu ]
+    # --- SECTION GPU DÉSACTIVÉE POUR LE DÉVELOPPEMENT LOCAL SANS GPU ---
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [ gpu ]
     ports:
       # Le port interne du conteneur est 8080, on ne l'expose pas à l'hôte
       # car seul l'API Gateway a besoin d'y accéder.

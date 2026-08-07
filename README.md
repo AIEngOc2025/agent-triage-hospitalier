@@ -16,20 +16,22 @@ Le système est conçu sur une architecture microservices découplée pour garan
 
 ```mermaid
 graph TD
-    subgraph "Utilisateurs"
+    subgraph "Interface"
         UI(Frontend Streamlit)
     end
 
-    subgraph "Google Cloud Platform (europe-west1)"
-        UI -- HTTPS/REST --> API[API Gateway / FastAPI]
-        API -- gRPC/REST --> Inference[Inference Service / vLLM]
+    subgraph "Backend API"
+        API[API Backend / FastAPI]
     end
 
-    subgraph "Artefacts & Données"
+    subgraph "Inférence"
+        Inference[Service d'Inférence / vLLM]
         Model(Modèle fine-tuné)
-        Inference -- charge --> Model
-        API -- écrit dans --> Audit[Logs d'audit / JSONL]
+        Inference -- utilise --> Model
     end
+
+    UI <-->|HTTPS/REST| API
+    API <-->|HTTPS/REST| Inference
 
     style UI fill:#cde4ff
     style API fill:#d5e8d4

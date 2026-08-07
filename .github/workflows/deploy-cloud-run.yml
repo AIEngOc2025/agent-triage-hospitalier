@@ -2,32 +2,129 @@ name: "CI/CD Pipeline - Test and Trigger Build"
 
 on:
   push:
-    branches: [ dev ]
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
   workflow_dispatch:
+    inputs:
+      microservice:
+        description: "Microservice to deploy (manual trigger)"
+        required: true
+        type: choice
+        default: "all"
+        options:
+          - all
+          - inference
+          - api
+          - ui
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: "Quality Gate (CI)"
+  lint:
+    name: "Lint (ruff)"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-      - name: Set up Python 3.12
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.11'
+      - name: Install uv
+        uses: astral-sh/setup-uv@v1
+      - name: Run ruff check
+        run: uvx ruff@0.15.22 check app/ scripts/
+      - name: Run ruff format (check)
+        run: uvx ruff@0.15.22 format --check app/ scripts/
+
+  test:
+    name: "Unit Tests (pytest)"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       - name: Install uv
         uses: astral-sh/setup-uv@v1
       - name: Sync dependencies
         run: |
           uv venv
-          uv pip compile requirements-dev.txt -o requirements.lock
+          uv pip compile pyproject.toml -o requirements.lock
           uv pip sync requirements.lock
       - name: Run tests
         env:
           APP_TEST_MODE: "1"
-        run: uv run python -m pytest tests/
+        run: uv run python -m pytest tests/ -v --tb=short
 
-  # Note: Actual build and deployment are now handled by Google Cloud Build,
-  # which is connected directly to the GitHub repository.
-  # This workflow ensures code quality before Cloud Build triggers.
+  docker-build:
+    name: "Docker build smoke test (API)"
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build API image (no push)
+        run: |
+          docker build -f Dockerfile.api -t agent-api-gateway:ci-test .
+      - name: Verify image has expected entrypoint
+        run: |
+          docker run --rm agent-api-gateway:ci-test python -c "from app.main import app; print('OK:', app.title)"
+
+  deploy:
+    name: "Deploy (${{ inputs.microservice || 'all' }})"
+    runs-on: ubuntu-latest
+    needs: [lint, test, docker-build]
+    if: github.event_name == 'workflow_dispatch'
+    environment:
+      name: production
+      url: https://agent-api-gateway-414294705487.europe-west1.run.app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Resolve cloudbuild config
+        id: resolve
+        run: |
+          case "${{ inputs.microservice }}" in
+            all)        CONFIG="cloudbuild.yaml" ;;
+            inference)  CONFIG="cloudbuild.inference.yaml" ;;
+            api)        CONFIG="cloudbuild.api.yaml" ;;
+            ui)         CONFIG="cloudbuild.ui.yaml" ;;
+            *)          echo "Unknown microservice: ${{ inputs.microservice }}"; exit 1 ;;
+          esac
+          echo "config=${CONFIG}" >> "$GITHUB_OUTPUT"
+          echo "Selected cloudbuild config: ${CONFIG}"
+
+      - name: Submit Cloud Build
+        run: |
+          gcloud builds submit \
+            --config "${{ steps.resolve.outputs.config }}" \
+            --project "${{ secrets.GCP_PROJECT_ID }}" \
+            .
+
+      - name: Show build summary
+        if: always()
+        run: |
+          gcloud builds list \
+            --limit 1 \
+            --format="table(id,status,startTime,finishTime,duration)" \
+            --project "${{ secrets.GCP_PROJECT_ID }}"
+
+  # Note: When the microservice involves an update, deployments are submitted
+  # manually via this workflow's "Run workflow" button (workflow_dispatch).
+  # Automatic push/PR triggers stop at the docker-build smoke test.

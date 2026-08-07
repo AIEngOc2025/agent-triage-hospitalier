@@ -7,7 +7,7 @@
 # --- Nettoyage ---
 cleanup() {
     echo "🛑 [PROD] Signal d'arrêt reçu. Arrêt des services..."
-    kill -TERM $VLLM_PID $GRADIO_PID 2>/dev/null
+    kill -TERM $VLLM_PID $STREAMLIT_PID 2>/dev/null
     exit 0
 }
 trap cleanup SIGINT SIGTERM EXIT
@@ -39,10 +39,13 @@ until curl -s http://localhost:${VLLM_PORT}/health > /dev/null; do
 done
 echo "✅ [PROD] VLLM opérationnel."
 
-# 2. Lancement Gradio (Background)
-echo "💻 [PROD] Lancement Gradio..."
-python app/ui.py --server-name 0.0.0.0 --server-port 7860 &
-GRADIO_PID=$!
+# 2. Lancement Streamlit UI (Background)
+echo "💻 [PROD] Lancement Streamlit UI..."
+streamlit run app/ui.py \
+    --server.address=0.0.0.0 \
+    --server.port=7860 \
+    --server.headless=true &
+STREAMLIT_PID=$!
 
 # 3. Lancement API FastAPI (Foreground - Main Process)
 echo "📡 [PROD] Lancement API FastAPI sur port $PORT..."

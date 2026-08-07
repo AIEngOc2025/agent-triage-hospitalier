@@ -20,21 +20,22 @@ steps:
       - '--image=europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-ui:latest'
       - '--region=europe-west1'
       - '--ingress=all'
+      - --allow-unauthenticated 
       - '--platform=managed'
       - '--set-env-vars=API_BASE_URL=${_API_URL}'
 
   # 4. Autoriser l'accès public (IAM)
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    id: 'Set IAM Policy'
-    entrypoint: 'gcloud'
-    args:
-      - 'run'
-      - 'services'
-      - 'add-iam-policy-binding'
-      - 'agent-ui'
-      - '--region=europe-west1'
-      - '--member=allUsers'
-      - '--role=roles/run.invoker'
+ # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+   # id: 'Set IAM Policy'
+   # entrypoint: 'gcloud'
+   # args:
+     # - 'run'
+     # - 'services'
+     # - 'add-iam-policy-binding'
+     # - 'agent-ui'
+     # - '--region=europe-west1'
+     # - '--member=allUsers'
+     # - '--role=roles/run.invoker'
 
 images:
   - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-ui:latest'

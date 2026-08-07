@@ -2,7 +2,7 @@ import asyncio
 import json
 import re
 import uuid
-from time import strftime
+from time import perf_counter, strftime
 from typing import Dict
 
 from presidio_analyzer import AnalyzerEngine
@@ -42,6 +42,7 @@ class MedicalAnonymizer:
             nlp_engine=nlp_engine, default_score_threshold=0.4
         )
         self.anonymizer = AnonymizerEngine()
+        self.last_latency = 0.0
 
     def anonymize_text(self, text: str, lang: str = "fr") -> str:
         """
@@ -54,6 +55,8 @@ class MedicalAnonymizer:
         """
         if not isinstance(text, str):
             return text
+
+        start = perf_counter()
 
         # 1. Analyse du texte
         results = self.analyzer.analyze(
@@ -73,6 +76,8 @@ class MedicalAnonymizer:
         anonymized = self.anonymizer.anonymize(
             text=text, analyzer_results=results, operators=operators
         )
+
+        self.last_latency = perf_counter() - start
         return anonymized.text
 
 
@@ -95,24 +100,31 @@ def anonymize_text(text: str) -> str:
 
 def clean_response(text: str) -> str:
     """
-    @definition: Removes specific tags (like <think>) and any other
-    HTML-like tags from the model's output.
+    @definition: Removes specific tags (like <think>, <tool_call>, <tool_response>) 
+    and any other HTML-like tags from the model's output.
     @args/params:
         - text (str): The raw text from the model.
     @return: The cleaned text string.
     """
-    clean_text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
-    clean_text = re.sub(r"<[^>]+>", "", clean_text)
-    return clean_text.strip()
+    patterns = [
+        r"<think>.*?</think>",
+        r"<tool_call>.*?</tool_call>",
+        r"<tool_response>.*?</tool_response>",
+        r"<[^>]+>",  # Balises génériques restantes
+    ]
+    for pattern in patterns:
+        text = re.sub(pattern, "", text, flags=re.DOTALL)
+    return text.strip()
 
 
-async def log_audit(entry: dict):
+async def log_audit(entry: dict) -> float:
     """
     @definition: Writes an audit log entry in JSONL format, anonymized.
     @args/params:
         - entry (dict): The log entry to record.
-    @return: None.
+    @return: float (latency in seconds of the logging process).
     """
+    start = perf_counter()
     try:
         # Anonymiser la décision ET l'input avant de loguer
         entry["decision"] = anonymize_text(entry["decision"])
@@ -125,6 +137,8 @@ async def log_audit(entry: dict):
         await asyncio.to_thread(write_log)
     except Exception as e:
         print(f"❌ Audit logging failed: {e}")
+
+    return perf_counter() - start
 
 
 def create_log_entry(

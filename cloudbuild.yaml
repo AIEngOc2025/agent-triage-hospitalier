@@ -20,10 +20,10 @@ steps:
       - '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/agent-inference-service'
       - '--region=europe-west1' # Votre région
       - '--allow-unauthenticated' # Nécessaire pour l'ingress interne
-      - '--ingress=internal' # <-- LA CLÉ : accessible uniquement en interne
+      - '--ingress=all' # <-- LA CLÉ : accessible uniquement en interne
       - '--platform=managed'
-      - '--cpu=4'
-      - '--memory=16Gi'
+      - '--cpu=8'
+      - '--memory=32Gi'
       - '--set-env-vars=MODEL_ID=modeles-triage-hospitalier/merged_dpo_final_chsa'
       - '--timeout=2400s'
       - '--gpu=1'
@@ -92,4 +92,6 @@ steps:
       - '--platform=managed'
       - '--allow-unauthenticated'
       # Variable d'environnement qui pointe vers l'API Gateway.
-      - '--set-env-vars=API_BASE_URL=https://agent-triage-hospitalier-414294705487.europe-west1.run.app' # <-- Remplacez XYZ par le hash de votre service API
+      - '--set-env-vars=API_BASE_URL=https://agent-api-gateway-rlgcjqsysq-ew.a.run.app' # <-- Remplacez XYZ par le hash de votre service API
+options:
+  logging: CLOUD_LOGGING_ONLY

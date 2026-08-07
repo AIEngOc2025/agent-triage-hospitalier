@@ -16,6 +16,17 @@ data/
 # modèles
 models/
 
+# Logs and local audit artifacts (never commit)
+*.log
+*.log.*
+full_logs.txt
+logs.txt
+audit_medical.log
+audit_code.sh
+
+# Local audit log (PII — never commit)
+logs/audit_medical.jsonl
+
 # Streamlit agent skills (environment-specific symlinks)
 .agents/skills/developing-with-streamlit
 .claude/skills/developing-with-streamlit

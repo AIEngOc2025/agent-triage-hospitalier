@@ -45,15 +45,26 @@ class UniversalMedicalProcessor:
             with open(local_path, "w") as f:
                 pass  # Fichier vide
 
+    def is_triage_relevant(self, text):
+        """
+        @definition : Vérifie si le texte est pertinent pour le triage médical.
+        @args/params : text (str)
+        @return : bool
+        """
+        # Vocabulaire attendu pour le triage
+        triage_vocab = ["maximale", "modérée", "différée", "urgence", "triage", "priorité"]
+        text_lower = text.lower()
+        return any(word in text_lower for word in triage_vocab)
+
     def process_file(self, file_path):
         """
-        @definition : Traite un fichier de données (JSONL), extrait les
-                      instructions et les réponses, et anonymise le contenu.
-        @args/params : file_path (str): Chemin vers le fichier à traiter.
+        @definition : Traite un fichier, extrait les instructions/réponses, 
+                      anonymise et filtre pour ne garder que le triage.
+        @args/params : file_path (str)
         @return : Aucun.
         """
         filename = os.path.basename(file_path)
-        print(f"--- 📂 Lecture de : {filename} ---")
+        print(f"--- 📂 Lecture et filtrage de : {filename} ---")
 
         count = 0
         with open(file_path, "r", encoding="utf-8") as f:
@@ -63,23 +74,16 @@ class UniversalMedicalProcessor:
                     instruction, response = None, None
 
                     # 1. Cas spécial : DPO (dpo_mix_en_train.jsonl)
-                    # Pour le SFT, on prend le prompt et la réponse 'chosen'
                     if "chosen" in data and "prompt" in data:
                         instruction = data["prompt"]
                         response = data["chosen"]
 
                     # 2. Cas spécial : QCM (medmcqa, frenchmedmcqa, medical_mqca)
-                    # Ces fichiers ont souvent 'question' + 'opa', 'opb'...
-                    # et 'cop' (index de la réponse)
                     elif "question" in data and "cop" in data:
                         instruction = data["question"]
-                        # On essaie de reconstruire la réponse textuelle
-                        # à partir de l'option correcte
                         options = {0: "opa", 1: "opb", 2: "opc", 3: "opd", 4: "ope"}
-                        # Parfois cop est un int (0,1,2) ou un str ('A','B','C')
                         cop = data["cop"]
                         if isinstance(cop, str):
-                            # Convertit 'A' ou '1' en index
                             idx = (
                                 ord(cop.lower()) - ord("a")
                                 if cop.isalpha()
@@ -87,7 +91,6 @@ class UniversalMedicalProcessor:
                             )
                         else:
                             idx = cop
-
                         key_opt = options.get(idx, "opa")
                         response = data.get(key_opt, "Réponse non disponible")
 
@@ -105,22 +108,21 @@ class UniversalMedicalProcessor:
                             or data.get("Answer")
                             or data.get("output")
                         )
-
-                    if instruction and response:
+                    
+                    # Logique de filtrage ajoutée
+                    if instruction and response and self.is_triage_relevant(str(instruction) + str(response)):
                         # Anonymisation
                         clean_inst = self.anonymizer.anonymize_text(str(instruction))
                         clean_resp = self.anonymizer.anonymize_text(str(response))
-
+                        
                         self.final_data.append(
                             {"instruction": clean_inst, "response": clean_resp}
                         )
                         count += 1
-                # Cible les erreurs attendues (JSON malformé, clé manquante)
-                # pour ne pas masquer d'autres problèmes.
                 except (json.JSONDecodeError, KeyError):
                     continue
 
-        print(f"✅ Terminé : {count} exemples extraits.")
+        print(f"✅ Terminé : {count} exemples de triage extraits.")
 
     def save(self, output_path):
         """

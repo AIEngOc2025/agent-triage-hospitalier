@@ -45,4 +45,5 @@ images:
   - 'europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-api-gateway:latest'
 
 options:
-  default_logs_bucket_behavior: REGIONAL_USER_OWNED_BUCKET
+  logging: CLOUD_LOGGING_ONLY
+

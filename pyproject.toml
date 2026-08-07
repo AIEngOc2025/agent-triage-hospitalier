@@ -17,6 +17,10 @@ dependencies = [
     "datasets>=2.19.0",
     "peft>=0.20.0",
     "langdetect>=1.0.9",
+    "streamlit>=1.61.1",
+    "instructor>=1.15.4",
+    "transformers>=5.14.1",
+    "torch>=2.13.0",
 ]
 
 [tool.ruff]

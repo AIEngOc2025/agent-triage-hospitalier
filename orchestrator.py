@@ -11,6 +11,21 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+"""
+Project orchestrator CLI.
+
+Provides commands to:
+- generate ``TECHNICAL_OVERVIEW.md`` from local audit logs (docs).
+- deploy a specific service (api / inference / ui) to Google Cloud Run.
+- list the latest Cloud Build status.
+
+NOTE: This script is a thin wrapper around ``gcloud builds submit`` and
+audit-log post-processing. It does not perform runtime orchestration or
+service health probing; for live health checks, use the ``/health`` endpoint
+exposed by each deployed service.
+"""
+
+
 class ProjectOrchestrator:
     """
     @definition : Orchestrates project operations such as deployment, status checks,

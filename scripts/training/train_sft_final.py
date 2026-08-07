@@ -1,4 +1,6 @@
 import argparse
+import glob
+import os
 
 import torch
 from datasets import load_dataset
@@ -9,8 +11,6 @@ from trl import SFTTrainer
 
 def format_chatml(ex):
     # Format ChatML strict pour Qwen
-    # L'instruction est utilisée comme système ou utilisateur selon le cas.
-    # Ici, on suit la structure du notebook Kaggle pour la cohérence.
     return {
         "text": f"<|im_start|>system\nTu es l'infirmier de triage du CHSA.<|im_end|>\n"
         f"<|im_start|>user\n{ex['instruction']}<|im_end|>\n"
@@ -20,17 +20,15 @@ def format_chatml(ex):
 
 def train():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_id", type=str, default="Qwen/Qwen2-1.5B-Instruct")
+    parser.add_argument("--model_id", type=str, default="Qwen/Qwen3-1.7B-Base")
     parser.add_argument(
-        "--train_path",
+        "--data_dir",
         type=str,
-        default="data/processed/train_sft_balanced_50_50.jsonl",
-    )
-    parser.add_argument(
-        "--val_path", type=str, default="data/processed/val_sft_split.jsonl"
+        default="data/processed/",
+        help="Répertoire contenant les fichiers .jsonl de données",
     )
     parser.add_argument("--output_dir", type=str, default="models/sft_model_final")
-    args = parser.parse_args()
+    args, _ = parser.parse_known_args()
 
     # --- 1. CHARGEMENT ---
     tokenizer = AutoTokenizer.from_pretrained(args.model_id, trust_remote_code=True)
@@ -46,12 +44,20 @@ def train():
     model.config.use_cache = False
 
     # --- 2. DATASETS ---
-    train_ds = load_dataset("json", data_files=args.train_path, split="train").map(
-        format_chatml
-    )
-    val_ds = load_dataset("json", data_files=args.val_path, split="train").map(
-        format_chatml
-    )
+    # Charger les fichiers .jsonl : soit un répertoire, soit un fichier unique
+    if os.path.isdir(args.data_dir):
+        data_files = glob.glob(os.path.join(args.data_dir, "*.jsonl"))
+    else:
+        data_files = [args.data_dir]
+
+    print(f"📂 Chargement de {len(data_files)} fichiers depuis {args.data_dir}")
+
+    full_dataset = load_dataset("json", data_files=data_files, split="train")
+
+    split_ds = full_dataset.train_test_split(test_size=0.1)
+
+    train_ds = split_ds["train"].map(format_chatml)
+    val_ds = split_ds["test"].map(format_chatml)
 
     # --- 3. LORA ---
     lora_config = LoraConfig(

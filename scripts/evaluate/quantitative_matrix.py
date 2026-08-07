@@ -9,7 +9,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # --- CONFIGURATION ---
 MODEL_ID = "Qwen/Qwen3-1.7B-Base"
-ADAPTERS = "models/dpo_final_chsa"
+ADAPTERS = "models/sft/"
 TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_SFT_052026.jsonl"
 
 
@@ -43,7 +43,7 @@ def calculate_matrix():
         prompt = (
             f"<|im_start|>system\nTu es l'infirmier du CHSA. "
             f"Répondez avec concision (max 50 tokens). "
-            f"Format strict : [Niveau: <maximale|modérée|faible>] - Orientation : <orientation>.\n"
+            f"Format strict : [Niveau: <maximale|modérée|différée>] - Orientation : <orientation>.\n"
             f"<|im_start|>user\n{item['instruction']}<|im_end|>\n"
             f"<|im_start|>assistant\n"
         )
@@ -53,9 +53,10 @@ def calculate_matrix():
             outputs = model.generate(
                 **inputs,
                 max_new_tokens=50,
-                temperature=0.1,
-                do_sample=True,
-                repetition_penalty=1.2,
+                temperature=0.01,
+                do_sample=False,
+                repetition_penalty=1.5,
+                pad_token_id=tokenizer.pad_token_id,
             )
 
         output_text = tokenizer.decode(outputs[0], skip_special_tokens=True).lower()

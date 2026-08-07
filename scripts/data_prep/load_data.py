@@ -60,11 +60,22 @@ class LocalDataProcessor:
         clean_inst = self.anonymizer.anonymize_text(instruction)
         clean_resp = self.anonymizer.anonymize_text(response)
 
-        self.final_data.append({"instruction": clean_inst, "response": clean_resp})
+        # Formatage en une seule chaîne de texte au format ChatML
+        # C'est ce format que le SFTTrainer utilisera pour l'entraînement.
+        formatted_text = (
+            f"<|im_start|>system\n"
+            "Tu es un infirmier de triage au CHSA. Ton objectif est d'évaluer l'urgence clinique d'un patient.\n"
+            "<|im_end|>\n"
+            f"<|im_start|>user\n{clean_inst}<|im_end|>\n"
+            f"<|im_start|>assistant\n{clean_resp}<|im_end|>"
+        )
+
+        # Le dictionnaire contient maintenant une seule clé "text"
+        self.final_data.append({"text": formatted_text})
 
     def save(self, output_path):
         """
-        @definition : Sauvegarde les données traitées dans un fichier JSONL.
+        @definition : Sauvegarde les données formatées dans un fichier JSONL.
         @args/params : output_path (str).
         @return : Aucun.
         """

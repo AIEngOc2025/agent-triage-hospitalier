@@ -57,11 +57,11 @@ until curl -s --fail "$HEALTH_CHECK_URL" > /dev/null 2>&1; do
 done
 echo "✅ API opérationnelle."
 
-# --- 3. Lancement de l'interface Gradio ---
-echo "💻 Lancement de l'interface Gradio..."
+# --- 3. Lancement de l'interface Streamlit ---
+echo "💻 Lancement de l'interface Streamlit..."
 # L'UI pointera vers notre API
 export API_BASE_URL="${API_BASE_URL}"
-uv run python app/ui.py
+uv run streamlit run app/ui.py
 
 # --- Fin du script ---
 cleanup

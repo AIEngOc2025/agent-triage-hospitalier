@@ -1,4 +1,4 @@
-import os
+import traceback
 import uuid
 from contextlib import asynccontextmanager
 from time import perf_counter
@@ -6,19 +6,23 @@ from typing import AsyncGenerator, List
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
-from pydantic import BaseModel
+from httpx import HTTPStatusError
+from pydantic import BaseModel, Field
 
 from app.api_utils import clean_response, create_log_entry, log_audit
 from app.core.settings import settings
 from app.remote.client import RemoteInferenceClient
+from app.schemas import TriageResponse
 from app.system_prompts import SYSTEM_PROMPT_FR
 
-# --- 2. ENGINE ABSTRACTION ---
 
-
+# --- ENGINE ABSTRACTION ---
 class ModelEngine:
-    """
-    Client for remote LLM inference.
+    """Client polymorphe pour l'inférence distante (vLLM OpenAI-compatible).
+
+    Supporte deux modes :
+    - `conversationnel` (par défaut) : pour le chat libre, via httpx brut
+    - `structured` : pour le triage structuré, via instructor + Pydantic
     """
 
     def __init__(self):
@@ -26,8 +30,6 @@ class ModelEngine:
         self.engine_type = "RemoteInference"
 
     def initialize(self):
-        print(f"DEBUG: APP_ENV={settings.APP_ENV}")
-        print(f"DEBUG: Initializing with model_name={settings.MODEL_PATH}")
         print("🌐 [REMOTE] Initializing remote inference client...")
         self.client = RemoteInferenceClient()
 
@@ -41,83 +43,75 @@ class ModelEngine:
         response = await self.client.generate(messages)
         return clean_response(response)
 
+    async def generate_structured(self, messages: List[dict]) -> TriageResponse:
+        """Génère une réponse typée TriageResponse via instructor.
 
-# Global engine instancegc
+        Le system prompt doit être en tête de `messages` pour garantir
+        la conformité au contrat JSON.
+        """
+        return await self.client.generate_structured(messages)
+
+
 engine = ModelEngine()
 
 
-# --- 3. LIFESPAN ---
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    @definition: Manages the application's lifespan events (startup and shutdown).
-    @args/params:
-        - app (FastAPI): The FastAPI application instance.
-    @return: None (générateur asynchrone).
-    """
     settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     engine.initialize()
     yield
-    print("🛑 Arrêt de la tentative du chargement de l'orchestrateur")
+    if engine.client is not None:
+        await engine.client.close()
+    print("🛑 Shutdown: remote inference client released")
 
 
-# --- 4. API FASTAPI ---
 app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
-
-if __name__ == "__main__":
-    import uvicorn
-
-    # Cloud Run defaults to 8080, ensure we respect it.
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run(app, host="0.0.0.0", port=port)
 
 
 @app.get("/health", status_code=200, tags=["Monitoring"])
 async def health_check():
-    """
-    @definition: Provides a health check endpoint to verify service and model
-    engine status.
-    @return: A dictionary with the service status and engine type.
-    """
-    print(f"🩺 Health check called. Engine: {engine.engine_type}")
     return {"status": "ok", "engine": engine.engine_type}
 
 
 class ChatRequest(BaseModel):
-    patient_id: str = "PAT-001"
-    history: List[dict]
+    patient_id: str = Field(
+        ..., pattern=r"^PAT-\d{3,}$", description="Patient identifier (format: PAT-XXX)"
+    )
+    history: List[dict] = Field(..., min_length=1, max_length=50)
     stream: bool = False
+
+
+class TriageRequest(BaseModel):
+    patient_id: str = Field(
+        ..., pattern=r"^PAT-\d{3,}$", description="Patient identifier (format: PAT-XXX)"
+    )
+    history: List[dict] = Field(..., min_length=1, max_length=50)
+
+
+def _extract_user_input(messages: List[dict]) -> str:
+    """Extrait le dernier message user de l'historique (helper partagé)."""
+    return next(
+        (m["content"] for m in reversed(messages) if m["role"] == "user"),
+        "",
+    )
+
+
+def _ensure_system_prompt(messages: List[dict]) -> List[dict]:
+    """Garantit la présence du system prompt en tête (sans muter l'input)."""
+    if messages[0].get("role") != "system":
+        return [{"role": "system", "content": SYSTEM_PROMPT_FR}] + list(messages)
+    return list(messages)
 
 
 @app.post("/chat")
 async def api_chat(request: ChatRequest):
-    """
-    @definition: Main endpoint for handling chat requests, supporting both
-    streaming and non-streaming responses.
-    @args/params:
-        - request (ChatRequest): The incoming request containing patient ID and
-        history.
-    @return: A StreamingResponse or a JSON object with the model's response.
+    """Endpoint conversationnel : génère une réponse texte libre.
+
+    Supporte streaming (SSE) et non-streaming. La réponse est nettoyée
+    (`clean_response`) pour supprimer les balises internes (`think`, etc.).
     """
     start_time = perf_counter()
-    messages = request.history
-
-    # --- Intercepteur de salutations pour démonstration (Bypass LLM) ---
-    user_input = (
-        next((m["content"] for m in reversed(messages) if m["role"] == "user"), "")
-        .strip()
-        .lower()
-    )
-
-    if user_input in ["bonjour", "salut", "hello", "hi"]:
-        response = (
-            "Bonjour. Veuillez décrire vos symptômes ou votre situation médicale."
-        )
-        return {"response": response, "audit_ref": "demo-interceptor"}
-
-    # Ensure a system prompt is always present
-    if not messages or messages[0].get("role") != "system":
-        messages.insert(0, {"role": "system", "content": SYSTEM_PROMPT_FR})
+    messages = _ensure_system_prompt(request.history)
 
     if request.stream:
 
@@ -128,15 +122,10 @@ async def api_chat(request: ChatRequest):
                     full_response.append(chunk)
                     yield f"data: {chunk}\n\n"
 
-                # Log completion of streaming request
                 latency = perf_counter() - start_time
-                user_input = next(
-                    (m["content"] for m in reversed(messages) if m["role"] == "user"),
-                    "",
-                )
                 log_entry = create_log_entry(
                     request.patient_id,
-                    user_input,
+                    _extract_user_input(messages),
                     "".join(full_response),
                     latency,
                     True,
@@ -150,20 +139,68 @@ async def api_chat(request: ChatRequest):
     try:
         response = await engine.generate(messages)
         latency = perf_counter() - start_time
-        user_input = next(
-            (m["content"] for m in reversed(messages) if m["role"] == "user"), ""
-        )
         log_entry = create_log_entry(
-            request.patient_id, user_input, response, latency, False
+            request.patient_id,
+            _extract_user_input(messages),
+            response,
+            latency,
+            False,
         )
         await log_audit(log_entry)
         return {"response": response, "audit_ref": log_entry["audit_id"]}
+    except HTTPStatusError as e:
+        print(f"❌ HTTP Error: {e.response.text}")
+        raise HTTPException(status_code=500, detail=str(e)) from e
     except Exception as e:
-        import traceback
-
-        from httpx import HTTPStatusError
-
-        if isinstance(e, HTTPStatusError):
-            print(f"❌ HTTP Error: {e.response.text}")
         print(f"❌ Internal Server Error: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+@app.post("/triage", response_model=None)
+async def api_triage(request: TriageRequest):
+    """Endpoint structuré : génère une `TriageResponse` typée.
+
+    Utilise `instructor.from_openai` (mode MD_JSON) côté client pour
+    valider la sortie contre le schema Pydantic. Le résultat est
+    sérialisé en JSON via `.model_dump()`.
+
+    Le format de réponse est :
+        {
+            "message": "...",
+            "triage_result": {"niveau": "maximale|modérée|différée" | null,
+                              "orientation": "..." | null},
+            "audit_ref": "..."
+        }
+    """
+    start_time = perf_counter()
+    messages = _ensure_system_prompt(request.history)
+
+    try:
+        result = await engine.generate_structured(messages)
+        latency = perf_counter() - start_time
+
+        # Sérialisation Pydantic -> dict
+        log_entry = create_log_entry(
+            request.patient_id,
+            _extract_user_input(messages),
+            result.model_dump_json(),
+            latency,
+            False,
+        )
+        await log_audit(log_entry)
+        return {
+            **result.model_dump(),
+            "audit_ref": log_entry["audit_id"],
+        }
+    except Exception as e:
+        print(f"❌ Structured triage failed: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=str(e)) from e
+
+
+if __name__ == "__main__":
+    import os
+
+    import uvicorn
+
+    port = int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=port)
