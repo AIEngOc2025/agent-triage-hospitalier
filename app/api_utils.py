@@ -100,7 +100,7 @@ def anonymize_text(text: str) -> str:
 
 def clean_response(text: str) -> str:
     """
-    @definition: Removes specific tags (like <think>, <tool_call>, <tool_response>) 
+    @definition: Removes specific tags (like <think>, <tool_call>, <tool_response>)
     and any other HTML-like tags from the model's output.
     @args/params:
         - text (str): The raw text from the model.

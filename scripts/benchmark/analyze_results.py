@@ -3,8 +3,8 @@ Analyse des résultats de benchmark :
 - Génère des statistiques (percentiles, moyenne, etc.) pour chaque fichier.
 - Compare les performances local vs. cloud si les deux fichiers sont fournis.
 """
+
 import json
-import sys
 import statistics
 from collections import defaultdict
 from pathlib import Path
@@ -32,9 +32,9 @@ def analyze(file_path: str):
     results = [json.loads(l) for l in open(file_path)]
     latencies = [r["latency_ms"] for r in results if r.get("latency_ms")]
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"📊 Analyse de : {file_path}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if not latencies:
         print("  Aucune requête réussie à analyser.")
@@ -59,12 +59,14 @@ def analyze(file_path: str):
             by_cat[r["category"]].append(r["latency_ms"])
 
     print(f"\n  {'Par catégorie':<25} {'n':>4} {'moy':>8} {'p95':>8} {'max':>8}")
-    print(f"  {'-'*25} {'-'*4} {'-'*8} {'-'*8} {'-'*8}")
+    print(f"  {'-' * 25} {'-' * 4} {'-' * 8} {'-' * 8} {'-' * 8}")
     for cat, vals in sorted(by_cat.items()):
-        print(f"  {cat:<25} {len(vals):>4} "
-              f"{statistics.mean(vals):>7.0f}ms "
-              f"{percentile(vals, 95):>7.0f}ms "
-              f"{max(vals):>7.0f}ms")
+        print(
+            f"  {cat:<25} {len(vals):>4} "
+            f"{statistics.mean(vals):>7.0f}ms "
+            f"{percentile(vals, 95):>7.0f}ms "
+            f"{max(vals):>7.0f}ms"
+        )
 
     return {
         "p50": statistics.median(latencies),
@@ -75,14 +77,20 @@ def analyze(file_path: str):
 
 def compare(local_stats, cloud_stats):
     """Compare les statistiques locales et cloud."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("🔄 COMPARAISON Local vs. Cloud")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"{'Métrique':<10} {'Local (ms)':>12} {'Cloud (ms)':>12} {'Ratio':>8}")
-    print(f"{'-'*10} {'-'*12} {'-'*12} {'-'*8}")
+    print(f"{'-' * 10} {'-' * 12} {'-' * 12} {'-' * 8}")
     for metric in ["p50", "p95", "mean"]:
-        ratio = cloud_stats[metric] / local_stats[metric] if local_stats[metric] else float('inf')
-        print(f"{metric.upper():<10} {local_stats[metric]:>12.0f} {cloud_stats[metric]:>12.0f} {ratio:>7.2f}x")
+        ratio = (
+            cloud_stats[metric] / local_stats[metric]
+            if local_stats[metric]
+            else float("inf")
+        )
+        print(
+            f"{metric.upper():<10} {local_stats[metric]:>12.0f} {cloud_stats[metric]:>12.0f} {ratio:>7.2f}x"
+        )
 
 
 if __name__ == "__main__":

@@ -75,7 +75,9 @@ async def health_check():
 
 class ChatRequest(BaseModel):
     patient_id: str = Field(
-        ..., pattern=r"^PAT-\d{3,}$", description="Patient identifier (format: PAT-XXX)"
+        ...,
+        pattern=r"^(PAT-\d{3,}|conv-user)$",
+        description="Patient identifier (format: PAT-XXX ou conv-user)",
     )
     history: List[dict] = Field(..., min_length=1, max_length=50)
     stream: bool = False
@@ -83,7 +85,9 @@ class ChatRequest(BaseModel):
 
 class TriageRequest(BaseModel):
     patient_id: str = Field(
-        ..., pattern=r"^PAT-\d{3,}$", description="Patient identifier (format: PAT-XXX)"
+        ...,
+        pattern=r"^(PAT-\d{3,}|conv-user)$",
+        description="Patient identifier (format: PAT-XXX ou conv-user)",
     )
     history: List[dict] = Field(..., min_length=1, max_length=50)
 

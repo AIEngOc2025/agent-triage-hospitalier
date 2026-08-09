@@ -9,8 +9,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # --- CONFIGURATION ---
 MODEL_ID = "Qwen/Qwen3-1.7B-Base"
-ADAPTERS = "models/sft/"
-TEST_FILE = "data/processed/Mpaga_Christophe_1_Dataset_Test_SFT_052026.jsonl"
+ADAPTERS = "models/dpo_final_chsa"
+TEST_FILE = "data/golden_set.jsonl"
 
 
 def calculate_matrix():
@@ -69,7 +69,9 @@ def calculate_matrix():
             prediction_tag = None
 
         ground_truth = item["response"].lower()
-        lang = item["clinical_metadata"]["language"]
+        # Gestion sécurisée de la langue
+        metadata = item.get("clinical_metadata", {})
+        lang = metadata.get("language", "fr")
 
         # --- LOGIQUE DE LA MATRICE ---
         # 1. Vérification de la langue

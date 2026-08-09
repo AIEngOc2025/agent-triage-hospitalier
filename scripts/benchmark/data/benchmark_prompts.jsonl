@@ -1,2 +1,8 @@
-{"category": "salutation", "prompt": "Bonjour, je me sens mal."}
-{"category": "symptôme", "prompt": "J'ai une douleur intense à la poitrine."}
+{"category": "salutation", "prompt": "Bonjour"}
+{"category": "symptome_simple", "prompt": "J'ai mal au ventre."}
+{"category": "symptome_detaille", "prompt": "J'ai 45 ans, je fume, j'ai une douleur thoracique qui irradie dans le bras gauche depuis 30 minutes."}
+{"category": "urgence_vitale", "prompt": "Mon mari vient de perdre connaissance, il ne respire plus."}
+{"category": "conversation_longue", "prompt": "J'ai de la fièvre, des courbatures, mal à la gorge depuis hier soir. Je prends déjà du Doliprane. Je suis diabétique."}
+{"category": "question_hors_sujet", "prompt": "Quelle est la capitale de l'Australie ?"}
+{"category": "input_long", "prompt": "Je suis un homme de 65 ans avec des antécédents d'hypertension artérielle et de diabète de type 2. Depuis ce matin, je ressens une oppression thoracique persistante qui s'accentue à l'effort, accompagnée de sueurs froides et d'une légère difficulté à respirer. J'ai pris ma trinitrine sous la langue il y a 10 minutes mais la douleur ne passe pas complètement. Je n'ai pas de fièvre ni de toux."}
+{"category": "input_avec_pii", "prompt": "Je m'appelle Jean Dupont, 06 12 34 56 78, j'habite au 12 rue de la Paix à Paris, j'ai mal au dos."}

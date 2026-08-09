@@ -24,10 +24,13 @@ def format_dpo_dataset(ex):
     @return: A dictionary with 'prompt', 'chosen', and 'rejected' keys formatted
              in ChatML.
     """
-    ex["prompt"] = f"<|im_start|>system\nTu es l'infirmier de triage du CHSA.<|im_end|>\n<|im_start|>user\n{ex['instruction']}<|im_end|>"
+    ex["prompt"] = (
+        f"<|im_start|>system\nTu es l'infirmier de triage du CHSA.<|im_end|>\n<|im_start|>user\n{ex['instruction']}<|im_end|>"
+    )
     ex["chosen"] = f"<|im_start|>assistant\n{ex['chosen']}<|im_end|>"
     ex["rejected"] = f"<|im_start|>assistant\n{ex['rejected']}<|im_end|>"
     return ex
+
 
 def run_dpo_training(model_id, sft_adapters_path, dpo_dataset_path, output_dir):
     """

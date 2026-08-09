@@ -25,10 +25,10 @@ def load_jsonl(path):
             try:
                 data.append(json.loads(line))
             except json.JSONDecodeError:
-                continue # Skip malformed lines
+                continue  # Skip malformed lines
 
     if not data:
-         pytest.skip(f"Dataset file {path} loaded no valid data.")
+        pytest.skip(f"Dataset file {path} loaded no valid data.")
 
     return data
 

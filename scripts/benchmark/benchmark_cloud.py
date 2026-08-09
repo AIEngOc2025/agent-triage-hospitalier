@@ -5,11 +5,13 @@ Quasi identique au script local, mais avec :
  - Authentification OIDC (token GCP).
  - Mesure du cold start Cloud via un endpoint warmup + une pause.
 """
+
 import asyncio
 import json
-import time
 import statistics
+import time
 from pathlib import Path
+
 import httpx
 
 # --- CONFIGURATION ---
@@ -31,7 +33,7 @@ def get_token():
     if token:
         print("ℹ️  Utilisation du token fourni via BENCHMARK_TOKEN")
         return token
-    
+
     print("ℹ️  Tentative de récupération d'un token via google.auth...")
     auth_req = Request()
     return id_token.fetch_id_token(auth_req, API_URL)
@@ -41,7 +43,7 @@ async def warmup(client: httpx.AsyncClient):
     """Une requête de warmup pour amorcer l'instance Cloud Run."""
     print("🔥 Warmup (peut prendre du temps si l'instance est froide)...")
     payload = {
-        "patient_id": "WARMUP-CLOUD",
+        "patient_id": "conv-user",
         "history": [{"role": "user", "content": "Bonjour"}],
         "stream": False,
     }
@@ -55,24 +57,23 @@ async def warmup(client: httpx.AsyncClient):
 async def measure_one(client: httpx.AsyncClient, prompt: str, category: str):
     """Mesure une requête vers l'API Cloud."""
     payload = {
-        "patient_id": "BENCH-CLOUD",
+        "patient_id": "PAT-999",
         "history": [{"role": "user", "content": prompt}],
         "stream": False,
     }
     t_start = time.perf_counter()
     try:
-        r = await client.post(
-            f"{API_URL}/chat", json=payload, timeout=300
-        )
+        r = await client.post(f"{API_URL}/chat", json=payload, timeout=300)
         t_end = time.perf_counter()
         r.raise_for_status()  # Lève une exception pour les codes 4xx/5xx
         response_data = r.json()
-        
+
         return {
             "category": category,
             "latency_ms": round((t_end - t_start) * 1000, 2),
             "component_latencies": {
-                k: round(v * 1000, 2) for k, v in response_data.get("latencies", {}).items()
+                k: round(v * 1000, 2)
+                for k, v in response_data.get("latencies", {}).items()
             },
             "status_code": r.status_code,
             "response_length": len(response_data.get("response", "")),
@@ -96,7 +97,7 @@ async def main():
         results = []
         for i in range(N_REPEAT):
             for p in prompts:
-                print(f"  Run {i+1}/{N_REPEAT} — {p['category']}...", end=" ")
+                print(f"  Run {i + 1}/{N_REPEAT} — {p['category']}...", end=" ")
                 r = await measure_one(client, p["prompt"], p["category"])
                 print(f"{r.get('latency_ms')} ms" if r.get("latency_ms") else "FAIL")
                 results.append(r)
@@ -108,9 +109,11 @@ async def main():
 
     lats = [r["latency_ms"] for r in results if r.get("latency_ms")]
     if lats:
-        print(f"\n📊 p50={statistics.median(lats):.0f}ms "
-              f"p95={sorted(lats)[int(len(lats)*0.95)]:.0f}ms "
-              f"max={max(lats):.0f}ms")
+        print(
+            f"\n📊 p50={statistics.median(lats):.0f}ms "
+            f"p95={sorted(lats)[int(len(lats) * 0.95)]:.0f}ms "
+            f"max={max(lats):.0f}ms"
+        )
 
 
 if __name__ == "__main__":

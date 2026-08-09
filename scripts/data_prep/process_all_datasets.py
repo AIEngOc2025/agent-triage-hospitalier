@@ -42,7 +42,7 @@ class UniversalMedicalProcessor:
         except Exception as e:
             print(f"❌ Erreur lors du téléchargement de {dataset_id}: {e}")
             # Créer un fichier vide pour ne pas retenter le téléchargement à chaque fois
-            with open(local_path, "w") as f:
+            with open(local_path, "w"):
                 pass  # Fichier vide
 
     def is_triage_relevant(self, text):
@@ -52,13 +52,20 @@ class UniversalMedicalProcessor:
         @return : bool
         """
         # Vocabulaire attendu pour le triage
-        triage_vocab = ["maximale", "modérée", "différée", "urgence", "triage", "priorité"]
+        triage_vocab = [
+            "maximale",
+            "modérée",
+            "différée",
+            "urgence",
+            "triage",
+            "priorité",
+        ]
         text_lower = text.lower()
         return any(word in text_lower for word in triage_vocab)
 
     def process_file(self, file_path):
         """
-        @definition : Traite un fichier, extrait les instructions/réponses, 
+        @definition : Traite un fichier, extrait les instructions/réponses,
                       anonymise et filtre pour ne garder que le triage.
         @args/params : file_path (str)
         @return : Aucun.
@@ -108,13 +115,17 @@ class UniversalMedicalProcessor:
                             or data.get("Answer")
                             or data.get("output")
                         )
-                    
+
                     # Logique de filtrage ajoutée
-                    if instruction and response and self.is_triage_relevant(str(instruction) + str(response)):
+                    if (
+                        instruction
+                        and response
+                        and self.is_triage_relevant(str(instruction) + str(response))
+                    ):
                         # Anonymisation
                         clean_inst = self.anonymizer.anonymize_text(str(instruction))
                         clean_resp = self.anonymizer.anonymize_text(str(response))
-                        
+
                         self.final_data.append(
                             {"instruction": clean_inst, "response": clean_resp}
                         )

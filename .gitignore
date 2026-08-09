@@ -7,14 +7,14 @@ __pycache__/
 .venv/
 
 # Lock file
-requirements.lockbuild/
+requirements.lockbuild/*
 .env
 
 #data
-data/
+data/*
 
 # modèles
-models/
+models/*
 
 # Logs and local audit artifacts (never commit)
 *.log

@@ -24,7 +24,7 @@ def filter_dataset():
         for line in f_in:
             data = json.loads(line)
             instr = data.get("instruction", "").lower()
-            resp = data.get("response", "").lower()
+            data.get("response", "").lower()
 
             # Critères de conservation (plus larges pour le DPO)
             medical_keywords = [

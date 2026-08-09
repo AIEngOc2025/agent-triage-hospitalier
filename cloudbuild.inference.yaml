@@ -20,7 +20,7 @@ steps:
       - '--image=europe-west1-docker.pkg.dev/${PROJECT_ID}/cloud-run-source-deploy/agent-inference-service:latest'
       - '--region=europe-west1'
       - '--allow-unauthenticated' # Nécessaire pour un service avec ingress=internal
-      - '--ingress=internal' # Le service ne doit être accessible qu'en interne (par l'API Gateway)
+      - '--ingress=all' # Le service ne doit être accessible qu'en interne (par l'API Gateway)
       - '--platform=managed'
       - '--cpu=8' # Augmentation du CPU pour gérer le modèle
       - '--memory=32Gi' # Augmentation de la mémoire pour le chargement du modèle

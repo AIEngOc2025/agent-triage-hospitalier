@@ -1,8 +1,10 @@
 import logging
 from typing import Dict
+
 from transformers import pipeline
 
 logger = logging.getLogger(__name__)
+
 
 class TriageClassifier:
     def __init__(self):
@@ -17,8 +19,7 @@ class TriageClassifier:
         logger.info("Loading Zero-Shot NLP Triage Classifier...")
         # Modèle léger et performant pour le zero-shot
         self.classifier = pipeline(
-            "zero-shot-classification", 
-            model="facebook/bart-large-mnli"
+            "zero-shot-classification", model="facebook/bart-large-mnli"
         )
         self.is_ready = True
         logger.info("NLP Triage Classifier ready.")
@@ -31,26 +32,31 @@ class TriageClassifier:
         """
         if not self.is_ready:
             return {"niveau": "différée", "confiance": 0.0}
-        
+
         # Labels en anglais pour un meilleur alignement avec le modèle BART
-        labels = ["maximal vital emergency", "moderate medical consultation", "deferred medical advice"]
-        
+        labels = [
+            "maximal vital emergency",
+            "moderate medical consultation",
+            "deferred medical advice",
+        ]
+
         result = self.classifier(text, labels)
-        
+
         # Mapping corrigé
         label_map = {
             "maximal vital emergency": "maximale",
             "moderate medical consultation": "modérée",
-            "deferred medical advice": "différée"
+            "deferred medical advice": "différée",
         }
-        
-        top_label = result['labels'][0]
-        confidence = result['scores'][0]
-        
+
+        top_label = result["labels"][0]
+        confidence = result["scores"][0]
+
         return {
             "niveau": label_map.get(top_label, "différée"),
-            "confiance": round(confidence, 2)
+            "confiance": round(confidence, 2),
         }
+
 
 # Instance globale
 triage_classifier = TriageClassifier()

@@ -24,25 +24,23 @@ N_REPEAT = 5
 async def warmup(client: httpx.AsyncClient):
     """Une requête de warmup pour amorcer vLLM."""
     payload = {
-        "patient_id": "WARMUP",
+        "patient_id": "conv-user",
         "history": [{"role": "user", "content": "Bonjour"}],
         "stream": False,
     }
-    await client.post(f"{API_URL}/chat", json=payload, timeout=120)
+    await client.post(f"{API_URL}/chat", json=payload, timeout=300)
 
 
 async def measure_one(client: httpx.AsyncClient, prompt: str, category: str):
     """Mesure une requête."""
     payload = {
-        "patient_id": "BENCH-LOCAL",
+        "patient_id": "PAT-999",
         "history": [{"role": "user", "content": prompt}],
         "stream": False,
     }
     t_start = time.perf_counter()
     try:
-        r = await client.post(
-            f"{API_URL}/chat", json=payload, timeout=300
-        )
+        r = await client.post(f"{API_URL}/chat", json=payload, timeout=300)
         t_end = time.perf_counter()
         return {
             "category": category,
@@ -70,7 +68,7 @@ async def main():
         results = []
         for i in range(N_REPEAT):
             for p in prompts:
-                print(f"  Run {i+1}/{N_REPEAT} — {p['category']}...", end=" ")
+                print(f"  Run {i + 1}/{N_REPEAT} — {p['category']}...", end=" ")
                 r = await measure_one(client, p["prompt"], p["category"])
                 print(f"{r.get('latency_ms')} ms" if r.get("latency_ms") else "FAIL")
                 results.append(r)
@@ -91,7 +89,7 @@ async def main():
     if lats:
         print(
             f"\n📊 p50={statistics.median(lats):.0f}ms "
-            f"p95={sorted(lats)[int(len(lats)*0.95)]:.0f}ms "
+            f"p95={sorted(lats)[int(len(lats) * 0.95)]:.0f}ms "
             f"max={max(lats):.0f}ms"
         )
 

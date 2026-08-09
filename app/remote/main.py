@@ -2,9 +2,9 @@ import traceback
 import uuid
 from contextlib import asynccontextmanager
 from time import perf_counter
-from typing import List
+from typing import AsyncGenerator, List
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import StreamingResponse
 from httpx import HTTPStatusError
 from pydantic import BaseModel, Field
@@ -15,38 +15,29 @@ from app.remote.client import RemoteInferenceClient
 from app.schemas import TriageResponse
 from app.system_prompts import SYSTEM_PROMPT_FR
 
-
-# --- ENGINE WRAPPER ---
-class RemoteEngine:
-    """Client polymorphe pour l'inférence distante (vLLM OpenAI-compatible).
-
-    Supporte deux modes :
-    - `conversationnel` (par défaut) : pour le chat libre, via httpx brut
-    - `structured` : pour le triage structuré, via instructor + Pydantic
-    """
-
+# --- ENGINE ABSTRACTION ---
+class ModelEngine:
     def __init__(self):
         self.client = None
         self.engine_type = "RemoteInference"
 
     def initialize(self):
-        print("🌐 [REMOTE] Initializing remote inference client...")
+        # Initialisation du client unique (Pool de connexion maintenu)
         self.client = RemoteInferenceClient()
 
-    async def generate_stream(self, messages: List[dict], request_id: str):
+    async def generate_stream(self, messages: List[dict]) -> AsyncGenerator[str, None]:
         async for chunk in self.client.generate_stream(messages):
             yield chunk
 
     async def generate(self, messages: List[dict]) -> str:
+        # On délègue le nettoyage au client si possible, ou on le garde ici
         response = await self.client.generate(messages)
         return clean_response(response)
 
     async def generate_structured(self, messages: List[dict]) -> TriageResponse:
         return await self.client.generate_structured(messages)
 
-
-engine = RemoteEngine()
-
+engine = ModelEngine()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -55,67 +46,50 @@ async def lifespan(app: FastAPI):
     yield
     if engine.client is not None:
         await engine.client.close()
-    print("🛑 Shutdown: remote inference client released")
-
 
 app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
 
-
-@app.get("/health", status_code=200, tags=["Monitoring"])
-async def health_check():
-    return {"status": "ok", "engine": engine.engine_type}
-
-
+# --- SCHEMAS ---
 class ChatRequest(BaseModel):
-    patient_id: str = Field(
-        ..., pattern=r"^PAT-\d{3,}$", description="Patient identifier (format: PAT-XXX)"
-    )
+    patient_id: str = Field(..., pattern=r"^(PAT-\d{3,}|conv-user)$")
     history: List[dict] = Field(..., min_length=1, max_length=50)
     stream: bool = False
 
-
 class TriageRequest(BaseModel):
-    patient_id: str = Field(
-        ..., pattern=r"^PAT-\d{3,}$", description="Patient identifier (format: PAT-XXX)"
-    )
+    patient_id: str = Field(..., pattern=r"^(PAT-\d{3,}|conv-user)$")
     history: List[dict] = Field(..., min_length=1, max_length=50)
 
-
-def _extract_user_input(messages: List[dict]) -> str:
-    return next(
-        (m["content"] for m in reversed(messages) if m["role"] == "user"),
-        "",
-    )
-
-
+# --- UTILS ---
 def _ensure_system_prompt(messages: List[dict]) -> List[dict]:
-    if messages[0].get("role") != "system":
-        return [{"role": "system", "content": SYSTEM_PROMPT_FR}] + list(messages)
-    return list(messages)
+    """Plus rapide : évite la mutation et réduit les vérifications."""
+    if not messages or messages[0].get("role") != "system":
+        return [{"role": "system", "content": SYSTEM_PROMPT_FR}] + messages
+    return messages
 
+# --- ROUTES ---
 
 @app.post("/chat")
-async def api_chat(request: ChatRequest):
+async def api_chat(request: ChatRequest, background_tasks: BackgroundTasks):
     start_time = perf_counter()
     messages = _ensure_system_prompt(request.history)
 
     if request.stream:
-
         async def event_generator():
+            full_content = []
             try:
-                full_response = []
-                async for chunk in engine.generate_stream(messages, str(uuid.uuid4())):
-                    full_response.append(chunk)
+                async for chunk in engine.generate_stream(messages):
+                    full_content.append(chunk)
                     yield f"data: {chunk}\n\n"
+                
+                # Audit lancé APRÈS que le stream soit fini, sans bloquer la connexion
                 latency = perf_counter() - start_time
                 log_entry = create_log_entry(
-                    request.patient_id,
-                    _extract_user_input(messages),
-                    "".join(full_response),
-                    latency,
-                    True,
+                    request.patient_id, 
+                    messages[-1]["content"], 
+                    "".join(full_content), 
+                    latency, True
                 )
-                await log_audit(log_entry)
+                background_tasks.add_task(log_audit, log_entry)
             except Exception as e:
                 yield f"data: Error: {str(e)}\n\n"
 
@@ -124,25 +98,22 @@ async def api_chat(request: ChatRequest):
     try:
         response = await engine.generate(messages)
         latency = perf_counter() - start_time
+        
+        # On prépare le log
         log_entry = create_log_entry(
-            request.patient_id,
-            _extract_user_input(messages),
-            response,
-            latency,
-            False,
+            request.patient_id, messages[-1]["content"], response, latency, False
         )
-        await log_audit(log_entry)
+        # On répond TOUT DE SUITE, l'audit se fera juste après
+        background_tasks.add_task(log_audit, log_entry)
+        
         return {"response": response, "audit_ref": log_entry["audit_id"]}
-    except HTTPStatusError as e:
-        print(f"❌ HTTP Error: {e.response.text}")
-        raise HTTPException(status_code=500, detail=str(e)) from e
+    
     except Exception as e:
-        print(f"❌ Internal Server Error: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        raise HTTPException(status_code=500, detail=str(e))
 
-
-@app.post("/triage", response_model=None)
-async def api_triage(request: TriageRequest):
+@app.post("/triage", response_model=TriageResponse)
+async def api_triage(request: TriageRequest, background_tasks: BackgroundTasks):
+    """Optimisé pour réduire le temps de sérialisation JSON."""
     start_time = perf_counter()
     messages = _ensure_system_prompt(request.history)
 
@@ -150,27 +121,19 @@ async def api_triage(request: TriageRequest):
         result = await engine.generate_structured(messages)
         latency = perf_counter() - start_time
 
+        # Audit en arrière-plan
         log_entry = create_log_entry(
-            request.patient_id,
-            _extract_user_input(messages),
-            result.model_dump_json(),
-            latency,
-            False,
+            request.patient_id, 
+            messages[-1]["content"], 
+            result.model_dump_json(), 
+            latency, False
         )
-        await log_audit(log_entry)
-        return {
-            **result.model_dump(),
-            "audit_ref": log_entry["audit_id"],
-        }
+        background_tasks.add_task(log_audit, log_entry)
+        
+        # Ajout manuel de l'audit_ref au modèle sans re-sérialisation complète
+        response_data = result.model_dump()
+        response_data["audit_ref"] = log_entry["audit_id"]
+        return response_data
+
     except Exception as e:
-        print(f"❌ Structured triage failed: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=str(e)) from e
-
-
-if __name__ == "__main__":
-    import os
-
-    import uvicorn
-
-    port = int(os.environ.get("PORT", 8080))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+        raise HTTPException(status_code=500, detail=str(e))

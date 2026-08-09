@@ -9,7 +9,7 @@ Cible : Cloud Run (API Gateway)
 | :--- | :--- | :--- | :--- |
 | **TOTAL (Réseau)** | **774** | **840** | **944** |
 | **vLLM** (Inférence) | 674 | 754 | 763 |
-| **Audit** | 23 | 22 | 33 |
+|
 | **Presidio** (Anonymisation) | 6 | 6 | 7 |
 
 ## Conclusion

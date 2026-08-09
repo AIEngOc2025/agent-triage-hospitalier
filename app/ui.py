@@ -5,7 +5,7 @@ import httpx
 import streamlit as st
 
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8080")
-API_TIMEOUT = float(os.getenv("API_TIMEOUT", "30"))
+API_TIMEOUT = float(os.getenv("API_TIMEOUT", "300"))
 MAX_INPUT_LENGTH = int(os.getenv("MAX_INPUT_LENGTH", "2000"))
 
 st.set_page_config(page_title="CHSA - Triage Hospitalier", page_icon="🩺")
@@ -48,7 +48,7 @@ if user_input := st.chat_input("Décrivez vos symptômes..."):
             try:
                 payload = {
                     "history": st.session_state.messages,
-                    "patient_id": st.session_state.session_id,
+                    "patient_id": "conv-user",
                     "stream": False,
                 }
                 with httpx.Client(timeout=API_TIMEOUT) as client:
@@ -66,10 +66,12 @@ if user_input := st.chat_input("Décrivez vos symptômes..."):
                     {"role": "assistant", "content": assistant_response}
                 )
             except httpx.HTTPError as e:
-                status = e.response.status_code if e.response else "timeout"
+                # Accès sécurisé à e.response
+                response = getattr(e, "response", None)
+                status = response.status_code if response is not None else "timeout"
                 st.error(f"Erreur de communication avec le serveur ({status}).")
-            except Exception:
-                st.error("Une erreur inattendue est survenue.")
+            except Exception as e:
+                st.error(f"Une erreur inattendue est survenue : {e}")
 
 if st.sidebar.button("Nouveau Triage"):
     st.session_state.clear()
