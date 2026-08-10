@@ -34,7 +34,7 @@ async def test_api_chat_integration(client):
         response = client.post(
             "/chat",
             json={
-                "patient_id": "TEST-INT-001",
+                "patient_id": "PAT-001",
                 "history": [{"role": "user", "content": "Bonjour"}],
                 "stream": False,
             },
