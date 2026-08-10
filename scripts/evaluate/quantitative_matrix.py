@@ -1,4 +1,6 @@
+import argparse
 import json
+import re
 
 import pandas as pd
 import torch
@@ -7,39 +9,48 @@ from peft import PeftModel
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# --- CONFIGURATION ---
-MODEL_ID = "Qwen/Qwen3-1.7B-Base"
-ADAPTERS = "models/dpo_final_chsa"
-TEST_FILE = "data/golden_set.jsonl"
+# --- CONFIGURATION DEFAULTS ---
+DEFAULT_MODEL_ID = "Qwen/Qwen3-1.7B-Base"
+DEFAULT_ADAPTERS = "models/dpo_final_chsa"
+DEFAULT_TEST_FILE = "data/golden_set.jsonl"
 
 
-def calculate_matrix():
+def calculate_matrix(model_id, adapters, test_file):
     """
     @definition : Calculates and prints the performance metrics matrix for the
-                  model.
-    @args/params : None.
-    @return : A dictionary containing performance metrics (language precision,
-              triage precision, and safety rate).
+                  model with improved robustness and device selection.
+    @args/params :
+        - model_id (str): ID of the base model.
+        - adapters (str): Path to the PEFT adapters.
+        - test_file (str): Path to the test dataset.
+    @return : A dictionary containing performance metrics.
     """
-    device = "cpu"
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_ID)
-    base_model = AutoModelForCausalLM.from_pretrained(
-        MODEL_ID, torch_dtype=torch.float32, device_map={"": device}
+    device = (
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps"
+        if torch.backends.mps.is_available()
+        else "cpu"
     )
-    model = PeftModel.from_pretrained(base_model, ADAPTERS)
+    print(f"🚀 Utilisation du périphérique : {device}")
+
+    tokenizer = AutoTokenizer.from_pretrained(model_id)
+    # Use float16 on GPU for memory efficiency
+    dtype = torch.float16 if device != "cpu" else torch.float32
+    base_model = AutoModelForCausalLM.from_pretrained(
+        model_id, torch_dtype=dtype, device_map={"": device}
+    )
+    model = PeftModel.from_pretrained(base_model, adapters)
     model.eval()
 
-    with open(TEST_FILE, "r") as f:
-        test_samples = [json.loads(line) for line in f][
-            :50
-        ]  # On teste 50 cas pour la matrice
+    with open(test_file, "r") as f:
+        test_samples = [json.loads(line) for line in f][:50]
 
     results = []
 
     print(f"📊 Génération de la matrice quantitative sur {len(test_samples)} cas...")
 
     for item in tqdm(test_samples):
-        # Prompt renforcé pour la concision et la prise de décision
         prompt = (
             f"<|im_start|>system\nTu es l'infirmier du CHSA. "
             f"Répondez avec concision (max 50 tokens). "
@@ -61,28 +72,22 @@ def calculate_matrix():
             )
 
         output_text = tokenizer.decode(outputs[0], skip_special_tokens=True).lower()
-        # Sécurisation de l'extraction du tag
-        if "[niveau:" in output_text and "]" in output_text.split("[niveau:")[1]:
-            prediction_tag = (
-                output_text.split("[niveau:")[1].split("]")[0].strip().lower()
-            )
-        else:
-            prediction_tag = None
+
+        # Robust extraction using Regex
+        match = re.search(r"\[niveau:\s*(maximale|modérée|différée)\s*\]", output_text)
+        prediction_tag = match.group(1) if match else None
 
         ground_truth = item["response"].lower()
-        # Gestion sécurisée de la langue
         metadata = item.get("clinical_metadata", {})
         lang = metadata.get("language", "fr")
 
         # --- LOGIQUE DE LA MATRICE ---
-        # 1. Vérification de la langue
         try:
             detected_lang = detect(output_text)
             lang_ok = 1 if detected_lang == lang else 0
         except LangDetectException:
             lang_ok = 0
 
-        # 2. Vérification de l'urgence (Priorité)
         urgence_levels = {
             "maximale": ["maximale", "emergency", "immediate"],
             "modérée": ["modérée", "urgency"],
@@ -96,7 +101,6 @@ def calculate_matrix():
 
         urgence_match = 1 if expected_level and prediction_tag == expected_level else 0
 
-        # 3. Détection d'hallucination technique
         hallucination = (
             1
             if ("ui" in output_text or "!!!" in output_text or "self." in output_text)
@@ -111,14 +115,6 @@ def calculate_matrix():
             }
         )
 
-        # DEBUG: Afficher quelques sorties
-        if len(results) <= 3:
-            print(f"\n--- DEBUG SAMPLE {len(results)} ---")
-            print(f"PROMPT: {item['instruction'][:100]}...")
-            print(f"TRUTH: {ground_truth[:100]}...")
-            print(f"PRED: {output_text[:100]}...")
-
-    # --- CALCUL DES SCORES FINAUX ---
     df = pd.DataFrame(results)
     matrix = {
         "Précision Linguistique": f"{(df['lang_ok'].mean() * 100):.2f}%",
@@ -139,4 +135,14 @@ def calculate_matrix():
 
 
 if __name__ == "__main__":
-    calculate_matrix()
+    parser = argparse.ArgumentParser(description="Évaluation quantitative du modèle")
+    parser.add_argument("--model_id", default=DEFAULT_MODEL_ID, help="ID du modèle")
+    parser.add_argument(
+        "--adapters", default=DEFAULT_ADAPTERS, help="Chemin des adaptateurs"
+    )
+    parser.add_argument(
+        "--test_file", default=DEFAULT_TEST_FILE, help="Fichier de test"
+    )
+    args = parser.parse_args()
+
+    calculate_matrix(args.model_id, args.adapters, args.test_file)
