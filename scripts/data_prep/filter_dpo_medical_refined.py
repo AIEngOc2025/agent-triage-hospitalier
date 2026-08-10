@@ -1,6 +1,7 @@
 import json
 
-# Mots-clés plus spécifiques pour le triage médical (hors <PATIENT> pour éviter les faux positifs)
+# Mots-clés plus spécifiques pour le triage médical (hors <PATIENT>
+# pour éviter les faux positifs)
 MEDICAL_KEYWORDS = [
     "triage",
     "symptom",

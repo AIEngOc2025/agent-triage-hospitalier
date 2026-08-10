@@ -8,11 +8,14 @@ Quasi identique au script local, mais avec :
 
 import asyncio
 import json
+import os
 import statistics
 import time
 from pathlib import Path
 
 import httpx
+from google.auth.transport.requests import Request
+from google.oauth2 import id_token
 
 # --- CONFIGURATION ---
 API_URL = "https://agent-api-gateway-414294705487.europe-west1.run.app"
@@ -20,11 +23,7 @@ PROMPTS_FILE = "scripts/benchmark/data/benchmark_prompts.jsonl"
 RESULTS_FILE = "scripts/benchmark/data/results_cloud.jsonl"
 N_REPEAT = 5
 
-import os
-
 # Auth OIDC (récupère un token pour Cloud Run)
-from google.auth.transport.requests import Request
-from google.oauth2 import id_token
 
 
 def get_token():
@@ -90,7 +89,7 @@ async def measure_one(client: httpx.AsyncClient, prompt: str, category: str):
 
 
 async def main():
-    prompts = [json.loads(l) for l in open(PROMPTS_FILE)]
+    prompts = [json.loads(line) for line in open(PROMPTS_FILE)]
     async with httpx.AsyncClient() as client:
         await warmup(client)
 

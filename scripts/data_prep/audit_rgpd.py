@@ -30,7 +30,8 @@ def audit_rgpd():
 
     print(f"Nombre total de lignes analysées : {total_lines}")
     print(
-        f"Lignes contenant des données masquées : {anonymized_lines} ({(anonymized_lines / total_lines) * 100:.2f}%)"
+        f"Lignes contenant des données masquées : {anonymized_lines} "
+        f"({(anonymized_lines / total_lines) * 100:.2f}%)"
     )
     print("-" * 40)
     for tag in ANONYMIZATION_TAGS:

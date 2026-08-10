@@ -1,6 +1,6 @@
 import argparse
-import glob
 import os
+
 import matplotlib.pyplot as plt
 
 # Désactiver le parallélisme des tokenizers pour éviter les deadlocks
@@ -9,8 +9,12 @@ os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import torch
 from datasets import load_from_disk
 from peft import LoraConfig
-from transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments, BitsAndBytesConfig
-from trl import SFTTrainer, SFTConfig
+from transformers import (
+    AutoTokenizer,
+    BitsAndBytesConfig,
+    TrainingArguments,
+)
+from trl import SFTConfig, SFTTrainer
 
 
 def format_chatml(ex):
@@ -44,13 +48,13 @@ def train():
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
         bnb_4bit_use_double_quant=True,
-        bnb_4bit_compute_dtype=torch.bfloat16
+        bnb_4bit_compute_dtype=torch.bfloat16,
     )
 
     # Initialisation de la config SFT
     sft_config = SFTConfig(
         dataset_text_field="text",
-        #max_seq_length=512,
+        # max_seq_length=512,
         loss_type="nll",
     )
 
@@ -108,22 +112,31 @@ def train():
     print("📊 Génération des graphiques de performance...")
     history = trainer.state.log_history
 
-    train_loss = [x['loss'] for x in history if 'loss' in x]
-    train_steps = [x['step'] for x in history if 'loss' in x]
-    val_loss = [x['eval_loss'] for x in history if 'eval_loss' in x]
-    val_steps = [x['step'] for x in history if 'eval_loss' in x]
+    train_loss = [x["loss"] for x in history if "loss" in x]
+    train_steps = [x["step"] for x in history if "loss" in x]
+    val_loss = [x["eval_loss"] for x in history if "eval_loss" in x]
+    val_steps = [x["step"] for x in history if "eval_loss" in x]
 
     plt.figure(figsize=(12, 6))
-    plt.plot(train_steps, train_loss, label='Train Loss (SFT)', color='#1f77b4', linewidth=2)
+    plt.plot(
+        train_steps, train_loss, label="Train Loss (SFT)", color="#1f77b4", linewidth=2
+    )
     if val_loss:
-        plt.plot(val_steps, val_loss, label='Validation Loss (SFT)', color='#e31a1c', marker='s', linestyle='--')
+        plt.plot(
+            val_steps,
+            val_loss,
+            label="Validation Loss (SFT)",
+            color="#e31a1c",
+            marker="s",
+            linestyle="--",
+        )
 
-    plt.title('Convergence de l\'Alignement SFT - POC CHSA', fontsize=14)
-    plt.xlabel('Steps', fontsize=12)
-    plt.ylabel('Loss', fontsize=12)
+    plt.title("Convergence de l'Alignement SFT - POC CHSA", fontsize=14)
+    plt.xlabel("Steps", fontsize=12)
+    plt.ylabel("Loss", fontsize=12)
     plt.legend()
     plt.grid(True, alpha=0.3)
-    plt.savefig('sft_convergence.png', dpi=300)
+    plt.savefig("sft_convergence.png", dpi=300)
     print("✅ Graphique de convergence sauvegardé sous 'sft_convergence.png'")
 
 

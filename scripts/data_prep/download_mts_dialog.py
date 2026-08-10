@@ -7,7 +7,8 @@ os.makedirs("data/raw", exist_ok=True)
 url = "https://huggingface.co/datasets/har1/MTS_Dialogue-Clinical_Note"
 print("📥 Téléchargement de MTS-Dialog depuis Hugging Face...")
 try:
-    # Le dataset d'origine de MTS-Dialog est souvent sous "Lekunb/mts-dialog" ou disponible via d'autres repos
+    # Le dataset d'origine de MTS-Dialog est souvent sous "Lekunb/mts-dialog"
+    # ou disponible via d'autres repos
     dataset = load_dataset(url)
     dataset.save_to_disk("data/raw/mts-dialog")
     print("✅ MTS-Dialog téléchargé avec succès dans data/raw/mts-dialog.")

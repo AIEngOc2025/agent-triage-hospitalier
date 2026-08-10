@@ -43,7 +43,8 @@ def balance_dataset():
     random.shuffle(balanced_data)
 
     print(
-        f"✅ Équilibrage effectué : {min_count} exemples de chaque langue (Total: {len(balanced_data)})"
+        f"✅ Équilibrage effectué : {min_count} exemples de chaque langue "
+        f"(Total: {len(balanced_data)})"
     )
 
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:

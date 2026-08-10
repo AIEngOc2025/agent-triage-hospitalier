@@ -56,7 +56,8 @@ def filter_dpo_data(input_path, output_path):
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
     print(
-        f"✅ Dataset filtré créé : {len(filtered_data)} paires conservées dans {output_path}"
+        f"✅ Dataset filtré créé : {len(filtered_data)} paires conservées "
+        f"dans {output_path}"
     )
 
 

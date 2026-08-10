@@ -62,14 +62,16 @@ class ProjectOrchestrator:
                             count += 1
                         else:
                             logger.warning(
-                                f"Skipping log entry with invalid latency: {line.strip()}"
+                                "Skipping log entry with invalid latency: "
+                                f"{line.strip()}"
                             )
                     except json.JSONDecodeError:
                         logger.warning(f"Skipping malformed log entry: {line.strip()}")
                         continue
         except FileNotFoundError:
             logger.warning(
-                f"Audit log file not found at {self.AUDIT_LOG_FILE}. Returning default metrics."
+                "Audit log file not found at "
+                f"{self.AUDIT_LOG_FILE}. Returning default metrics."
             )
             return 0.0, 0
         except Exception as e:
@@ -82,47 +84,53 @@ class ProjectOrchestrator:
 
     def generate_technical_overview(self):
         """
-        @definition : Generates the TECHNICAL_OVERVIEW.md file with project metrics and roadmap.
+        @definition : Generates the TECHNICAL_OVERVIEW.md file with
+                      project metrics and roadmap.
         @args/params : None
         @return : None
         """
         avg_latency_ms, count = self.calculate_metrics()
 
-        content = f"""# Technical Overview : Agent de Triage Hospitalier
-
-## 1. Vision et Objectifs
-Ce projet vise à fournir une solution d'IA pour le triage hospitalier,
-garantissant précision, rapidité et conformité RGPD.
-
-## 2. Architecture Technique
-Architecture découplée en 3 services : API Gateway (FastAPI),
-Inference Engine (vLLM), et Frontend UI (Streamlit).
-
-## 3. Métriques de Performance (Vérifiables)
-*Données calculées à partir de {count} interactions enregistrées.*
-
-| Métrique | Cible / Objectif | Valeur Actuelle | Méthode de vérification |
-| :--- | :--- | :--- | :--- |
-| **Latence API Gateway** | < 200ms (p95) | {avg_latency_ms if count > 0 else "N/A"} ms | Logs d'audit (Moyenne) |
-| **Précision du Triage** | > 90% | À auditer | Évaluation dataset test |
-| **Anonymisation PII** | > 99% | À valider | Tests `test_audit.py` |
-| **Disponibilité** | > 99.9% | - | Monitoring `/health` |
-
-## 4. Roadmap
-- Court terme : Validation clinique sur site.
-- Long terme : Passage à l'échelle (32B+ paramètres).
-"""
+        lat_val = avg_latency_ms if count > 0 else "N/A"
+        content_lines = [
+            "# Technical Overview : Agent de Triage Hospitalier",
+            "",
+            "## 1. Vision et Objectifs",
+            "Ce projet vise à fournir une solution d'IA pour le triage hospitalier,",
+            "garantissant précision, rapidité et conformité RGPD.",
+            "",
+            "## 2. Architecture Technique",
+            "Architecture découplée en 3 services : API Gateway (FastAPI),",
+            "Inference Engine (vLLM), et Frontend UI (Streamlit).",
+            "",
+            "## 3. Métriques de Performance (Vérifiables)",
+            f"*Données calculées à partir de {count} interactions enregistrées.*",
+            "",
+            "| Métrique | Cible | Actuelle | Vérification |",
+            "| :--- | :--- | :--- | :--- |",
+            f"| **Latence** | < 200ms (p95) | {lat_val} ms | Logs d'audit |",
+            "| **Précision** | > 90% | À auditer | Dataset test |",
+            "| **PII** | > 99% | À valider | `test_audit.py` |",
+            "| **Dispo** | > 99.9% | - | Monitoring |",
+            "",
+            "## 4. Roadmap",
+            "- Court terme : Validation clinique sur site.",
+            "- Long terme : Passage à l'échelle (32B+ paramètres).",
+        ]
+        content = "\n".join(content_lines)
         with open(self.TECHNICAL_OVERVIEW_FILE, "w") as f:
             f.write(content)
         logger.info(
-            f"✅ {self.TECHNICAL_OVERVIEW_FILE} généré (Latence moyenne: {avg_latency_ms} ms sur {count} échantillons)."
+            f"✅ {self.TECHNICAL_OVERVIEW_FILE} généré (Latence moyenne: "
+            f"{avg_latency_ms} ms sur {count} échantillons)."
         )
 
     def deploy(self, service):
         """
         @definition : Deploys a specified service to Google Cloud Run via Cloud Build.
         @args/params :
-            - service (str): The name of the service to deploy ('api', 'inference', 'ui').
+            - service (str): The name of the service to deploy
+                             ('api', 'inference', 'ui').
         @return : None
         """
         if service not in self.SERVICES:
@@ -146,7 +154,8 @@ Inference Engine (vLLM), et Frontend UI (Streamlit).
             logger.error(f"  Erreur standard: {e.stderr}")
         except FileNotFoundError:
             logger.error(
-                "❌ 'gcloud' command not found. Please ensure Google Cloud SDK is installed and configured."
+                "❌ 'gcloud' command not found. Please ensure Google Cloud "
+                "SDK is installed and configured."
             )
         except Exception as e:
             logger.error(
@@ -176,7 +185,8 @@ Inference Engine (vLLM), et Frontend UI (Streamlit).
             logger.error(f"❌ Erreur lors de la récupération du statut des builds: {e}")
         except FileNotFoundError:
             logger.error(
-                "❌ 'gcloud' command not found. Please ensure Google Cloud SDK is installed and configured."
+                "❌ 'gcloud' command not found. Please ensure Google Cloud "
+                "SDK is installed and configured."
             )
 
 

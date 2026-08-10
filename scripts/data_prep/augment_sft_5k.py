@@ -4,7 +4,8 @@ import random
 
 def augment_data(input_path, output_path, target_count=5000):
     """
-    @definition : Augmente le dataset à 5000 exemples en multipliant et variant les données.
+    @definition : Augmente le dataset à 5000 exemples en multipliant
+    et variant les données.
     @args/params : input_path, output_path, target_count.
     @return : None.
     """

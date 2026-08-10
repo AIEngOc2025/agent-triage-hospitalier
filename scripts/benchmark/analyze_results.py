@@ -29,7 +29,7 @@ def analyze(file_path: str):
         print(f"⚠️  Fichier non trouvé : {file_path}. Analyse ignorée.")
         return None
 
-    results = [json.loads(l) for l in open(file_path)]
+    results = [json.loads(line) for line in open(file_path)]
     latencies = [r["latency_ms"] for r in results if r.get("latency_ms")]
 
     print(f"\n{'=' * 60}")
@@ -89,7 +89,8 @@ def compare(local_stats, cloud_stats):
             else float("inf")
         )
         print(
-            f"{metric.upper():<10} {local_stats[metric]:>12.0f} {cloud_stats[metric]:>12.0f} {ratio:>7.2f}x"
+            f"{metric.upper():<10} {local_stats[metric]:>12.0f} "
+            f"{cloud_stats[metric]:>12.0f} {ratio:>7.2f}x"
         )
 
 

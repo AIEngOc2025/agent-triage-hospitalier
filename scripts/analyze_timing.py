@@ -20,7 +20,7 @@ def analyze(file_path: str):
         print(f"⚠️ Fichier non trouvé : {file_path}")
         return
 
-    results = [json.loads(l) for l in open(file_path)]
+    results = [json.loads(line) for line in open(file_path)]
 
     # Agrégation des latences par composant
     stats = defaultdict(list)
@@ -39,16 +39,21 @@ def analyze(file_path: str):
     print(f"\n📊 Analyse détaillée : {file_path}")
     print(f"{'Composant':<20} {'Moy (ms)':>10} {'p50 (ms)':>10} {'p95 (ms)':>10}")
     print(f"{'-' * 50}")
+    total_mean = statistics.mean(total_latencies)
+    total_med = statistics.median(total_latencies)
+    total_p95 = percentile(total_latencies, 95)
     print(
-        f"{'TOTAL (Réseau)':<20} {statistics.mean(total_latencies):>10.0f} {statistics.median(total_latencies):>10.0f} {percentile(total_latencies, 95):>10.0f}"
+        f"{'TOTAL (Réseau)':<20} {total_mean:>10.0f} {total_med:>10.0f} "
+        f"{total_p95:>10.0f}"
     )
 
     for c, vals in stats.items():
         if not vals:
             continue
-        print(
-            f"{c:<20} {statistics.mean(vals):>10.0f} {statistics.median(vals):>10.0f} {percentile(vals, 95):>10.0f}"
-        )
+        c_mean = statistics.mean(vals)
+        c_med = statistics.median(vals)
+        c_p95 = percentile(vals, 95)
+        print(f"{c:<20} {c_mean:>10.0f} {c_med:>10.0f} {c_p95:>10.0f}")
 
 
 if __name__ == "__main__":
