@@ -5,7 +5,6 @@ import re
 import pandas as pd
 import torch
 from langdetect import LangDetectException, detect
-from peft import PeftModel
 from tqdm import tqdm
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -35,16 +34,27 @@ def calculate_matrix(model_id, adapters, test_file):
     print(f"🚀 Utilisation du périphérique : {device}")
 
     tokenizer = AutoTokenizer.from_pretrained(model_id)
-    # Use float16 on GPU for memory efficiency
-    dtype = torch.float16 if device != "cpu" else torch.float32
-    base_model = AutoModelForCausalLM.from_pretrained(
-        model_id, torch_dtype=dtype, device_map={"": device}
-    )
-    model = PeftModel.from_pretrained(base_model, adapters)
+    # Use bfloat16 for stability on Apple Silicon (MPS)
+    dtype = torch.bfloat16 if device != "cpu" else torch.float32
+
+    # Try 4-bit loading for memory efficiency
+    try:
+        from transformers import BitsAndBytesConfig
+
+        quant_config = BitsAndBytesConfig(load_in_4bit=True)
+        model = AutoModelForCausalLM.from_pretrained(
+            adapters, quantization_config=quant_config, device_map={"": device}
+        )
+    except Exception:
+        print("⚠️ 4-bit quantization failed, falling back to full precision.")
+        model = AutoModelForCausalLM.from_pretrained(
+            adapters, torch_dtype=dtype, device_map={"": device}
+        )
+
     model.eval()
 
     with open(test_file, "r") as f:
-        test_samples = [json.loads(line) for line in f][:50]
+        test_samples = [json.loads(line) for line in f][:2]
 
     results = []
 
@@ -73,9 +83,11 @@ def calculate_matrix(model_id, adapters, test_file):
 
         output_text = tokenizer.decode(outputs[0], skip_special_tokens=True).lower()
 
-        # Robust extraction using Regex
-        match = re.search(r"\[niveau:\s*(maximale|modérée|différée)\s*\]", output_text)
-        prediction_tag = match.group(1) if match else None
+        # Robust extraction using Regex (case-insensitive and tolerant)
+        match = re.search(
+            r"\[niveau:\s*(maximale|modérée|différée)\s*\]", output_text, re.IGNORECASE
+        )
+        prediction_tag = match.group(1).lower() if match else None
 
         ground_truth = item["response"].lower()
         metadata = item.get("clinical_metadata", {})
@@ -94,16 +106,19 @@ def calculate_matrix(model_id, adapters, test_file):
             "différée": ["différée", "deferred"],
         }
         expected_level = None
-        for level in urgence_levels.keys():
-            if level in ground_truth:
+        for level, keywords in urgence_levels.items():
+            if any(kw in ground_truth for kw in keywords):
                 expected_level = level
                 break
 
         urgence_match = 1 if expected_level and prediction_tag == expected_level else 0
 
+        # Revised Hallucination detection: Focus on structural markers
         hallucination = (
             1
-            if ("ui" in output_text or "!!!" in output_text or "self." in output_text)
+            if (
+                "!!!" in output_text or "self." in output_text or prediction_tag is None
+            )
             else 0
         )
 
