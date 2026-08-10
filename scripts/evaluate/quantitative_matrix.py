@@ -43,7 +43,8 @@ def calculate_matrix():
         prompt = (
             f"<|im_start|>system\nTu es l'infirmier du CHSA. "
             f"Répondez avec concision (max 50 tokens). "
-            f"Format strict : [Niveau: <maximale|modérée|différée>] - Orientation : <orientation>.\n"
+            "Format strict : [Niveau: <maximale|modérée|différée>] - "
+            "Orientation : <orientation>.\n"
             f"<|im_start|>user\n{item['instruction']}<|im_end|>\n"
             f"<|im_start|>assistant\n"
         )
