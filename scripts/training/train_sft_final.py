@@ -90,6 +90,7 @@ def train():
         logging_steps=10,
         save_strategy="epoch",
         fp16=torch.cuda.is_available(),
+        report_to="mlflow",
     )
 
     # --- 5. INITIALISATION DU TRAINER ---

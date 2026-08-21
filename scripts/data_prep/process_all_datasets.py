@@ -1,8 +1,11 @@
 import json
 import os
+import sys
+
+# Ajout pour permettre l'import de app.api_utils
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 from datasets import load_dataset
-
 from app.api_utils import MedicalAnonymizer
 
 
@@ -19,7 +22,8 @@ class UniversalMedicalProcessor:
 
     def download_and_save_dataset(self, dataset_id, local_path, split="train"):
         """
-        @definition : Télécharge un dataset depuis Hugging Face et le sauvegarde localement en JSONL.
+        @definition : Télécharge un dataset depuis Hugging Face et le sauvegarde
+                      localement en JSONL.
         @args/params :
             - dataset_id (str): L'identifiant du dataset sur Hugging Face.
             - local_path (str): Le chemin où sauvegarder le fichier JSONL.
@@ -63,15 +67,16 @@ class UniversalMedicalProcessor:
         text_lower = text.lower()
         return any(word in text_lower for word in triage_vocab)
 
-    def process_file(self, file_path):
+    def process_file(self, file_path, source_name):
         """
         @definition : Traite un fichier, extrait les instructions/réponses,
                       anonymise et filtre pour ne garder que le triage.
-        @args/params : file_path (str)
+                      Ajoute les métadonnées de source dynamiquement.
+        @args/params : file_path (str), source_name (str)
         @return : Aucun.
         """
         filename = os.path.basename(file_path)
-        print(f"--- 📂 Lecture et filtrage de : {filename} ---")
+        print(f"--- 📂 Lecture et filtrage de : {filename} (Source: {source_name}) ---")
 
         count = 0
         with open(file_path, "r", encoding="utf-8") as f:
@@ -127,13 +132,20 @@ class UniversalMedicalProcessor:
                         clean_resp = self.anonymizer.anonymize_text(str(response))
 
                         self.final_data.append(
-                            {"instruction": clean_inst, "response": clean_resp}
+                            {
+                                "instruction": clean_inst,
+                                "response": clean_resp,
+                                "clinical_metadata": {
+                                    "source": source_name,
+                                    "anonymized": True,
+                                },
+                            }
                         )
                         count += 1
                 except (json.JSONDecodeError, KeyError):
                     continue
 
-        print(f"✅ Terminé : {count} exemples de triage extraits.")
+        print(f"✅ Terminé : {count} exemples de triage extraits de {source_name}.")
 
     def save(self, output_path):
         """
@@ -154,20 +166,27 @@ if __name__ == "__main__":
     processor = UniversalMedicalProcessor()
 
     # Mapping entre les noms de fichiers locaux et les identifiants Hugging Face
-    # Cela permet de télécharger les datasets s'ils sont manquants.
     DATASET_MAP = {
-        "medical_qa_en_train.jsonl": ("pubmed_qa", "train"),
-        "medical_qa_shared_task_en_train.jsonl": ("bioasq", "train"),
-        "medmcqa_en_train.jsonl": ("medmcqa", "train"),
-        "frenchmedmcqa_fr_train.jsonl": ("Dr-BERT/FrenchMedMCQA", "train"),
-        "medquad_en_train.jsonl": ("kevinma/medquad", "train"),
-        "medical_mqca_fr_train.jsonl": ("fids-lab/medical_mqca_fr", "train"),
+        "medical_qa_en_train.jsonl": ("pubmed_qa", "train", "PubMedQA"),
+        "medical_qa_shared_task_en_train.jsonl": ("bioasq", "train", "BioASQ"),
+        "medmcqa_en_train.jsonl": ("medmcqa", "train", "MedMCQA"),
+        "frenchmedmcqa_fr_train.jsonl": (
+            "Dr-BERT/FrenchMedMCQA",
+            "train",
+            "FrenchMedMCQA",
+        ),
+        "medquad_en_train.jsonl": ("kevinma/medquad", "train", "MedQuAD"),
+        "medical_mqca_fr_train.jsonl": (
+            "fids-lab/medical_mqca_fr",
+            "train",
+            "MedicalMQCA_FR",
+        ),
     }
 
     base_path = "data/raw/"
     os.makedirs(base_path, exist_ok=True)
 
-    for local_filename, (hf_id, split) in DATASET_MAP.items():
+    for local_filename, (hf_id, split, source_name) in DATASET_MAP.items():
         full_path = os.path.join(base_path, local_filename)
 
         # Si le fichier n'existe pas ou est vide, on le télécharge
@@ -176,7 +195,4 @@ if __name__ == "__main__":
 
         # On traite le fichier (qu'il ait été téléchargé ou qu'il existait déjà)
         if os.path.exists(full_path) and os.path.getsize(full_path) > 0:
-            processor.process_file(full_path)
-
-    # Sauvegarde du résultat final combiné
-    processor.save("data/processed/train_sft.jsonl")
+            processor.process_file(full_path, source_name)

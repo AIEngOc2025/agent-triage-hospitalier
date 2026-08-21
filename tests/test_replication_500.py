@@ -40,7 +40,7 @@ async def test_api_chat_500_replication(client):
         response = client.post(
             "/chat",
             json={
-                "patient_id": "TEST-500-REPL",
+                "patient_id": "PAT-004",
                 "history": [{"role": "user", "content": "Bonjour"}],
                 "stream": False,
             },

@@ -5,7 +5,7 @@ import uuid
 from time import perf_counter, strftime
 from typing import Dict
 
-from presidio_analyzer import AnalyzerEngine
+from presidio_analyzer import AnalyzerEngine, Pattern, PatternRecognizer
 from presidio_analyzer.nlp_engine import NlpEngineProvider
 from presidio_anonymizer import AnonymizerEngine
 from presidio_anonymizer.entities import OperatorConfig
@@ -19,7 +19,7 @@ class MedicalAnonymizer:
     def __init__(self):
         """
         @definition : Initialise l'anonymiseur médical avec Presidio
-        pour le français et l'anglais.
+        pour le français et l'anglais, incluant un recognizer pour les éponymes.
         @args/params : Aucun.
         @return : Aucun.
         """
@@ -41,6 +41,19 @@ class MedicalAnonymizer:
         self.analyzer = AnalyzerEngine(
             nlp_engine=nlp_engine, default_score_threshold=0.4
         )
+
+        # 1. Création d'un recognizer pour les éponymes médicaux à protéger
+        # Pattern pour éponymes OU 'syndrome de [Nom]'
+        eponyms = ["Charcot", "Alzheimer", "Parkinson", "Crohn"]
+        regex_pattern = f"(?:{'|'.join(eponyms)}|syndrome de [A-Za-z]+)"
+        pattern = Pattern("medical_eponym", regex_pattern, 1.0)
+        eponym_recognizer = PatternRecognizer(
+            supported_entity="MEDICAL_EPONYM",
+            patterns=[pattern],
+            supported_language="fr",
+        )
+        self.analyzer.registry.add_recognizer(eponym_recognizer)
+
         self.anonymizer = AnonymizerEngine()
         self.last_latency = 0.0
 
@@ -61,7 +74,13 @@ class MedicalAnonymizer:
         # 1. Analyse du texte
         results = self.analyzer.analyze(
             text=text,
-            entities=["PERSON", "LOCATION", "PHONE_NUMBER", "US_POSTAL_CODE"],
+            entities=[
+                "PERSON",
+                "LOCATION",
+                "PHONE_NUMBER",
+                "US_POSTAL_CODE",
+                "MEDICAL_EPONYM",
+            ],
             language=lang,
         )
 
@@ -71,10 +90,25 @@ class MedicalAnonymizer:
             "LOCATION": OperatorConfig("replace", {"new_value": "<ADRESSE>"}),
             "PHONE_NUMBER": OperatorConfig("replace", {"new_value": "<TELEPHONE>"}),
             "US_POSTAL_CODE": OperatorConfig("replace", {"new_value": "<CODE POSTAL>"}),
+            "MEDICAL_EPONYM": OperatorConfig("keep", {}),
         }
 
+        # Post-processing to remove overlapping PERSON results
+        filtered_results = []
+        eponym_results = [r for r in results if r.entity_type == "MEDICAL_EPONYM"]
+        for r in results:
+            if r.entity_type == "PERSON":
+                # Check overlap
+                is_overlap = any(
+                    (r.start < e.end and r.end > e.start) for e in eponym_results
+                )
+                if not is_overlap:
+                    filtered_results.append(r)
+            else:
+                filtered_results.append(r)
+
         anonymized = self.anonymizer.anonymize(
-            text=text, analyzer_results=results, operators=operators
+            text=text, analyzer_results=filtered_results, operators=operators
         )
 
         self.last_latency = perf_counter() - start

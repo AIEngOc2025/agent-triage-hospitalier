@@ -27,10 +27,10 @@ CMD [ \
     "--model", "/app/model", \
     "--host", "0.0.0.0", \
     "--port", "8080", \
-    "--max-model-len", "1024", \
+    "--max-model-len", "2048", \
     "--max-num-batched-tokens", "1024", \
     "--enforce-eager", \
-    "--gpu-memory-utilization", "0.6", \
+    "--gpu-memory-utilization", "0.8", \
     "--disable-log-stats", \
     "--disable-log-requests" \
 ]

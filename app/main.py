@@ -1,3 +1,5 @@
+import asyncio
+import logging
 import traceback
 import uuid
 from contextlib import asynccontextmanager
@@ -11,9 +13,16 @@ from pydantic import BaseModel, Field
 
 from app.api_utils import clean_response, create_log_entry, log_audit
 from app.core.settings import settings
-from app.remote.client import RemoteInferenceClient
+from app.nlp_triage import triage_classifier
+from app.remote.client import RemoteInferenceClient, call_with_retry
 from app.schemas import TriageResponse
 from app.system_prompts import SYSTEM_PROMPT_FR
+from app.triage_veto import decide_veto
+
+logger = logging.getLogger(__name__)
+
+# --- Warmup config (cold start resilience) ---
+WARMUP_TIMEOUT_SEC: float = 30.0  # pire cas : cold start vLLM ~5-15 s
 
 
 # --- ENGINE ABSTRACTION ---
@@ -59,6 +68,25 @@ engine = ModelEngine()
 async def lifespan(app: FastAPI):
     settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     engine.initialize()
+    # Warmup best-effort : amorce vLLM pour éviter le cold start sur la 1ère
+    # requête réelle. L'API démarre même si le warmup échoue.
+    if engine.client is not None:
+        try:
+            await asyncio.wait_for(
+                engine.client.generate(
+                    [
+                        {"role": "system", "content": "Warmup."},
+                        {"role": "user", "content": "ok"},
+                    ]
+                ),
+                timeout=WARMUP_TIMEOUT_SEC,
+            )
+            logger.info("✅ Inference warmup OK")
+        except Exception as exc:
+            logger.warning(
+                "⚠️ Warmup best-effort échoué (%s) — l'API démarre quand même",
+                exc,
+            )
     yield
     if engine.client is not None:
         await engine.client.close()
@@ -141,7 +169,7 @@ async def api_chat(request: ChatRequest):
         return StreamingResponse(event_generator(), media_type="text/event-stream")
 
     try:
-        response = await engine.generate(messages)
+        response = await call_with_retry(lambda: engine.generate(messages))
         latency = perf_counter() - start_time
         log_entry = create_log_entry(
             request.patient_id,
@@ -180,20 +208,53 @@ async def api_triage(request: TriageRequest):
     messages = _ensure_system_prompt(request.history)
 
     try:
-        result = await engine.generate_structured(messages)
+        result = await call_with_retry(lambda: engine.generate_structured(messages))
         latency = perf_counter() - start_time
+
+        # --- Veto bidirectionnel NLP ↔ LLM ---
+        user_input = _extract_user_input(messages)
+        nlp_pred = triage_classifier.predict(user_input)
+        triage_result = result.triage_result
+        llm_niveau = (
+            triage_result.niveau.value
+            if triage_result and triage_result.niveau
+            else None
+        )
+        llm_orientation = triage_result.orientation if triage_result else result.message
+
+        veto = decide_veto(
+            llm_niveau=llm_niveau,
+            llm_orientation=llm_orientation,
+            nlp_niveau=nlp_pred.get("niveau"),
+            nlp_confiance=float(nlp_pred.get("confiance", 0.0)),
+        )
+
+        # Si le veto a modifié le niveau, on reconstruit la réponse
+        response_payload = result.model_dump()
+        if veto.source != "llm" and veto.final_niveau != llm_niveau:
+            response_payload["triage_result"] = {
+                "niveau": veto.final_niveau,
+                "orientation": veto.orientation,
+            }
+        response_payload["triage_source"] = veto.source
+        response_payload["nlp_veto_meta"] = {
+            "nlp_niveau": veto.nlp_niveau,
+            "nlp_confiance": veto.nlp_confiance,
+            "nlp_mode": nlp_pred.get("mode"),
+            "rationale": veto.rationale,
+        }
 
         # Sérialisation Pydantic -> dict
         log_entry = create_log_entry(
             request.patient_id,
             _extract_user_input(messages),
-            result.model_dump_json(),
+            response_payload,
             latency,
             False,
         )
         await log_audit(log_entry)
         return {
-            **result.model_dump(),
+            **response_payload,
             "audit_ref": log_entry["audit_id"],
         }
     except Exception as e:

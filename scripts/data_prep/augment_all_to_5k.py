@@ -73,14 +73,6 @@ if __name__ == "__main__":
             "data/processed/new_triage_data.jsonl",
             "data/processed/temp_triage_500_2k.jsonl",
         ),
-        (
-            "data/processed/triage_nlie2_processed.jsonl",
-            "data/processed/temp_nlie2_2k.jsonl",
-        ),
-        (
-            "data/processed/triage_transcriptions_processed.jsonl",
-            "data/processed/temp_transcriptions_2k.jsonl",
-        ),
     ]
 
     for src, dst in sources:
