@@ -1,6 +1,9 @@
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import MagicMock, patch
+
 from app.api_utils import TriageLogic
+
 
 # Mock des dépendances pour le test
 @patch("app.remote.client.RemoteInferenceClient.generate_structured")
@@ -20,11 +23,11 @@ async def test_triage_logic_returns_correct_response(mock_generate):
     )
     mock_generate.return_value = TriageResponse(
         message=orientation_msg,
-        result=TriageResult(niveau="maximale", raison="Urgent", orientation="Urgences"),
+        triage_result=TriageResult(niveau="maximale", orientation="Urgences"),
     )
 
     triage_logic = TriageLogic()
     response = await triage_logic.process_triage("douleur thoracique")
 
-    assert response.result.niveau == "maximale"
-    assert "Urgences" in response.result.orientation
+    assert response.triage_result.niveau == "maximale"
+    assert "Urgences" in response.triage_result.orientation

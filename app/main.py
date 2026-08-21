@@ -1,16 +1,14 @@
 import asyncio
 import logging
 import traceback
-import uuid
 from contextlib import asynccontextmanager
 from time import perf_counter
-from typing import AsyncGenerator, List
+from typing import AsyncGenerator, Dict, List
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import StreamingResponse
-from httpx import HTTPStatusError
 from pydantic import BaseModel, Field
 
+from agent.orchestrator import TriageAgentOrchestrator
 from app.api_utils import clean_response, create_log_entry, log_audit
 from app.core.settings import settings
 from app.nlp_triage import triage_classifier
@@ -20,6 +18,9 @@ from app.system_prompts import SYSTEM_PROMPT_FR
 from app.triage_veto import decide_veto
 
 logger = logging.getLogger(__name__)
+
+# --- AGENT PERSISTENCE ---
+agent_sessions: Dict[str, TriageAgentOrchestrator] = {}
 
 # --- Warmup config (cold start resilience) ---
 WARMUP_TIMEOUT_SEC: float = 30.0  # pire cas : cold start vLLM ~5-15 s
@@ -137,54 +138,40 @@ def _ensure_system_prompt(messages: List[dict]) -> List[dict]:
 
 @app.post("/chat")
 async def api_chat(request: ChatRequest):
-    """Endpoint conversationnel : génère une réponse texte libre.
-
-    Supporte streaming (SSE) et non-streaming. La réponse est nettoyée
-    (`clean_response`) pour supprimer les balises internes (`think`, etc.).
-    """
+    """Endpoint conversationnel : utilise l'orchestrateur agentique."""
     start_time = perf_counter()
-    messages = _ensure_system_prompt(request.history)
+    user_input = _extract_user_input(request.history)
 
-    if request.stream:
+    # 1. Gestion de session agent
+    if request.patient_id not in agent_sessions:
+        agent_sessions[request.patient_id] = TriageAgentOrchestrator()
+    orchestrator = agent_sessions[request.patient_id]
 
-        async def event_generator():
-            try:
-                full_response = []
-                async for chunk in engine.generate_stream(messages, str(uuid.uuid4())):
-                    full_response.append(chunk)
-                    yield f"data: {chunk}\n\n"
-
-                latency = perf_counter() - start_time
-                log_entry = create_log_entry(
-                    request.patient_id,
-                    _extract_user_input(messages),
-                    "".join(full_response),
-                    latency,
-                    True,
-                )
-                await log_audit(log_entry)
-            except Exception as e:
-                yield f"data: Error: {str(e)}\n\n"
-
-        return StreamingResponse(event_generator(), media_type="text/event-stream")
-
+    # 2. Exécution agentique
     try:
-        response = await call_with_retry(lambda: engine.generate(messages))
+        agent_result = orchestrator.run(user_input)
+
+        # 3. Formatage réponse
+        response_text = (
+            agent_result.get("final_decision")
+            or agent_result.get("question")
+            or "Pas de réponse générée."
+        )
+
+        # 4. Logs
         latency = perf_counter() - start_time
         log_entry = create_log_entry(
             request.patient_id,
-            _extract_user_input(messages),
-            response,
+            user_input,
+            response_text,
             latency,
             False,
         )
         await log_audit(log_entry)
-        return {"response": response, "audit_ref": log_entry["audit_id"]}
-    except HTTPStatusError as e:
-        print(f"❌ HTTP Error: {e.response.text}")
-        raise HTTPException(status_code=500, detail=str(e)) from e
+        return {"response": response_text, "audit_ref": log_entry["audit_id"]}
+
     except Exception as e:
-        print(f"❌ Internal Server Error: {traceback.format_exc()}")
+        logger.error(f"❌ Erreur agentique : {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 

@@ -10,6 +10,10 @@ from openai import AsyncOpenAI
 from app.schemas import TriageResponse
 from app.timing import time_execution
 
+MAX_RETRIES = 3
+BASE_BACKOFF_SEC = 1.0
+RETRYABLE_STATUS_CODES = {502, 503, 504}
+
 logger = logging.getLogger(__name__)
 InferenceMode = Literal["conversationnel", "structured"]
 
