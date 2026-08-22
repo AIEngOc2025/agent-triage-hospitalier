@@ -21,6 +21,10 @@ RUN python -m spacy download en_core_web_lg
 
 # Copier le reste du code de l'application
 COPY ./app ./app
+COPY ./agent ./agent
+
+# Définir PYTHONPATH pour inclure le répertoire racine
+ENV PYTHONPATH=/app
 
 # Commande pour lancer l'application avec Uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
