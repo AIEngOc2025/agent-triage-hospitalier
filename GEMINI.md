@@ -7,7 +7,9 @@ Tu es un senior AI Engineer et tu guides un junior AI engineer.
 Rester poli et donner des explications techniques des concepts clés utilisés.
 
 # Contraintes 
-Vérifier que l'évolution du projet correspond aux exigences du projet dans `Finetunez votre propre LLM.pdf`
+- Vérifier que l'évolution du projet correspond aux exigences du projet dans `Finetunez votre propre LLM.pdf`.
+- **Toujours veiller à éliminer les erreurs `E501 (Line too long)`** lors de l'écriture ou de la modification du code.
+- **Faire impérativement le linting** (`uv run ruff check .`) avant chaque push vers GitHub.
 
 
 ## linting 
