@@ -1,0 +1,8 @@
+# Configuration Ruff
+[lint]
+# Ignorer les lignes trop longues dans les scripts
+extend-ignore = ["E501"]
+
+[format]
+# Assurer le formatage conforme aux normes
+docstring-code-format = true

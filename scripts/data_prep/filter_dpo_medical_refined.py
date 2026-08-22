@@ -55,7 +55,8 @@ def filter_dpo_data_refined(input_path, output_path):
             f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
     print(
-        f"✅ Dataset raffiné créé : {len(filtered_data)} paires conservées dans {output_path}"
+        f"✅ Dataset raffiné créé : {len(filtered_data)} paires "
+        f"conservées dans {output_path}"
     )
 
 

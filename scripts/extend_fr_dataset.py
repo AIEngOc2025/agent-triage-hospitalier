@@ -134,7 +134,7 @@ def main() -> None:
     )
     args = p.parse_args()
 
-    records = [json.loads(l) for l in open(args.input) if l.strip()]
+    records = [json.loads(line) for line in open(args.input) if line.strip()]
     print(f"Input : {len(records)} cas")
 
     # Compte FR actuels
