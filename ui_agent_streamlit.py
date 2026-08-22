@@ -1,14 +1,15 @@
 import streamlit as st
-
-from agent.orchestrator import TriageAgentOrchestrator
+import httpx
+import uuid
 
 # Configuration
+API_URL = "https://agent-api-gateway-414294705487.europe-west1.run.app/chat"
 st.set_page_config(page_title="CHSA - Agent Triage", page_icon="🩺")
-st.title("🩺 Agent de Triage Hospitalier (Dialogue Itératif)")
+st.title("🩺 Agent de Triage Hospitalier (Client Distant)")
 
-# Initialisation de l'agent dans la session
-if "agent" not in st.session_state:
-    st.session_state.agent = TriageAgentOrchestrator()
+# Initialisation de la session
+if "patient_id" not in st.session_state:
+    st.session_state.patient_id = str(uuid.uuid4())
     st.session_state.messages = []
 
 # Affichage de l'historique
@@ -22,24 +23,23 @@ if prompt := st.chat_input("Décrivez la plainte du patient :"):
     with st.chat_message("user"):
         st.write(prompt)
 
-    # Exécution de l'agent
+    # Appel à l'API distante
     with st.chat_message("assistant"):
         with st.spinner("Analyse clinique..."):
-            result = st.session_state.agent.run(prompt)
+            try:
+                payload = {
+                    "history": st.session_state.messages,
+                    "patient_id": st.session_state.patient_id,
+                    "stream": False,
+                }
+                response = httpx.post(API_URL, json=payload, timeout=60.0)
+                response.raise_for_status()
+                result = response.json()
 
-            if result["status"] == "PENDING_CLARIFICATION":
-                msg = result["question"]
+                # Récupération de la réponse
+                msg = result.get("response", "Pas de réponse reçue.")
                 st.write(msg)
                 st.session_state.messages.append({"role": "assistant", "content": msg})
 
-            elif result["status"] == "AUTO_FINALIZED":
-                msg = f"Triage finalisé : **{result['final_decision']}**. {result['comment']}"
-                st.write(msg)
-                st.session_state.messages.append({"role": "assistant", "content": msg})
-
-            elif result["status"] == "PENDING_VETO":
-                msg = f"Recommandation : **{result['recommended_level']}**. Validation requise."
-                st.write(msg)
-                st.session_state.messages.append({"role": "assistant", "content": msg})
-                # Gérer le veto ici (simplifié pour le POC)
-                st.warning("⚠️ Veto clinique à implémenter dans cette UI.")
+            except Exception as e:
+                st.error(f"Erreur de connexion à l'API : {e}")
