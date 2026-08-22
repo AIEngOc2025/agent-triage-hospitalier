@@ -7,6 +7,7 @@ import httpx
 import instructor
 from openai import AsyncOpenAI
 
+from app.remote.retry_utils import call_with_retry
 from app.schemas import TriageResponse
 from app.timing import time_execution
 
