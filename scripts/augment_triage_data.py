@@ -132,7 +132,7 @@ SYNONYMS = {
     # FR — Toux
     "toux": ["toux persistante", "expectorations"],
     # FR — Patient
-    "patient": ["sujet", "personne", "individu"],
+    "patient_fr": ["sujet", "personne", "individu"],
     # FR — Sueurs
     "sueurs froides": ["transpiration abondante", "diaphorèse"],
     "transpiration": ["sueurs", "diaphorèse"],
@@ -156,7 +156,7 @@ SYNONYMS = {
     # EN — Bleeding
     "bleeding": ["hemorrhage", "blood loss"],
     # EN — Patient
-    "patient": ["subject", "individual", "person"],
+    "patient_en": ["subject", "individual", "person"],
     # year-old
     "year-old": ["y/o", "-year-old", "year old"],
 }
@@ -475,7 +475,7 @@ def main() -> None:
     p.add_argument("--seed", type=int, default=42)
     args = p.parse_args()
 
-    records = [json.loads(l) for l in open(args.input) if l.strip()]
+    records = [json.loads(line) for line in open(args.input) if line.strip()]
     print(f"📂 Input : {len(records)} cas")
 
     augmented = augment_dataset(records, args.target_size, args.seed)

@@ -40,13 +40,14 @@ def decide_veto(
     nlp_niveau: Optional[str],
     nlp_confiance: float,
 ) -> VetoOutcome:
-    """Applique la règle de veto bidirectionnel asymétrique.
-
-    Args:
-        llm_niveau: niveau détecté par le LLM (peut être None si pas classé).
-        llm_orientation: texte d'orientation du LLM.
-        nlp_niveau: niveau prédit par le NLP.
-        nlp_confiance: confiance NLP [0, 1].
+    """
+    @definition : Applique la règle de veto bidirectionnel asymétrique.
+    @args/params :
+        llm_niveau (Optional[str]) : Niveau détecté par le LLM.
+        llm_orientation (str) : Texte d'orientation du LLM.
+        nlp_niveau (Optional[str]) : Niveau prédit par le NLP.
+        nlp_confiance (float) : Confiance NLP [0, 1].
+    @return : VetoOutcome - Le résultat de la décision de veto.
     """
     # --- Cas 1 : NLP pas confiant ou LLM pas encore classé ---
     if llm_niveau is None:
@@ -124,7 +125,9 @@ def decide_veto(
             nlp_niveau=nlp_niveau,
             nlp_confiance=nlp_confiance,
             llm_niveau=llm_niveau,
-            rationale="LLM garde maximale (veto défensif contre la rétrogradation NLP).",
+            rationale=(
+                "LLM garde maximale (veto défensif contre la rétrogradation NLP)."
+            ),
         )
 
     # Désaccord mod-vs-diff : LLM l'emporte (modérée reste investiguée)

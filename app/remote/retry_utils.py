@@ -16,7 +16,10 @@ T = TypeVar("T")
 
 async def call_with_retry(func: Callable[[], Any]) -> Any:
     """
-    Exécute une fonction asynchrone avec retry exponentiel sur les erreurs 5xx retryables.
+    @definition : Exécute une fonction asynchrone avec retry exponentiel
+        sur les erreurs 5xx retryables.
+    @args/params : func (Callable[[], Any]) - Fonction asynchrone à appeler.
+    @return : Any - Résultat de la fonction exécutée.
     """
     retries = 0
     while True:
