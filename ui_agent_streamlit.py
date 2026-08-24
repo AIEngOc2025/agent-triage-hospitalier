@@ -1,13 +1,19 @@
+import os
 import random
 
 import httpx
 import streamlit as st
 
 # Configuration
-API_URL = "https://agent-api-gateway-414294705487.europe-west1.run.app/chat"
+# En production Cloud Run, surcharger via la variable d'env API_URL.
+API_URL = os.getenv(
+    "API_URL",
+    "https://agent-api-gateway-414294705487.europe-west1.run.app/chat",
+)
 st.set_page_config(page_title="CHSA - Agent Triage", page_icon="🩺")
 st.title("🩺 Agent de Triage Hospitalier (Client Distant)")
 st.caption(f"Patient ID de la session : `{st.session_state.get('patient_id', '—')}`")
+st.caption(f"API cible : `{API_URL}`")
 
 # Initialisation de la session
 # L'API attend un patient_id conforme au pattern Pydantic
