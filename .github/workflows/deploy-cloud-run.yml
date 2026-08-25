@@ -53,12 +53,16 @@ jobs:
           python-version: '3.12'
       - name: Install uv
         uses: astral-sh/setup-uv@v1
+        with:
+          version: "latest"
       - name: Sync dependencies
-        run: uv sync --all-groups
+        run: |
+          uv --version
+          uv sync
       - name: Debug environment
         run: |
-          uv run pip list
-          uv run python -c "import sys; print(sys.path)"
+          uv pip list
+          uv run python -c "import sys; print(sys.path); import pytest; print('pytest found')"
       - name: Run tests
         env:
           APP_TEST_MODE: "1"
