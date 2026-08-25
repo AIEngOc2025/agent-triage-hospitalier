@@ -44,6 +44,7 @@ class TriageAgentOrchestrator:
             "status": "AUTO_FINALIZED",
             "final_decision": nlp_result["niveau"],
             "comment": "Triage autonome finalisé par l'agent.",
+            "reasoning": f"Classifieur NLP appliqué sur données anonymisées : Niveau {nlp_result['niveau']} (Confiance: {nlp_result['confiance']:.2%})",
         }
 
     def process_validation(

@@ -59,5 +59,6 @@
   "transformers_version": "5.14.1",
   "use_cache": true,
   "use_sliding_window": false,
-  "vocab_size": 151936
+  "vocab_size": 151936,
+  "rope_theta": 1000000.0
 }

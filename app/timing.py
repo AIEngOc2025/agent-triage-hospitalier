@@ -1,29 +1,44 @@
+import functools
+import logging
 import time
-from functools import wraps
-from typing import Any, Callable
+from contextlib import contextmanager
+from typing import Callable, Optional
+
+logger = logging.getLogger(__name__)
 
 
-def time_execution(component_name: str):
+@contextmanager
+def measure_latency(label: str):
     """
-    @definition: Décorateur pour mesurer le temps d'exécution d'une fonction asynchrone
-    et stocker la latence dans un attribut de la fonction.
-    @args/params:
-        - component_name (str): Nom du composant mesuré.
-    @return: Fonction décorée.
+    Context manager pour mesurer la latence d'un bloc de code.
+    Log le temps écoulé en millisecondes.
+    """
+    start = time.perf_counter()
+    try:
+        yield
+    finally:
+        elapsed_ms = (time.perf_counter() - start) * 1000
+        logger.info(f"⏱️  [METRIC] {label}: {elapsed_ms:.2f}ms")
+
+
+def time_execution(label: Optional[str] = None):
+    """
+    Décorateur pour mesurer le temps d'exécution d'une fonction.
     """
 
     def decorator(func: Callable):
-        @wraps(func)
-        async def wrapper(*args, **kwargs) -> Any:
-            start = time.perf_counter()
-            result = await func(*args, **kwargs)
-            duration = time.perf_counter() - start
+        @functools.wraps(func)
+        async def wrapper(*args, **kwargs):
+            nonlocal label
+            if label is None:
+                label = func.__name__
 
-            # Stockage de la latence sur la fonction décorée
-            if not hasattr(wrapper, "last_latency"):
-                wrapper.last_latency = 0.0
-            wrapper.last_latency = duration
-            return result
+            start = time.perf_counter()
+            try:
+                return await func(*args, **kwargs)
+            finally:
+                elapsed_ms = (time.perf_counter() - start) * 1000
+                logger.info(f"⏱️  [METRIC] {label}: {elapsed_ms:.2f}ms")
 
         return wrapper
 

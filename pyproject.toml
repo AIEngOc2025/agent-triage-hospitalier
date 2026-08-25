@@ -2,7 +2,7 @@
 name = "agent-triage-hospitalier"
 version = "0.1.0"
 description = "A hospital triage agent using LLMs."
-requires-python = ">=3.11"
+requires-python = ">=3.12,<3.14"
 dependencies = [
     "requests>=2.34.2",
     "fastapi>=0.139.2",
@@ -21,6 +21,7 @@ dependencies = [
     "instructor>=1.15.4",
     "transformers>=5.14.1",
     "torch>=2.13.0",
+    "vllm-metal>=0.1.0",
 ]
 
 [tool.ruff]

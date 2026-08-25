@@ -7,9 +7,8 @@ import httpx
 import instructor
 from openai import AsyncOpenAI
 
-from app.remote.retry_utils import call_with_retry
 from app.schemas import TriageResponse
-from app.timing import time_execution
+from app.timing import measure_latency, time_execution
 
 MAX_RETRIES = 3
 BASE_BACKOFF_SEC = 1.0
@@ -105,22 +104,23 @@ class RemoteInferenceClient:
             raise
 
     async def generate_stream(self, messages: List[dict]) -> AsyncGenerator[str, None]:
-        payload = self._prepare_payload(messages, stream=True)
-        async with self.raw_client.stream(
-            "POST", f"{self.inference_url}/v1/chat/completions", json=payload
-        ) as response:
-            response.raise_for_status()
-            async for line in response.aiter_lines():
-                if line.startswith("data: "):
-                    content = line[6:].strip()
-                    if content == "[DONE]":
-                        break
-                    try:
-                        chunk = json.loads(content)
-                        if delta := chunk["choices"][0]["delta"].get("content"):
-                            yield delta
-                    except json.JSONDecodeError:
-                        continue
+        with measure_latency("network_inference_stream"):
+            payload = self._prepare_payload(messages, stream=True)
+            async with self.raw_client.stream(
+                "POST", f"{self.inference_url}/v1/chat/completions", json=payload
+            ) as response:
+                response.raise_for_status()
+                async for line in response.aiter_lines():
+                    if line.startswith("data: "):
+                        content = line[6:].strip()
+                        if content == "[DONE]":
+                            break
+                        try:
+                            chunk = json.loads(content)
+                            if delta := chunk["choices"][0]["delta"].get("content"):
+                                yield delta
+                        except json.JSONDecodeError:
+                            continue
 
     async def close(self) -> None:
         await self.raw_client.aclose()

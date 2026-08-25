@@ -20,10 +20,18 @@ class Settings(BaseSettings):
     # --- Environment Configuration ---
     # APP_ENV can be 'development' or 'production'
     APP_ENV: Literal["development", "production"] = "development"
+    ENGINE_MODE: Literal["remote", "local"] = "remote"
 
     # --- Model & Log Paths ---
     MODEL_PATH: str = Field(default="models/merged_dpo_final_chsa", env="MODEL_PATH")
     LOG_FILE: Path = Path("logs/triage.log")
+
+    # --- vLLM Engine Configuration ---
+    max_model_len: int = 2048
+    dtype: str = "auto"
+    gpu_memory_utilization: float = 0.9
+    enforce_eager: bool = False
+    enable_prefix_caching: bool = True
 
     # --- Computed Properties ---
     @property

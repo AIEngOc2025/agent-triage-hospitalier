@@ -1,20 +1,24 @@
 import asyncio
 import logging
+import os
 import traceback
 from contextlib import asynccontextmanager
 from time import perf_counter
-from typing import AsyncGenerator, Dict, List
+from typing import Dict, List
 
+import uvicorn
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from agent.orchestrator import TriageAgentOrchestrator
-from app.api_utils import clean_response, create_log_entry, log_audit
+from app.agent_orchestrator import TriageAgentOrchestrator
+from app.api_utils import create_log_entry, log_audit
 from app.core.settings import settings
+from app.local.engine import LocalEngine
+from app.middleware_timing import TimingMiddleware
 from app.nlp_triage import triage_classifier
-from app.remote.client import RemoteInferenceClient, call_with_retry
-from app.schemas import TriageResponse
-from app.system_prompts import SYSTEM_PROMPT_FR
+from app.remote.engine import RemoteEngine
+from app.remote.retry_utils import call_with_retry
+from app.system_prompts import SYSTEM_PROMPT_FR, SYSTEM_PROMPT_JSON_FR
 from app.triage_veto import decide_veto
 
 logger = logging.getLogger(__name__)
@@ -27,42 +31,13 @@ WARMUP_TIMEOUT_SEC: float = 30.0  # pire cas : cold start vLLM ~5-15 s
 
 
 # --- ENGINE ABSTRACTION ---
-class ModelEngine:
-    """Client polymorphe pour l'inférence distante (vLLM OpenAI-compatible).
-
-    Supporte deux modes :
-    - `conversationnel` (par défaut) : pour le chat libre, via httpx brut
-    - `structured` : pour le triage structuré, via instructor + Pydantic
-    """
-
-    def __init__(self):
-        self.client = None
-        self.engine_type = "RemoteInference"
-
-    def initialize(self):
-        print("🌐 [REMOTE] Initializing remote inference client...")
-        self.client = RemoteInferenceClient()
-
-    async def generate_stream(
-        self, messages: List[dict], request_id: str
-    ) -> AsyncGenerator[str, None]:
-        async for chunk in self.client.generate_stream(messages):
-            yield chunk
-
-    async def generate(self, messages: List[dict]) -> str:
-        response = await self.client.generate(messages)
-        return clean_response(response)
-
-    async def generate_structured(self, messages: List[dict]) -> TriageResponse:
-        """Génère une réponse typée TriageResponse via instructor.
-
-        Le system prompt doit être en tête de `messages` pour garantir
-        la conformité au contrat JSON.
-        """
-        return await self.client.generate_structured(messages)
+def get_engine():
+    if settings.ENGINE_MODE == "local":
+        return LocalEngine(settings)
+    return RemoteEngine()
 
 
-engine = ModelEngine()
+engine = get_engine()
 
 
 @asynccontextmanager
@@ -71,30 +46,29 @@ async def lifespan(app: FastAPI):
     engine.initialize()
     # Warmup best-effort : amorce vLLM pour éviter le cold start sur la 1ère
     # requête réelle. L'API démarre même si le warmup échoue.
-    if engine.client is not None:
-        try:
-            await asyncio.wait_for(
-                engine.client.generate(
-                    [
-                        {"role": "system", "content": "Warmup."},
-                        {"role": "user", "content": "ok"},
-                    ]
-                ),
-                timeout=WARMUP_TIMEOUT_SEC,
-            )
-            logger.info("✅ Inference warmup OK")
-        except Exception as exc:
-            logger.warning(
-                "⚠️ Warmup best-effort échoué (%s) — l'API démarre quand même",
-                exc,
-            )
+    try:
+        await asyncio.wait_for(
+            engine.generate(
+                [
+                    {"role": "system", "content": "Warmup."},
+                    {"role": "user", "content": "ok"},
+                ]
+            ),
+            timeout=WARMUP_TIMEOUT_SEC,
+        )
+        logger.info("✅ Inference warmup OK")
+    except Exception as exc:
+        logger.warning(
+            "⚠️ Warmup best-effort échoué (%s) — l'API démarre quand même",
+            exc,
+        )
     yield
-    if engine.client is not None:
-        await engine.client.close()
-    print("🛑 Shutdown: remote inference client released")
+    await engine.close()
+    print("🛑 Shutdown: engine released")
 
 
 app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
+app.add_middleware(TimingMiddleware)
 
 
 @app.get("/health", status_code=200, tags=["Monitoring"])
@@ -129,10 +103,12 @@ def _extract_user_input(messages: List[dict]) -> str:
     )
 
 
-def _ensure_system_prompt(messages: List[dict]) -> List[dict]:
+def _ensure_system_prompt(
+    messages: List[dict], prompt_content: str = SYSTEM_PROMPT_FR
+) -> List[dict]:
     """Garantit la présence du system prompt en tête (sans muter l'input)."""
     if messages[0].get("role") != "system":
-        return [{"role": "system", "content": SYSTEM_PROMPT_FR}] + list(messages)
+        return [{"role": "system", "content": prompt_content}] + list(messages)
     return list(messages)
 
 
@@ -157,6 +133,7 @@ async def api_chat(request: ChatRequest):
             or agent_result.get("question")
             or "Pas de réponse générée."
         )
+        reasoning = agent_result.get("reasoning")
 
         # 4. Logs
         latency = perf_counter() - start_time
@@ -168,7 +145,11 @@ async def api_chat(request: ChatRequest):
             False,
         )
         await log_audit(log_entry)
-        return {"response": response_text, "audit_ref": log_entry["audit_id"]}
+        return {
+            "response": response_text,
+            "reasoning": reasoning,
+            "audit_ref": log_entry["audit_id"],
+        }
 
     except Exception as e:
         logger.error(f"❌ Erreur agentique : {traceback.format_exc()}")
@@ -192,7 +173,7 @@ async def api_triage(request: TriageRequest):
         }
     """
     start_time = perf_counter()
-    messages = _ensure_system_prompt(request.history)
+    messages = _ensure_system_prompt(request.history, SYSTEM_PROMPT_JSON_FR)
 
     try:
         result = await call_with_retry(lambda: engine.generate_structured(messages))

@@ -1,65 +1,40 @@
-import json
-import statistics
+import re
 import sys
 from collections import defaultdict
-from pathlib import Path
+from statistics import mean, median
 
 
-def percentile(data, p):
-    if not data:
-        return 0
-    s_data = sorted(data)
-    k = (len(s_data) - 1) * (p / 100)
-    f = int(k)
-    c = min(f + 1, len(s_data) - 1)
-    return s_data[f] + (s_data[c] - s_data[f]) * (k - f)
-
-
-def analyze(file_path: str):
-    if not Path(file_path).exists():
-        print(f"⚠️ Fichier non trouvé : {file_path}")
-        return
-
-    results = [json.loads(line) for line in open(file_path)]
-
-    # Agrégation des latences par composant
-    stats = defaultdict(list)
-    total_latencies = []
-
-    for r in results:
-        if not r.get("success"):
-            continue
-
-        total_latencies.append(r["latency_ms"])
-
-        comp_lat = r.get("component_latencies", {})
-        for c, val in comp_lat.items():
-            stats[c].append(val)
-
-    print(f"\n📊 Analyse détaillée : {file_path}")
-    print(f"{'Composant':<20} {'Moy (ms)':>10} {'p50 (ms)':>10} {'p95 (ms)':>10}")
-    print(f"{'-' * 50}")
-    total_mean = statistics.mean(total_latencies)
-    total_med = statistics.median(total_latencies)
-    total_p95 = percentile(total_latencies, 95)
-    print(
-        f"{'TOTAL (Réseau)':<20} {total_mean:>10.0f} {total_med:>10.0f} "
-        f"{total_p95:>10.0f}"
+def analyze_logs(log_file: str):
+    metrics = defaultdict(list)
+    # Pattern pour extraire les logs de métriques : ⏱️  [METRIC] label: value ms
+    pattern = re.compile(
+        r"⏱️\s+\[METRIC\]\s+(?P<label>[\w\s_]+):\s+(?P<value>[\d\.]+)ms"
     )
 
-    for c, vals in stats.items():
-        if not vals:
+    try:
+        with open(log_file, "r") as f:
+            for line in f:
+                match = pattern.search(line)
+                if match:
+                    label = match.group("label").strip()
+                    value = float(match.group("value"))
+                    metrics[label].append(value)
+    except FileNotFoundError:
+        print(f"Erreur : Fichier {log_file} introuvable.")
+        return
+
+    print(f"--- Analyse des Performances ({log_file}) ---")
+    for label, values in metrics.items():
+        if not values:
             continue
-        c_mean = statistics.mean(vals)
-        c_med = statistics.median(vals)
-        c_p95 = percentile(vals, 95)
-        print(f"{c:<20} {c_mean:>10.0f} {c_med:>10.0f} {c_p95:>10.0f}")
+        print(f"\nMetric: {label}")
+        print(f"  Count:  {len(values)}")
+        print(f"  Min:    {min(values):.2f} ms")
+        print(f"  Max:    {max(values):.2f} ms")
+        print(f"  Mean:   {mean(values):.2f} ms")
+        print(f"  Median: {median(values):.2f} ms")
 
 
 if __name__ == "__main__":
-    file_path = (
-        sys.argv[1]
-        if len(sys.argv) > 1
-        else "scripts/benchmark/data/results_cloud.jsonl"
-    )
-    analyze(file_path)
+    log_path = sys.argv[1] if len(sys.argv) > 1 else "logs/app.log"
+    analyze_logs(log_path)

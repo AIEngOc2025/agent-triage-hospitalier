@@ -46,15 +46,20 @@ if prompt := st.chat_input("Décrivez la plainte du patient :"):
                 response.raise_for_status()
                 result = response.json()
 
-                # Récupération de la réponse
+                # Récupération de la réponse et du raisonnement
                 msg = result.get("response", "Pas de réponse reçue.")
+                reasoning = result.get("reasoning", None)
+
+                if reasoning:
+                    with st.expander("🧠 Chaîne de pensée de l'agent"):
+                        st.write(reasoning)
+
                 st.write(msg)
                 st.session_state.messages.append({"role": "assistant", "content": msg})
 
             except httpx.HTTPStatusError as e:
                 st.error(
-                    f"Erreur API ({e.response.status_code}) : "
-                    f"{e.response.text[:300]}"
+                    f"Erreur API ({e.response.status_code}) : {e.response.text[:300]}"
                 )
             except Exception as e:
                 st.error(f"Erreur de connexion à l'API : {e}")
