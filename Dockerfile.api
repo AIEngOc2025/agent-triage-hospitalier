@@ -1,30 +1,30 @@
-# Utiliser une image Python de base
-FROM python:3.11-slim
+# Utiliser une image Python de base adaptée à la version 3.12
+FROM python:3.12-slim
 
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Installer uv, un gestionnaire de paquets et d'environnement virtuel rapide
-RUN pip install uv
+# Installer uv pour la gestion des dépendances
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uv
 
-# Copier les fichiers de dépendances
-COPY pyproject.toml poetry.lock* ./
-COPY requirements.txt ./
+# Copier les fichiers de configuration du projet
+COPY pyproject.toml uv.lock ./
 
-# Installer les dépendances Python en utilisant uv pour la vitesse
-RUN uv pip install --no-cache --system -r requirements.txt
+# Synchroniser les dépendances (sans les dépendances de dev)
+RUN uv sync --no-dev --no-editable
 
 # --- AJOUT : Téléchargement des modèles SpaCy ---
-# Télécharger les modèles linguistiques requis par MedicalAnonymizer
-RUN python -m spacy download fr_core_news_lg
-RUN python -m spacy download en_core_web_lg
+RUN .venv/bin/python -m spacy download fr_core_news_lg
+RUN .venv/bin/python -m spacy download en_core_web_lg
 
-# Copier le reste du code de l'application
-COPY ./app ./app
-COPY ./agent ./agent
+# Copier tout le code de l'application
+COPY . .
 
 # Définir PYTHONPATH pour inclure le répertoire racine
 ENV PYTHONPATH=/app
+
+# Utiliser l'environnement virtuel créé par uv
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Commande pour lancer l'application avec Uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
