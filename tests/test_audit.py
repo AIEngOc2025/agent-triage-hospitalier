@@ -7,11 +7,11 @@ from fastapi.testclient import TestClient
 from httpx import HTTPStatusError, Request, Response
 
 from app.main import app, log_audit
+from app.remote.retry_utils import call_with_retry
 from app.remote.client import (
     BASE_BACKOFF_SEC,
     MAX_RETRIES,
     RETRYABLE_STATUS_CODES,
-    call_with_retry,
 )
 from app.settings import settings
 
