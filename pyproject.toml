@@ -21,7 +21,6 @@ dependencies = [
     "instructor>=1.15.4",
     "transformers>=5.14.1",
     "torch>=2.13.0",
-    "vllm-metal>=0.1.0",
 ]
 
 [tool.ruff]
@@ -44,4 +43,5 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "ruff>=0.15.22",
     "black>=24.0.0",
+    "vllm-metal>=0.1.0; sys_platform == 'darwin'",
 ]
