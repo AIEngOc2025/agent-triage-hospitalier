@@ -55,6 +55,10 @@ jobs:
         uses: astral-sh/setup-uv@v1
       - name: Sync dependencies
         run: uv sync --all-groups
+      - name: Debug environment
+        run: |
+          uv run pip list
+          uv run python -c "import sys; print(sys.path)"
       - name: Run tests
         env:
           APP_TEST_MODE: "1"
