@@ -23,6 +23,11 @@ dependencies = [
     "torch>=2.13.0",
 ]
 
+[project.optional-dependencies]
+mac = [
+    "vllm-metal>=0.1.0",
+]
+
 [tool.ruff]
 line-length = 88
 exclude = ["build", "*.jsonl"]
@@ -43,5 +48,4 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "ruff>=0.15.22",
     "black>=24.0.0",
-    "vllm-metal>=0.1.0; sys_platform == 'darwin'",
 ]
