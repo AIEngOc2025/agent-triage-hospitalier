@@ -3,6 +3,7 @@ WORKDIR /app
 
 # Installer uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+RUN chmod +x /usr/local/bin/uv
 
 # Copier les fichiers de configuration
 COPY pyproject.toml uv.lock ./

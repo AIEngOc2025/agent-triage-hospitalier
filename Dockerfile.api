@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Installer uv pour la gestion des dépendances
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+RUN chmod +x /usr/local/bin/uv
 
 # Copier les fichiers de configuration du projet
 COPY pyproject.toml uv.lock ./
