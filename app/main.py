@@ -13,10 +13,9 @@ from pydantic import BaseModel, Field
 from app.agent_orchestrator import TriageAgentOrchestrator
 from app.api_utils import create_log_entry, log_audit
 from app.core.settings import settings
-from app.local.engine import LocalEngine
+from app.engine_factory import engine
 from app.middleware_timing import TimingMiddleware
 from app.nlp_triage import triage_classifier
-from app.remote.engine import RemoteEngine
 from app.remote.retry_utils import call_with_retry
 from app.system_prompts import SYSTEM_PROMPT_FR, SYSTEM_PROMPT_JSON_FR
 from app.triage_veto import decide_veto
@@ -28,16 +27,6 @@ agent_sessions: Dict[str, TriageAgentOrchestrator] = {}
 
 # --- Warmup config (cold start resilience) ---
 WARMUP_TIMEOUT_SEC: float = 30.0  # pire cas : cold start vLLM ~5-15 s
-
-
-# --- ENGINE ABSTRACTION ---
-def get_engine():
-    if settings.ENGINE_MODE == "local":
-        return LocalEngine(settings)
-    return RemoteEngine()
-
-
-engine = get_engine()
 
 
 @asynccontextmanager
@@ -125,7 +114,7 @@ async def api_chat(request: ChatRequest):
 
     # 2. Exécution agentique
     try:
-        agent_result = orchestrator.run(user_input)
+        agent_result = await orchestrator.run(user_input)
 
         # 3. Formatage réponse
         response_text = (

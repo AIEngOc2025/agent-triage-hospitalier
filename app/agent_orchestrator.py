@@ -4,6 +4,9 @@ import logging
 from enum import Enum, auto
 from typing import Dict, Any
 
+from app.system_prompts import SYSTEM_PROMPT_JSON_FR
+from app.engine_factory import engine
+
 logger = logging.getLogger(__name__)
 
 
@@ -35,7 +38,7 @@ class TriageAgentOrchestrator:
         logger.info("Transitioning from %s to %s", self.state, new_state)
         self.state = new_state
 
-    def process_step(self, data: Any = None) -> Any:
+    async def process_step(self, data: Any = None) -> Any:
         """
         @definition : Traite l'étape actuelle en fonction de l'état du graphe.
         @args/params : data (Any) - Données d'entrée pour l'étape.
@@ -59,8 +62,15 @@ class TriageAgentOrchestrator:
             return "LLM Synthesis next"
 
         if self.state == TriageState.LLM_SYNTHESIS:
-            # Placeholder pour appel au LLM
-            self.context["llm_synthesis"] = "Patient needs evaluation in 2h."
+            # Appel au LLM
+            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT_JSON_FR},
+                {"role": "user", "content": self.context["anonymized_data"]},
+            ]
+            response = await engine.generate_structured(messages)
+
+            # Stockage de la réponse structurée (message + triage_result)
+            self.context["llm_synthesis"] = response.model_dump_json()
             self.transition_to(TriageState.FINALIZATION)
             return "Triage Complete"
 
@@ -74,7 +84,7 @@ class TriageAgentOrchestrator:
 
         return "Unknown State"
 
-    def run(self, user_input: str) -> Dict[str, Any]:
+    async def run(self, user_input: str) -> Dict[str, Any]:
         """
         @definition : Exécute le graphe d'états jusqu'à un état d'attente ou final.
         @args/params : user_input (str) - Entrée utilisateur pour démarrer ou poursuivre.
@@ -82,11 +92,11 @@ class TriageAgentOrchestrator:
         """
         # Exécution simple du workflow jusqu'à VETO_WAIT ou FINALIZATION
         if self.state == TriageState.START:
-            self.process_step(user_input)
+            await self.process_step(user_input)
 
         # Simulation d'exécution auto jusqu'à l'état VETO_WAIT
         while self.state not in [TriageState.VETO_WAIT, TriageState.FINALIZATION]:
-            self.process_step()
+            await self.process_step()
 
         # Dynamique reasoning
         if self.state == TriageState.FINALIZATION:
