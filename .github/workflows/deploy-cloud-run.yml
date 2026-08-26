@@ -67,6 +67,7 @@ jobs:
         env:
           APP_TEST_MODE: "1"
           PYTHONPATH: "."
+          ENGINE_MODE: "local"
         run: uv run pytest tests/ -v --tb=short
 
   docker-build:
