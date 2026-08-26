@@ -13,7 +13,11 @@ class LocalEngine:
         self.tokenizer = None
 
     def initialize(self):
-        import mlx_lm
+        try:
+            import mlx_lm
+        except ImportError:
+            logger.warning("⚠️ mlx_lm not found. LocalEngine initialized in dummy mode.")
+            return
 
         print("🏠 [LOCAL] Initializing local MLX engine...")
         try:
@@ -25,6 +29,9 @@ class LocalEngine:
     async def generate_stream(
         self, messages: List[dict], request_id: str
     ) -> AsyncGenerator[str, None]:
+        if self.model is None:
+            raise RuntimeError("MLX engine not initialized (mlx_lm missing).")
+        
         import mlx_lm
 
         # Convert messages to prompt string for mlx_lm
@@ -37,6 +44,9 @@ class LocalEngine:
         yield response
 
     async def generate(self, messages: List[dict]) -> str:
+        if self.model is None:
+            raise RuntimeError("MLX engine not initialized (mlx_lm missing).")
+        
         import mlx_lm
 
         prompt = self.tokenizer.apply_chat_template(
@@ -45,6 +55,9 @@ class LocalEngine:
         return mlx_lm.generate(self.model, self.tokenizer, prompt=prompt, verbose=False)
 
     async def generate_structured(self, messages: List[dict]) -> TriageResponse:
+        if self.model is None:
+            raise RuntimeError("MLX engine not initialized (mlx_lm missing).")
+            
         import mlx_lm
 
         """
