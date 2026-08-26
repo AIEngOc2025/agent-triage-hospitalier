@@ -88,9 +88,17 @@ class TriageAgentOrchestrator:
         while self.state not in [TriageState.VETO_WAIT, TriageState.FINALIZATION]:
             self.process_step()
 
+        # Dynamique reasoning
+        if self.state == TriageState.FINALIZATION:
+            reasoning = "Triage terminé avec succès."
+        elif self.state == TriageState.VETO_WAIT:
+            reasoning = "Exécution agentique terminée jusqu'au point de veto."
+        else:
+            reasoning = "Exécution interrompue."
+
         return {
             "final_decision": self.context.get("llm_synthesis"),
-            "reasoning": "Exécution agentique terminée jusqu'au point de veto.",
+            "reasoning": reasoning,
             "state": self.state.name,
         }
 
