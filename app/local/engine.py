@@ -1,7 +1,5 @@
 import logging
 from typing import AsyncGenerator, List
-
-import mlx_lm
 from app.schemas import TriageResponse
 
 logger = logging.getLogger(__name__)
@@ -15,6 +13,8 @@ class LocalEngine:
         self.tokenizer = None
 
     def initialize(self):
+        import mlx_lm
+
         print("🏠 [LOCAL] Initializing local MLX engine...")
         try:
             self.model, self.tokenizer = mlx_lm.load(self.settings.MODEL_PATH)
@@ -25,6 +25,8 @@ class LocalEngine:
     async def generate_stream(
         self, messages: List[dict], request_id: str
     ) -> AsyncGenerator[str, None]:
+        import mlx_lm
+
         # Convert messages to prompt string for mlx_lm
         prompt = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
@@ -35,12 +37,16 @@ class LocalEngine:
         yield response
 
     async def generate(self, messages: List[dict]) -> str:
+        import mlx_lm
+
         prompt = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
         return mlx_lm.generate(self.model, self.tokenizer, prompt=prompt, verbose=False)
 
     async def generate_structured(self, messages: List[dict]) -> TriageResponse:
+        import mlx_lm
+
         """
         Génère du texte brut, nettoie le JSON, puis valide avec Pydantic.
         """

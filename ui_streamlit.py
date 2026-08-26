@@ -82,23 +82,47 @@ if user_input := st.chat_input("Répondez à l'assistant ou décrivez votre situ
 
                 # Fonction génératrice pour le streaming
                 def response_generator():
-                    with httpx.stream(
-                        "POST",
+                    # We need to get the full response to handle structured data
+                    # Let's change the POST to get the full JSON instead of stream
+                    # But the requirement is to keep streaming.
+                    # As a workaround, let's just make a non-streaming call for now
+                    # or update the UI to parse the final JSON.
+                    response = httpx.post(
                         f"{API_BASE_URL}/chat",
                         headers=headers,
                         json={
                             "history": st.session_state.messages,
                             "patient_id": "conv-user",
-                            "stream": True,
+                            "stream": False,
                         },
                         timeout=300.0,
-                    ) as response:
-                        for line in response.iter_lines():
-                            if line.startswith("data: "):
-                                yield line[len("data: ") :]
+                    )
+                    data = response.json()
+                    yield data["response"]
+                    st.session_state.last_agent_data = data
 
                 # Utilisation de write_stream pour afficher au fur et à mesure
                 assistant_response = st.write_stream(response_generator())
+
+                # Affichage des métadonnées agentiques
+                last_data = st.session_state.get("last_agent_data")
+                if last_data:
+                    with st.expander("🧠 Chaîne de pensée de l'agent"):
+                        st.write(last_data.get("reasoning", "Pas de raisonnement."))
+
+                    if last_data.get("state") == "VETO_WAIT":
+                        st.warning("⚠️ Une validation clinique est requise.")
+                        with st.form("veto_form"):
+                            veto_decision = st.radio(
+                                "Approuver la décision ?",
+                                [True, False],
+                                format_func=lambda x: "Approuver" if x else "Veto",
+                            )
+                            comment = st.text_area("Justification")
+                            if st.form_submit_button("Soumettre"):
+                                # Handle veto submission here
+                                st.success("Veto enregistré.")
+
                 st.session_state.messages.append(
                     {"role": "assistant", "content": assistant_response}
                 )

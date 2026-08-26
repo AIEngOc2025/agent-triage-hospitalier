@@ -18,3 +18,14 @@ def classify_triage_urgency(text: str) -> dict:
     @return : dict - Niveau d'urgence (maximale, modérée, différée) et score de confiance.
     """
     return triage_classifier.predict(text)
+
+
+def clinical_veto_tool(veto_decision: bool, comment: str) -> dict:
+    """
+    @definition : Enregistre le veto ou l'approbation d'un soignant sur la décision de l'IA.
+    @args/params : veto_decision (bool) - True si validé, False si refusé (veto).
+    @args/params : comment (str) - Justification de la décision clinique.
+    @return : dict - Statut de l'enregistrement du veto.
+    """
+    # Placeholder pour l'implémentation de l'enregistrement du veto
+    return {"status": "veto_recorded", "decision": veto_decision, "comment": comment}

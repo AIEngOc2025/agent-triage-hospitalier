@@ -134,6 +134,7 @@ async def api_chat(request: ChatRequest):
             or "Pas de réponse générée."
         )
         reasoning = agent_result.get("reasoning")
+        state = agent_result.get("state")
 
         # 4. Logs
         latency = perf_counter() - start_time
@@ -148,6 +149,7 @@ async def api_chat(request: ChatRequest):
         return {
             "response": response_text,
             "reasoning": reasoning,
+            "state": state,
             "audit_ref": log_entry["audit_id"],
         }
 

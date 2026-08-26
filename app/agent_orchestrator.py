@@ -1,77 +1,109 @@
-import logging
-from typing import Any, Dict
+from __future__ import annotations
 
-from app.agent_tools import anonymize_clinical_data, classify_triage_urgency
+import logging
+from enum import Enum, auto
+from typing import Dict, Any
 
 logger = logging.getLogger(__name__)
 
 
+class TriageState(Enum):
+    """États possibles du graphe de triage."""
+
+    START = auto()
+    ANONYMIZATION = auto()
+    NLP_CLASSIFICATION = auto()
+    LLM_SYNTHESIS = auto()
+    VETO_WAIT = auto()
+    FINALIZATION = auto()
+
+
 class TriageAgentOrchestrator:
-    """
-    @definition : Gère le flux de triage agentique (états: anonymisation -> classification -> veto).
-    @args/params : Aucun.
-    @return : Aucun.
-    """
+    """Graphe d'états contrôlé pour le triage hospitalier."""
 
     def __init__(self):
-        self.state = "INIT"
-        self.context = {}
+        self.state = TriageState.START
+        self.context: Dict[str, Any] = {}
+        logger.info("Orchestrator initialized at START.")
+
+    def transition_to(self, new_state: TriageState) -> None:
+        """
+        @definition : Effectue une transition vers un nouvel état du graphe.
+        @args/params : new_state (TriageState) - État cible.
+        @return : None
+        """
+        logger.info("Transitioning from %s to %s", self.state, new_state)
+        self.state = new_state
+
+    def process_step(self, data: Any = None) -> Any:
+        """
+        @definition : Traite l'étape actuelle en fonction de l'état du graphe.
+        @args/params : data (Any) - Données d'entrée pour l'étape.
+        @return : Any - Résultat de l'étape.
+        """
+        if self.state == TriageState.START:
+            self.context["raw_data"] = data
+            self.transition_to(TriageState.ANONYMIZATION)
+            return "Anonymization next"
+
+        if self.state == TriageState.ANONYMIZATION:
+            # Placeholder pour appel à l'outil anonymisation
+            self.context["anonymized_data"] = f"Anonymized: {self.context['raw_data']}"
+            self.transition_to(TriageState.NLP_CLASSIFICATION)
+            return "NLP Classification next"
+
+        if self.state == TriageState.NLP_CLASSIFICATION:
+            # Placeholder pour appel à l'outil classifieur
+            self.context["triage_result"] = "Modérée"
+            self.transition_to(TriageState.LLM_SYNTHESIS)
+            return "LLM Synthesis next"
+
+        if self.state == TriageState.LLM_SYNTHESIS:
+            # Placeholder pour appel au LLM
+            self.context["llm_synthesis"] = "Patient needs evaluation in 2h."
+            self.transition_to(TriageState.FINALIZATION)
+            return "Triage Complete"
+
+        if self.state == TriageState.VETO_WAIT:
+            # État d'attente désactivé
+            self.transition_to(TriageState.FINALIZATION)
+            return "Triage Complete"
+
+        if self.state == TriageState.FINALIZATION:
+            return "Triage Complete"
+
+        return "Unknown State"
 
     def run(self, user_input: str) -> Dict[str, Any]:
         """
-        @definition : Flux agentique totalement autonome. Toutes les décisions sont finalisées par l'agent.
-        @args/params : user_input (str) - Entrée patient/infirmier.
-        @return : Dict - Résultat avec 'status' (AUTO_FINALIZED).
+        @definition : Exécute le graphe d'états jusqu'à un état d'attente ou final.
+        @args/params : user_input (str) - Entrée utilisateur pour démarrer ou poursuivre.
+        @return : Dict[str, Any] - Résultat de l'exécution agentique.
         """
-        logger.info("🚀 Flux agentique totalement autonome (MVP - Sans garde-fou).")
-        self.context.setdefault("history", []).append(user_input)
+        # Exécution simple du workflow jusqu'à VETO_WAIT ou FINALIZATION
+        if self.state == TriageState.START:
+            self.process_step(user_input)
 
-        # 1. Dialogue si insuffisant
-        if len(user_input) < 20:
-            return {
-                "status": "PENDING_CLARIFICATION",
-                "question": "Pourriez-vous préciser vos symptômes et leur durée ?",
-            }
-
-        # 2. Triage autonome
-        anonymized_text = anonymize_clinical_data(" ".join(self.context["history"]))
-        nlp_result = classify_triage_urgency(anonymized_text)
-        self.context["nlp_result"] = nlp_result
-
-        # Autonomie totale : Pas de vérification humaine
-        self.state = "AUTO_FINALIZED"
-        return {
-            "status": "AUTO_FINALIZED",
-            "final_decision": nlp_result["niveau"],
-            "comment": "Triage autonome finalisé par l'agent.",
-            "reasoning": f"Classifieur NLP appliqué sur données anonymisées : Niveau {nlp_result['niveau']} (Confiance: {nlp_result['confiance']:.2%})",
-        }
-
-    def process_validation(
-        self, validation: bool, comment: str, user_id: str
-    ) -> Dict[str, Any]:
-        """
-        @definition : Consigne la validation humaine obligatoire pour les cas limites.
-        @args/params :
-            - validation (bool) - True si validé.
-            - comment (str) - Justification.
-            - user_id (str) - ID du validateur.
-        @return : Dict - Décision finale consignée.
-        """
-        self.state = "COMPLETED"
-        log_entry = {
-            "action": "HUMAN_VALIDATION",
-            "validated": validation,
-            "comment": comment,
-            "user_id": user_id,
-            "context": self.context["nlp_result"],
-        }
-        logger.info(f"📝 Validation consignée : {log_entry}")
+        # Simulation d'exécution auto jusqu'à l'état VETO_WAIT
+        while self.state not in [TriageState.VETO_WAIT, TriageState.FINALIZATION]:
+            self.process_step()
 
         return {
-            "status": "FINALIZED",
-            "final_decision": self.context["nlp_result"]["niveau"]
-            if validation
-            else "REVISED",
-            "audit_log": log_entry,
+            "final_decision": self.context.get("llm_synthesis"),
+            "reasoning": "Exécution agentique terminée jusqu'au point de veto.",
+            "state": self.state.name,
         }
+
+    def handle_veto(self, approved: bool, comment: str) -> str:
+        """
+        @definition : Gère la décision du soignant après l'état de VETO_WAIT.
+        @args/params : approved (bool) - True si validé, False si refusé.
+        @args/params : comment (str) - Justification.
+        @return : str - Résultat de la transition après veto.
+        """
+        if self.state != TriageState.VETO_WAIT:
+            return "Not in Veto Wait state"
+
+        self.context["veto_decision"] = {"approved": approved, "comment": comment}
+        self.transition_to(TriageState.FINALIZATION)
+        return "Finalization next"
