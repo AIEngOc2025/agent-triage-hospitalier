@@ -143,7 +143,7 @@ async def api_chat(request: ChatRequest):
             user_input,
             response_text,
             latency,
-            False,
+            request.stream,
         )
         await log_audit(log_entry)
         return {
