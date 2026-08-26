@@ -208,13 +208,19 @@ async def test_lifespan_warmup_failure_does_not_block_app(mock_generate, monkeyp
     from fastapi.testclient import TestClient
 
     from app.main import app
+    
+    monkeypatch.setenv("ENGINE_MODE", "remote")
+    from app.main import engine
+    engine.initialize()
 
     # Remplace le warmup par une coroutine qui lève un TimeoutError
     async def _boom_generate(*args, **kwargs):
         raise asyncio.TimeoutError("warmup timed out")
 
     monkeypatch.setattr("app.main.WARMUP_TIMEOUT_SEC", 0.05)
-    with patch("app.main.engine.client") as mock_client:
+    
+    # Mocking the engine's structure for RemoteEngine
+    with patch.object(engine, 'client') as mock_client:
         mock_client.generate = _boom_generate
 
         with TestClient(app) as client:
@@ -247,13 +253,17 @@ async def test_chat_retries_on_503_and_succeeds(mock_generate, monkeypatch):
 
     from app.main import app
 
+    monkeypatch.setenv("ENGINE_MODE", "remote")
     monkeypatch.setattr("app.remote.client.BASE_BACKOFF_SEC", 0.0)
+    
+    from app.main import engine
+    engine.initialize()
 
     # Le warmup doit passer (pas lever)
     async def _ok_generate(*args, **kwargs):
         return "warmup-ok"
 
-    with patch("app.main.engine.client") as mock_client:
+    with patch.object(engine, 'client') as mock_client:
         mock_client.generate = _ok_generate
         # engine.generate (utilisé dans /chat) : 503 puis OK
         mock_generate.side_effect = [_http_status_error(503), "RECOVERED"]
