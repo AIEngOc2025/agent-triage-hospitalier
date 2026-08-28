@@ -1,0 +1,8 @@
+DEBUG: All environment variables starting with MODEL:
+DEBUG: MODEL_ID=models/merged_dpo_final_chsa
+DEBUG: Settings loaded. MODEL: models/merged_dpo_final_chsa, ENV: development
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 7805.85it/s]
+INFO:     Started server process [17081]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://localhost:8000 (Press CTRL+C to quit)

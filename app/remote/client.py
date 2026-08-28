@@ -24,9 +24,9 @@ class RemoteInferenceClient:
         inference_url: Optional[str] = None,
         model_name: Optional[str] = None,
         temperature: float = 0.0,
-        max_tokens: int = 60,  # Réduit à 60 : suffisant pour un JSON de triage
+        max_tokens: int = 4096,  # Augmenté à 4096 : pour satisfaire les besoins du mode structuré (schema + contenu)
         repetition_penalty: float = 1.1,
-        timeout: float = 30.0,  # 30s est suffisant si le modèle ne "délire" plus
+        timeout: float = 300.0,  # Augmenté à 300s pour permettre des générations plus longues avec 4096 tokens
     ):
         self.inference_url = inference_url or os.getenv(
             "INFERENCE_SERVICE_URL",
@@ -55,7 +55,7 @@ class RemoteInferenceClient:
 
         self.params = {
             "temperature": temperature,
-            "max_tokens": max_tokens,
+            "max_tokens": 4096,
             "repetition_penalty": repetition_penalty,
         }
 
@@ -97,6 +97,7 @@ class RemoteInferenceClient:
                 # En production, on peut mettre 1.
                 max_retries=0,
                 temperature=0,
+                max_tokens=self.params["max_tokens"],
                 extra_body={"guided_json": TriageResponse.model_json_schema()},
             )
         except Exception as e:

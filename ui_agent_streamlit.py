@@ -42,7 +42,7 @@ if prompt := st.chat_input("Décrivez la plainte du patient :"):
                     "patient_id": st.session_state.patient_id,
                     "stream": False,
                 }
-                response = httpx.post(API_URL, json=payload, timeout=60.0)
+                response = httpx.post(API_URL, json=payload, timeout=360.0)
                 response.raise_for_status()
                 result = response.json()
 

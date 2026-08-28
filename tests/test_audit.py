@@ -53,7 +53,7 @@ async def test_log_audit_writes_file():
 async def test_api_chat_logs_audit(mock_run, client):
     """Tests that calling /chat triggers an audit log entry."""
     mock_run.return_value = {"final_decision": "Test response", "state": "FINALIZATION"}
-    
+
     with patch("app.main.log_audit", new_callable=AsyncMock) as mock_log:
         response = client.post(
             "/chat",
@@ -80,7 +80,7 @@ async def test_api_chat_logs_audit(mock_run, client):
 async def test_api_chat_streaming_logs_audit(mock_run, client):
     """Tests that streaming /chat triggers an audit log entry after completion."""
     mock_run.return_value = {"final_decision": "Test response", "state": "FINALIZATION"}
-    
+
     with patch("app.main.log_audit", new_callable=AsyncMock) as mock_log:
         response = client.post(
             "/chat",
@@ -96,7 +96,7 @@ async def test_api_chat_streaming_logs_audit(mock_run, client):
         # Parse the streaming response properly
         try:
             data = response.json()
-        except:
+        except Exception:
             # If streaming, iterate through response content
             data = {"response": "Test response"}
 
@@ -235,8 +235,13 @@ async def test_lifespan_warmup_failure_does_not_block_app(mock_generate, monkeyp
             assert r.status_code == 200
 
             # /chat doit fonctionner (orchestrator mocké)
-            with patch("app.agent_orchestrator.TriageAgentOrchestrator.run", 
-                       return_value={"final_decision": "Test response", "state": "FINALIZATION"}):
+            with patch(
+                "app.agent_orchestrator.TriageAgentOrchestrator.run",
+                return_value={
+                    "final_decision": "Test response",
+                    "state": "FINALIZATION",
+                },
+            ):
                 r = client.post(
                     "/chat",
                     json={
@@ -256,10 +261,8 @@ async def test_lifespan_warmup_failure_does_not_block_app(mock_generate, monkeyp
 @patch("app.main.engine.generate")
 async def test_chat_retries_on_503_and_succeeds(mock_generate, monkeypatch):
     """1er appel → 503 ; 2e appel → 'RECOVERED'. L'API renvoie 200 au client."""
-    from fastapi.testclient import TestClient
     from app.main import app
     from app.remote.engine import RemoteEngine
-    import importlib
     import app.main
 
     # Use RemoteEngine directly
@@ -274,9 +277,12 @@ async def test_chat_retries_on_503_and_succeeds(mock_generate, monkeypatch):
 
     with patch.object(app.main.engine, "client") as mock_client:
         mock_client.generate = _ok_generate
-        
+
         # Test requires orchestrator retry, which is not implemented. Skipping.
-        pytest.skip("Retry logic for orchestrator.run is not implemented in app/main.py")
+        pytest.skip(
+            "Retry logic for orchestrator.run is not implemented in app/main.py"
+        )
+
 
 # --- 8. sanity check : constantes de retry ---
 

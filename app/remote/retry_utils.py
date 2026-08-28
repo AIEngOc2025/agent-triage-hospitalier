@@ -2,7 +2,7 @@ import asyncio
 import logging
 from typing import Any, Callable, TypeVar
 
-from httpx import ConnectError, HTTPStatusError
+from httpx import ConnectError, HTTPStatusError, TimeoutException
 
 logger = logging.getLogger(__name__)
 
@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 MAX_RETRIES = 3
 BASE_BACKOFF_SEC = 1.0
 RETRYABLE_STATUS_CODES = {502, 503, 504}
+RETRYABLE_EXCEPTIONS = (HTTPStatusError, ConnectError, TimeoutException)
 
 T = TypeVar("T")
 
@@ -17,7 +18,7 @@ T = TypeVar("T")
 async def call_with_retry(func: Callable[[], Any]) -> Any:
     """
     @definition : Exécute une fonction asynchrone avec retry exponentiel
-        sur les erreurs 5xx retryables.
+        sur les erreurs 5xx retryables et timeouts.
     @args/params : func (Callable[[], Any]) - Fonction asynchrone à appeler.
     @return : Any - Résultat de la fonction exécutée.
     """
@@ -25,14 +26,12 @@ async def call_with_retry(func: Callable[[], Any]) -> Any:
     while True:
         try:
             return await func()
-        except (HTTPStatusError, ConnectError) as e:
-            # Vérifier si l'erreur est retryable
-            status_code = getattr(e, "response", None) and e.response.status_code
-            if (
-                isinstance(e, HTTPStatusError)
-                and status_code not in RETRYABLE_STATUS_CODES
-            ):
-                raise e
+        except RETRYABLE_EXCEPTIONS as e:
+            # Vérifier si l'erreur HTTP est retryable
+            if isinstance(e, HTTPStatusError):
+                status_code = getattr(e, "response", None) and e.response.status_code
+                if status_code not in RETRYABLE_STATUS_CODES:
+                    raise e
 
             if retries >= MAX_RETRIES:
                 logger.error("❌ Max retries exhausted. Failing.")
