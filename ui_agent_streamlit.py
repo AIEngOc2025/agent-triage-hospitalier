@@ -35,31 +35,26 @@ if prompt := st.chat_input("Décrivez la plainte du patient :"):
 
     # Appel à l'API distante
     with st.chat_message("assistant"):
-        with st.spinner("Analyse clinique..."):
-            try:
-                payload = {
-                    "history": st.session_state.messages,
-                    "patient_id": st.session_state.patient_id,
-                    "stream": False,
-                }
-                response = httpx.post(API_URL, json=payload, timeout=360.0)
-                response.raise_for_status()
-                result = response.json()
+        try:
+            payload = {
+                "history": st.session_state.messages,
+                "patient_id": st.session_state.patient_id,
+                "stream": True,
+            }
 
-                # Récupération de la réponse et du raisonnement
-                msg = result.get("response", "Pas de réponse reçue.")
-                reasoning = result.get("reasoning", None)
+            def response_stream():
+                with httpx.stream(
+                    "POST", API_URL, json=payload, timeout=360.0
+                ) as response:
+                    for line in response.iter_text():
+                        yield line
 
-                if reasoning:
-                    with st.expander("🧠 Chaîne de pensée de l'agent"):
-                        st.write(reasoning)
+            full_response = st.write_stream(response_stream())
+            st.session_state.messages.append(
+                {"role": "assistant", "content": full_response}
+            )
 
-                st.write(msg)
-                st.session_state.messages.append({"role": "assistant", "content": msg})
-
-            except httpx.HTTPStatusError as e:
-                st.error(
-                    f"Erreur API ({e.response.status_code}) : {e.response.text[:300]}"
-                )
-            except Exception as e:
-                st.error(f"Erreur de connexion à l'API : {e}")
+        except httpx.HTTPStatusError as e:
+            st.error(f"Erreur API ({e.response.status_code}) : {e.response.text[:300]}")
+        except Exception as e:
+            st.error(f"Erreur de connexion à l'API : {e}")

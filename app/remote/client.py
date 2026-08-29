@@ -24,9 +24,9 @@ class RemoteInferenceClient:
         inference_url: Optional[str] = None,
         model_name: Optional[str] = None,
         temperature: float = 0.0,
-        max_tokens: int = 4096,  # Augmenté à 4096 : pour satisfaire les besoins du mode structuré (schema + contenu)
+        max_tokens: int = 8192,  # Augmenté à 8192 : pour satisfaire les besoins du mode structuré (schema + contenu)
         repetition_penalty: float = 1.1,
-        timeout: float = 300.0,  # Augmenté à 300s pour permettre des générations plus longues avec 4096 tokens
+        timeout: float = 300.0,  # Augmenté à 300s pour permettre des générations plus longues avec 8192 tokens
     ):
         self.inference_url = inference_url or os.getenv(
             "INFERENCE_SERVICE_URL",
@@ -55,7 +55,7 @@ class RemoteInferenceClient:
 
         self.params = {
             "temperature": temperature,
-            "max_tokens": 4096,
+            "max_tokens": 8192,
             "repetition_penalty": repetition_penalty,
         }
 

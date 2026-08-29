@@ -13,7 +13,7 @@ class NiveauTriage(str, Enum):
 
     MAXIMALE = "maximale"
     MODEREE = "modérée"
-    DIFFérée = "différée"
+    DIFFEREE = "différée"
 
 
 class TriageResult(BaseModel):

@@ -24,8 +24,9 @@ python3 -m vllm.entrypoints.openai.api_server \
     --host 0.0.0.0 \
     --port "$VLLM_PORT" \
     --trust-remote-code \
-    --gpu-memory-utilization 0.9 &
-VLLM_PID=$!
+    --gpu-memory-utilization 0.9 \
+    --max-model-len 8192 &
+    VLLM_PID=$!
 
 until curl -s http://localhost:${VLLM_PORT}/health > /dev/null; do
     sleep 5

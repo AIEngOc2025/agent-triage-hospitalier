@@ -8,6 +8,7 @@ from typing import Dict, List
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.agent_orchestrator import TriageAgentOrchestrator
@@ -19,6 +20,9 @@ from app.nlp_triage import triage_classifier
 from app.remote.retry_utils import call_with_retry
 from app.system_prompts import SYSTEM_PROMPT_FR, SYSTEM_PROMPT_JSON_FR
 from app.triage_veto import decide_veto
+from instructor.v2.core.errors import IncompleteOutputException
+
+# ... existing imports ...
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +35,11 @@ WARMUP_TIMEOUT_SEC: float = 30.0  # pire cas : cold start vLLM ~5-15 s
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    @definition : Gestionnaire de cycle de vie de l'application FastAPI (init & shutdown).
+    @args/params : app (FastAPI) - Instance de l'application.
+    @return : AsyncGenerator - Contexte actif pendant l'exécution de l'API.
+    """
     settings.LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
     engine.initialize()
     # Warmup best-effort : amorce vLLM pour éviter le cold start sur la 1ère
@@ -53,7 +62,7 @@ async def lifespan(app: FastAPI):
         )
     yield
     await engine.close()
-    print("🛑 Shutdown: engine released")
+    logger.info("🛑 Shutdown: engine released")
 
 
 app = FastAPI(title="CHSA AI Gateway", lifespan=lifespan)
@@ -62,6 +71,11 @@ app.add_middleware(TimingMiddleware)
 
 @app.get("/health", status_code=200, tags=["Monitoring"])
 async def health_check():
+    """
+    @definition : Endpoint de contrôle de santé du service API et du moteur d'inférence.
+    @args/params : Aucun.
+    @return : Dict - Statut du service et type du moteur d'inférence actif.
+    """
     return {"status": "ok", "engine": engine.engine_type}
 
 
@@ -85,9 +99,13 @@ class TriageRequest(BaseModel):
 
 
 def _extract_user_input(messages: List[dict]) -> str:
-    """Extrait le dernier message user de l'historique (helper partagé)."""
+    """
+    @definition : Extrait le dernier message de l'utilisateur depuis l'historique.
+    @args/params : messages (List[dict]) - Historique des messages de la conversation.
+    @return : str - Contenu textuel du dernier message envoyé par l'utilisateur.
+    """
     return next(
-        (m["content"] for m in reversed(messages) if m["role"] == "user"),
+        (m["content"] for m in reversed(messages) if m.get("role") == "user"),
         "",
     )
 
@@ -95,37 +113,59 @@ def _extract_user_input(messages: List[dict]) -> str:
 def _ensure_system_prompt(
     messages: List[dict], prompt_content: str = SYSTEM_PROMPT_FR
 ) -> List[dict]:
-    """Garantit la présence du system prompt en tête (sans muter l'input)."""
-    if messages[0].get("role") != "system":
+    """
+    @definition : Garantit la présence du prompt système en tête d'historique.
+    @args/params :
+        messages (List[dict]) - Liste des messages de la session.
+        prompt_content (str) - Contenu du prompt système à injecter si absent.
+    @return : List[dict] - Liste des messages avec prompt système garanti en tête.
+    """
+    if not messages or messages[0].get("role") != "system":
         return [{"role": "system", "content": prompt_content}] + list(messages)
     return list(messages)
 
 
 @app.post("/chat")
 async def api_chat(request: ChatRequest):
-    """Endpoint conversationnel : utilise l'orchestrateur agentique."""
+    """
+    @definition : Endpoint conversationnel exploitant l'orchestrateur de triage agentique.
+    @args/params : request (ChatRequest) - Données de la requête (patient_id, history, stream).
+    @return : Dict ou StreamingResponse - Réponse générée avec métadonnées d'audit et de triage.
+    """
     start_time = perf_counter()
     user_input = _extract_user_input(request.history)
 
-    # 1. Gestion de session agent
+    # 1. Gestion de session agentique
     if request.patient_id not in agent_sessions:
         agent_sessions[request.patient_id] = TriageAgentOrchestrator()
     orchestrator = agent_sessions[request.patient_id]
 
-    # 2. Exécution agentique
-    try:
-        agent_result = await orchestrator.run(user_input)
+    # --- Mode Streaming (SSE) ---
+    if request.stream:
 
-        # 3. Formatage réponse
+        async def event_generator():
+            async for chunk in orchestrator.run_stream(
+                user_input, history=request.history
+            ):
+                yield chunk
+
+        return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+    # --- Mode Non-streaming (Exécution agentique complète) ---
+    try:
+        agent_result = await orchestrator.run(user_input, history=request.history)
+
+        # Formatage de la réponse
         response_text = (
             agent_result.get("final_decision")
-            or agent_result.get("question")
-            or "Pas de réponse générée."
+            or "Vos informations ont été enregistrées par l'équipe de triage."
         )
         reasoning = agent_result.get("reasoning")
         state = agent_result.get("state")
+        triage_level = agent_result.get("triage_level", "modérée")
+        is_emergency = agent_result.get("is_emergency", False)
 
-        # 4. Logs
+        # Journalisation d'audit RGPD
         latency = perf_counter() - start_time
         log_entry = create_log_entry(
             request.patient_id,
@@ -135,33 +175,33 @@ async def api_chat(request: ChatRequest):
             request.stream,
         )
         await log_audit(log_entry)
+
         return {
             "response": response_text,
             "reasoning": reasoning,
             "state": state,
+            "triage_level": triage_level,
+            "is_emergency": is_emergency,
             "audit_ref": log_entry["audit_id"],
         }
 
+    except IncompleteOutputException as e:
+        logger.error("❌ Erreur agentique : sortie incomplète (limite max_tokens)")
+        raise HTTPException(
+            status_code=422,
+            detail="La réponse générée est incomplète (limite max_tokens atteinte).",
+        ) from e
     except Exception as e:
-        logger.error(f"❌ Erreur agentique : {traceback.format_exc()}")
+        logger.error("❌ Erreur agentique : %s", traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @app.post("/triage", response_model=None)
 async def api_triage(request: TriageRequest):
-    """Endpoint structuré : génère une `TriageResponse` typée.
-
-    Utilise `instructor.from_openai` (mode MD_JSON) côté client pour
-    valider la sortie contre le schema Pydantic. Le résultat est
-    sérialisé en JSON via `.model_dump()`.
-
-    Le format de réponse est :
-        {
-            "message": "...",
-            "triage_result": {"niveau": "maximale|modérée|différée" | null,
-                              "orientation": "..." | null},
-            "audit_ref": "..."
-        }
+    """
+    @definition : Endpoint structuré générant une réponse de triage typée Pydantic.
+    @args/params : request (TriageRequest) - Requête contenant patient_id et historique.
+    @return : Dict - Résultat structuré validé avec garde-fou NLP et veto de sécurité.
     """
     start_time = perf_counter()
     messages = _ensure_system_prompt(request.history, SYSTEM_PROMPT_JSON_FR)
@@ -203,7 +243,7 @@ async def api_triage(request: TriageRequest):
             "rationale": veto.rationale,
         }
 
-        # Sérialisation Pydantic -> dict
+        # Sérialisation Pydantic -> dict & Log d'audit
         log_entry = create_log_entry(
             request.patient_id,
             _extract_user_input(messages),
@@ -216,8 +256,16 @@ async def api_triage(request: TriageRequest):
             **response_payload,
             "audit_ref": log_entry["audit_id"],
         }
+    except IncompleteOutputException as e:
+        logger.error(
+            "❌ Structured triage failed: Output incomplete (max_tokens limit)"
+        )
+        raise HTTPException(
+            status_code=422,
+            detail="La réponse générée est incomplète (limite max_tokens atteinte).",
+        ) from e
     except Exception as e:
-        print(f"❌ Structured triage failed: {traceback.format_exc()}")
+        logger.error("❌ Structured triage failed: %s", traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e)) from e
 
 

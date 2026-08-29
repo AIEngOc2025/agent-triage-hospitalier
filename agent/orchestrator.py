@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import Any, Dict
 
@@ -45,6 +46,26 @@ class TriageAgentOrchestrator:
             "final_decision": nlp_result["niveau"],
             "comment": "Triage autonome finalisé par l'agent.",
         }
+
+    async def run_stream(self, user_input: str):
+        """
+        @definition : Flux agentique avec streaming (générateur).
+        @args/params : user_input (str) - Entrée patient/infirmier.
+        @return : AsyncGenerator[str, None] - Flux de réponse.
+        """
+        logger.info("🚀 Flux agentique en streaming.")
+        # Simuler un streaming rapide pour la démonstration ou appeler un client LLM réel
+        response = self.run(user_input)
+
+        # Format simple : on renvoie le contenu final comme un flux
+        text = (
+            response.get("final_decision")
+            or response.get("question")
+            or "Pas de réponse."
+        )
+        for char in text:
+            yield char
+            await asyncio.sleep(0.01)  # Simuler la génération
 
     def process_validation(
         self, validation: bool, comment: str, user_id: str

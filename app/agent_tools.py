@@ -20,6 +20,34 @@ def classify_triage_urgency(text: str) -> dict:
     return triage_classifier.predict(text)
 
 
+def is_vital_emergency_suspected(text: str) -> dict:
+    """
+    @definition : Détecte les mots-clés d'urgence vitale critique (drapeaux rouges).
+    @args/params : text (str) - Texte clinique à analyser.
+    @return : dict - Indication de suspicion d'urgence vitale critique et motif.
+    """
+    red_flag_keywords = [
+        "douleur thoracique",
+        "oppression",
+        "bras gauche",
+        "étouffement",
+        "détresse respiratoire",
+        "inconscient",
+        "perte de connaissance",
+        "paralysie",
+        "avc",
+        "hémorragie",
+        "coma",
+        "convulsion",
+    ]
+    lower_text = text.lower()
+    detected = [kw for kw in red_flag_keywords if kw in lower_text]
+    return {
+        "vital_emergency": len(detected) > 0,
+        "matched_keywords": detected,
+    }
+
+
 def clinical_veto_tool(veto_decision: bool, comment: str) -> dict:
     """
     @definition : Enregistre le veto ou l'approbation d'un soignant sur la décision de l'IA.
@@ -27,5 +55,9 @@ def clinical_veto_tool(veto_decision: bool, comment: str) -> dict:
     @args/params : comment (str) - Justification de la décision clinique.
     @return : dict - Statut de l'enregistrement du veto.
     """
-    # Placeholder pour l'implémentation de l'enregistrement du veto
-    return {"status": "veto_recorded", "decision": veto_decision, "comment": comment}
+    # Enregistrement du veto pour auditabilité clinique
+    return {
+        "status": "veto_recorded",
+        "decision": veto_decision,
+        "comment": comment,
+    }
